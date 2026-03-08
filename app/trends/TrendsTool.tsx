@@ -67,7 +67,7 @@ function analyzePatterns(videos: Video[]) {
   // Title patterns
   const hasNumbers = titles.filter(t => /\d/.test(t)).length
   const hasCaps    = titles.filter(t => /[А-ЯЁ]{3,}/.test(t)).length
-  const hasEmoji   = titles.filter(t => /\p{Emoji}/u.test(t)).length
+  const hasEmoji   = titles.filter(t => [...t].some(ch => ch.codePointAt(0)! > 127)).length
   const avgViews   = Math.round(videos.reduce((s, v) => s + v.views, 0) / videos.length)
   const topVideo   = [...videos].sort((a, b) => trendScore(b) - trendScore(a))[0]
 
