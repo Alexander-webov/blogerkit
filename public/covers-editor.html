@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Конструктор обложек — БлогерКит</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Oswald:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#060608;--surface:#0e0e12;--border:#1a1a24;
+      --accent:#ff3d5a;--accent2:#ff9500;--accent3:#00d4ff;
+      --text:#f0f0f5;--muted:#5a5a70;--card:#0b0b10;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:100;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:rgba(6,6,8,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .logo{font-family:'Unbounded',sans-serif;font-size:.95rem;font-weight:900;display:flex;align-items:center;gap:.5rem}
+    .logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+    .mode-tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px}
+    .mode-tab{padding:.35rem 1.1rem;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;color:var(--muted);transition:all .15s;border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif}
+    .mode-tab.active{background:var(--accent);color:white}
+    .mode-tab:hover:not(.active){color:var(--text)}
+    .nav-right{display:flex;gap:.6rem;align-items:center}
+    .btn-nav{padding:.38rem .9rem;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;border:none;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s}
+    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+    .btn-outline:hover{color:var(--text);border-color:var(--muted)}
+    .btn-primary{background:var(--accent);color:white}
+    .btn-primary:hover{opacity:.85}
+
+    /* ═══ TEMPLATES MODE ═══════════════════════════════════════════ */
+    #modeTemplates{display:block}
+    #modeEditor{display:none}
+
+    .tpl-page{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 54px)}
+
+    /* sidebar */
+    .tpl-sidebar{background:var(--surface);border-right:1px solid var(--border);padding:1rem;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto;display:flex;flex-direction:column;gap:.3rem}
+    .s-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:.4rem .2rem;margin-top:.4rem}
+    .s-btn{display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border-radius:8px;cursor:pointer;font-size:.78rem;color:var(--muted);border:1px solid transparent;transition:all .15s;background:none;width:100%;font-family:'Plus Jakarta Sans',sans-serif;text-align:left}
+    .s-btn:hover{color:var(--text);background:rgba(255,255,255,.03)}
+    .s-btn.active{color:#ff8099;background:rgba(255,61,90,.08);border-color:rgba(255,61,90,.2)}
+    .s-icon{font-size:1rem;width:22px;text-align:center}
+
+    /* grid */
+    .tpl-main{padding:1.5rem}
+    .tpl-header{margin-bottom:1.2rem}
+    .tpl-title{font-family:'Unbounded',sans-serif;font-size:1.2rem;font-weight:900;letter-spacing:-.03em;margin-bottom:.3rem}
+    .tpl-sub-txt{color:var(--muted);font-size:.8rem}
+    .tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+
+    /* card */
+    .tpl-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s}
+    .tpl-card:hover{border-color:rgba(255,61,90,.4);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.6)}
+    .tpl-thumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:#111}
+    .tpl-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+    .tpl-card:hover .tpl-thumb img{transform:scale(1.05)}
+    .tpl-ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:1rem}
+    .ov-dark{background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.2) 55%,transparent 100%)}
+    .ov-red{background:linear-gradient(145deg,rgba(180,0,25,.72) 0%,rgba(0,0,0,.55) 100%)}
+    .ov-blue{background:linear-gradient(145deg,rgba(0,15,80,.75) 0%,rgba(0,0,0,.5) 100%)}
+    .ov-center{background:radial-gradient(ellipse at center,rgba(0,0,0,.1) 0%,rgba(0,0,0,.78) 100%);align-items:center;text-align:center}
+    .ov-side{background:linear-gradient(to right,rgba(0,0,0,.9) 0%,rgba(0,0,0,.45) 65%,transparent 100%)}
+    .ov-gold{background:linear-gradient(145deg,rgba(100,60,0,.75) 0%,rgba(0,0,0,.6) 100%)}
+    .ov-purple{background:linear-gradient(145deg,rgba(60,0,100,.75) 0%,rgba(0,0,0,.55) 100%)}
+    .ov-green{background:linear-gradient(145deg,rgba(0,60,30,.75) 0%,rgba(0,0,0,.55) 100%)}
+
+    .ov-tag{display:inline-block;padding:.18rem .55rem;border-radius:4px;font-size:.58rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem;width:fit-content}
+    .tag-r{background:var(--accent);color:#fff}
+    .tag-y{background:#ff9500;color:#000}
+    .tag-w{background:#fff;color:#000}
+    .tag-b{background:#0066ff;color:#fff}
+    .tag-g{background:#10b981;color:#fff}
+    .tag-p{background:#7c3aed;color:#fff}
+
+    .ov-h{font-family:'Unbounded',sans-serif;font-size:.95rem;font-weight:900;color:#fff;line-height:1.2;letter-spacing:-.02em;text-shadow:0 2px 12px rgba(0,0,0,.8)}
+    .ov-h.oswald{font-family:'Oswald',sans-serif;font-size:1.2rem;text-transform:uppercase}
+    .ov-s{font-size:.62rem;color:rgba(255,255,255,.6);margin-top:.25rem;font-weight:500}
+
+    .tpl-foot{padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between}
+    .tpl-name{font-size:.78rem;font-weight:600}
+    .tpl-meta2{font-size:.65rem;color:var(--muted)}
+    .btn-use{padding:.3rem .85rem;background:var(--accent);border-radius:6px;color:#fff;font-size:.7rem;font-weight:700;cursor:pointer;border:none;font-family:'Plus Jakarta Sans',sans-serif;transition:opacity .15s}
+    .btn-use:hover{opacity:.82}
+
+    /* ═══ EDITOR MODE ═══════════════════════════════════════════════ */
+    .editor-layout{display:grid;grid-template-columns:220px 1fr 250px;height:calc(100vh - 54px);overflow:hidden}
+
+    /* left tools */
+    .ed-left{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+    .ed-section{padding:.75rem;border-bottom:1px solid var(--border)}
+    .ed-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.55rem}
+
+    .tpl-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:.35rem}
+    .tpl-mini{aspect-ratio:16/9;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s;overflow:hidden;position:relative}
+    .tpl-mini:hover{border-color:var(--accent);transform:scale(1.04)}
+    .tpl-mini.sel{border-color:var(--accent)}
+    .tpl-mini img{width:100%;height:100%;object-fit:cover}
+    .tpl-mini-label{position:absolute;bottom:2px;left:3px;font-size:.45rem;color:rgba(255,255,255,.6)}
+
+    .bg-swatches{display:flex;flex-wrap:wrap;gap:.35rem}
+    .bg-sw{width:26px;height:26px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+    .bg-sw:hover,.bg-sw.sel{border-color:#fff;transform:scale(1.15)}
+
+    .add-btns{display:flex;flex-direction:column;gap:.3rem}
+    .add-btn{display:flex;align-items:center;gap:.55rem;padding:.5rem .65rem;background:var(--card);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:.75rem;color:var(--text);transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;width:100%}
+    .add-btn:hover{border-color:var(--accent);color:#ff8099;background:rgba(255,61,90,.05)}
+    .add-icon{font-size:.95rem;width:18px;text-align:center}
+
+    .stk-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.28rem}
+    .stk{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:1.25rem;background:var(--card);border-radius:6px;cursor:pointer;border:1px solid var(--border);transition:all .15s}
+    .stk:hover{border-color:var(--accent);transform:scale(1.1)}
+
+    /* canvas */
+    .ed-canvas{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#020204;background-image:radial-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:18px 18px;position:relative;overflow:hidden}
+    .canvas-wrap{box-shadow:0 0 0 1px rgba(255,255,255,.07),0 24px 70px rgba(0,0,0,.9)}
+    #mainCanvas{display:block}
+    .fmt-bar{position:absolute;bottom:.8rem;display:flex;gap:.3rem;flex-wrap:wrap;justify-content:center;max-width:90%;padding:0 1rem}
+    .fmt-btn{padding:.28rem .65rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;font-size:.65rem;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;display:flex;align-items:center;gap:.3rem;white-space:nowrap}
+    .fmt-btn:hover,.fmt-btn.act{background:rgba(255,61,90,.15);border-color:rgba(255,61,90,.3);color:#ff8099}
+    .fmt-icon{font-size:.8rem}
+    .fmt-size{font-size:.55rem;opacity:.6}
+
+    /* right props */
+    .ed-right{background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+    .prop-sec{padding:.75rem;border-bottom:1px solid var(--border)}
+    .prop-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.45rem}
+    .prop-inp{width:100%;background:var(--card);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:.78rem;padding:.38rem .65rem;outline:none;font-family:'Plus Jakarta Sans',sans-serif;transition:border-color .15s}
+    .prop-inp:focus{border-color:var(--accent)}
+    .prop-inp-sm{width:60px;text-align:center}
+    .prop-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.4rem}
+    .prop-label{font-size:.7rem;color:var(--muted);white-space:nowrap}
+    .color-row{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.3rem}
+    .c-dot{width:22px;height:22px;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:all .12s}
+    .c-dot:hover{transform:scale(1.2);border-color:#fff}
+    .aln-btns{display:flex;gap:.3rem;margin-top:.35rem}
+    .aln-btn{flex:1;padding:.32rem;background:var(--card);border:1px solid var(--border);border-radius:5px;color:var(--muted);cursor:pointer;font-size:.75rem;text-align:center;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif}
+    .aln-btn:hover,.aln-btn.on{background:rgba(255,61,90,.12);border-color:rgba(255,61,90,.3);color:#ff8099}
+    .range-inp{width:100%;accent-color:var(--accent)}
+    .layer-item{display:flex;align-items:center;gap:.45rem;padding:.4rem .75rem;cursor:pointer;font-size:.72rem;border-bottom:1px solid var(--border);transition:background .12s}
+    .layer-item:hover{background:rgba(255,255,255,.02)}
+    .layer-item.on{background:rgba(255,61,90,.07);color:#ff8099}
+    .layer-del{color:var(--muted);cursor:pointer;padding:.1rem .3rem;border-radius:3px;transition:all .1s;margin-left:auto}
+    .layer-del:hover{color:var(--accent);background:rgba(255,61,90,.1)}
+    .no-sel{padding:2rem 1rem;text-align:center;color:var(--muted);font-size:.75rem;line-height:1.7}
+    .act-btns{display:flex;flex-wrap:wrap;gap:.35rem}
+    .act-btn{padding:.3rem .75rem;border-radius:6px;font-size:.7rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s}
+    .act-btn:hover{color:var(--text);border-color:var(--muted)}
+    .act-del{background:rgba(255,61,90,.12);color:#ff8099;border-color:rgba(255,61,90,.2)}
+    .act-del:hover{background:rgba(255,61,90,.22)}
+
+    /* scrollbar */
+    ::-webkit-scrollbar{width:4px}
+    ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+    .hidden{display:none!important}
+
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+    /* upload label */
+    .upload-lbl{display:block;padding:1rem;background:var(--card);border:1px dashed var(--border);border-radius:9px;text-align:center;cursor:pointer;font-size:.72rem;color:var(--muted);transition:all .15s;line-height:1.6}
+    .upload-lbl:hover{border-color:var(--accent);color:var(--text)}
+
+    .font-sel{width:100%;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.75rem;padding:.35rem .6rem;outline:none;font-family:'Plus Jakarta Sans',sans-serif}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><div class="logo-dot"></div>БлогерКит · Обложки</div>
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('templates',this)">🖼 Шаблоны</button>
+    <button class="mode-tab" onclick="setMode('editor',this)">✏️ С нуля</button>
+  </div>
+  <div class="nav-right">
+    <div id="fmtBadge" style="display:none;padding:.3rem .8rem;background:rgba(255,61,90,.1);border:1px solid rgba(255,61,90,.25);border-radius:7px;font-size:.7rem;color:#ff8099;font-weight:700">▶️ YouTube · 1280×720</div>
+    <button class="btn-nav btn-outline" id="btnUndo" onclick="undoAction()" style="display:none">↩ Отмена</button>
+    <button class="btn-nav btn-outline" id="btnClear" onclick="clearCanvas()" style="display:none">🗑 Очистить</button>
+    <button class="btn-nav btn-primary" id="btnDownload" onclick="downloadCanvas()" style="display:none">⬇ Скачать PNG</button>
+  </div>
+</nav>
+
+<!-- ═══ TEMPLATES MODE ════════════════════════════════════════════════ -->
+<div id="modeTemplates">
+  <div class="tpl-page">
+    <div class="tpl-sidebar">
+      <div class="s-label">Все категории</div>
+      <button class="s-btn active" onclick="filterCat('all',this)"><span class="s-icon">⚡</span>Все шаблоны</button>
+      <button class="s-btn" onclick="filterCat('cars',this)"><span class="s-icon">🚗</span>Авто</button>
+      <button class="s-btn" onclick="filterCat('lifestyle',this)"><span class="s-icon">💎</span>Лайфстайл</button>
+      <button class="s-btn" onclick="filterCat('finance',this)"><span class="s-icon">💰</span>Финансы</button>
+      <button class="s-btn" onclick="filterCat('sport',this)"><span class="s-icon">💪</span>Спорт</button>
+      <button class="s-btn" onclick="filterCat('tech',this)"><span class="s-icon">💻</span>Технологии</button>
+      <button class="s-btn" onclick="filterCat('drama',this)"><span class="s-icon">🔥</span>Драма / Шок</button>
+      <button class="s-btn" onclick="filterCat('travel',this)"><span class="s-icon">✈️</span>Путешествия</button>
+      <button class="s-btn" onclick="filterCat('food',this)"><span class="s-icon">🍕</span>Еда</button>
+      <button class="s-btn" onclick="filterCat('beauty',this)"><span class="s-icon">💄</span>Красота</button>
+      <button class="s-btn" onclick="filterCat('gaming',this)"><span class="s-icon">🎮</span>Игры</button>
+      <button class="s-btn" onclick="filterCat('motivation',this)"><span class="s-icon">🧠</span>Мотивация</button>
+      <div class="s-label" style="margin-top:auto">Или</div>
+      <button class="s-btn" onclick="setMode('editor',document.querySelectorAll('.mode-tab')[1])" style="border-color:rgba(255,61,90,.3);color:#ff8099">
+        <span class="s-icon">✏️</span>Создать с нуля
+      </button>
+    </div>
+
+    <div class="tpl-main">
+      <div class="tpl-header">
+        <div class="tpl-title">Готовые шаблоны</div>
+        <div class="tpl-sub-txt">Выбери шаблон → вставь свой текст → скачай за 30 секунд</div>
+      </div>
+      <div class="tpl-grid" id="tplGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EDITOR MODE ═══════════════════════════════════════════════════ -->
+<div id="modeEditor" style="display:none">
+  <div class="editor-layout">
+
+    <!-- LEFT PANEL -->
+    <div class="ed-left">
+
+      <!-- Templates quick pick -->
+      <div class="ed-section">
+        <div class="ed-label">Начать с шаблона</div>
+        <div class="tpl-mini-grid" id="miniGrid"></div>
+      </div>
+
+      <!-- BG -->
+      <div class="ed-section">
+        <div class="ed-label">Цвет фона</div>
+        <div class="bg-swatches">
+          <div class="bg-sw" style="background:#0a0a0f" onclick="setBg('#0a0a0f')"></div>
+          <div class="bg-sw" style="background:#0d1f3c" onclick="setBg('#0d1f3c')"></div>
+          <div class="bg-sw" style="background:#1a0533" onclick="setBg('#1a0533')"></div>
+          <div class="bg-sw" style="background:#0d2b1a" onclick="setBg('#0d2b1a')"></div>
+          <div class="bg-sw" style="background:#2a0a0a" onclick="setBg('#2a0a0a')"></div>
+          <div class="bg-sw" style="background:#1a1500" onclick="setBg('#1a1500')"></div>
+          <div class="bg-sw" style="background:#ffffff" onclick="setBg('#ffffff')"></div>
+          <div class="bg-sw" style="background:#ff3d5a" onclick="setBg('#ff3d5a')"></div>
+          <div class="bg-sw" style="background:#7c3aed" onclick="setBg('#7c3aed')"></div>
+          <div class="bg-sw" style="background:#06b6d4" onclick="setBg('#06b6d4')"></div>
+          <div class="bg-sw" style="background:#ff9500" onclick="setBg('#ff9500')"></div>
+          <div class="bg-sw" style="background:#10b981" onclick="setBg('#10b981')"></div>
+        </div>
+        <input type="color" value="#0a0a0f" style="width:100%;height:28px;border:none;border-radius:6px;cursor:pointer;margin-top:.4rem;background:none" onchange="setBg(this.value)">
+      </div>
+
+      <!-- ELEMENTS -->
+      <div class="ed-section">
+        <div class="ed-label">Добавить</div>
+        <div class="add-btns">
+          <button class="add-btn" onclick="addText('ЗАГОЛОВОК',52,true)"><span class="add-icon">T</span>Заголовок</button>
+          <button class="add-btn" onclick="addText('Подзаголовок',24,false)"><span class="add-icon" style="font-size:.7rem">T</span>Подзаголовок</button>
+          <button class="add-btn" onclick="addRect()"><span class="add-icon">▬</span>Прямоугольник</button>
+          <button class="add-btn" onclick="addCircle()"><span class="add-icon">●</span>Круг</button>
+          <button class="add-btn" onclick="addBadge()"><span class="add-icon">🏷</span>Бейдж</button>
+          <button class="add-btn" onclick="addLine()"><span class="add-icon">—</span>Линия</button>
+        </div>
+      </div>
+
+      <!-- STICKERS -->
+      <div class="ed-section">
+        <div class="ed-label">Стикеры</div>
+        <div class="stk-grid" id="stkGrid"></div>
+      </div>
+
+      <!-- UPLOAD -->
+      <div class="ed-section">
+        <div class="ed-label">Загрузить фото</div>
+        <label class="upload-lbl">
+          📁 Нажми чтобы загрузить<br><span style="font-size:.62rem">JPG · PNG · WEBP</span>
+          <input type="file" accept="image/*" style="display:none" onchange="uploadImage(event)">
+        </label>
+      </div>
+    </div>
+
+    <!-- CANVAS -->
+    <div class="ed-canvas">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="mainCanvas"></canvas>
+      </div>
+      <div class="fmt-bar">
+        <button class="fmt-btn act" onclick="setFmt(1280,720,this)"><span class="fmt-icon">▶️</span>YouTube<span class="fmt-size">1280×720</span></button>
+        <button class="fmt-btn" onclick="setFmt(1280,720,this)"><span class="fmt-icon">🔵</span>ВКонтакте<span class="fmt-size">1280×720</span></button>
+        <button class="fmt-btn" onclick="setFmt(1080,1920,this)"><span class="fmt-icon">▶️</span>YouTube Shorts<span class="fmt-size">1080×1920</span></button>
+        <button class="fmt-btn" onclick="setFmt(1080,1920,this)"><span class="fmt-icon">🎵</span>TikTok<span class="fmt-size">1080×1920</span></button>
+        <button class="fmt-btn" onclick="setFmt(1080,1350,this)"><span class="fmt-icon">📸</span>Instagram<span class="fmt-size">1080×1350</span></button>
+        <button class="fmt-btn" onclick="setFmt(1080,1080,this)"><span class="fmt-icon">📸</span>Inst. Square<span class="fmt-size">1080×1080</span></button>
+        <button class="fmt-btn" onclick="setFmt(1200,630,this)"><span class="fmt-icon">✈️</span>Telegram<span class="fmt-size">1200×630</span></button>
+        <button class="fmt-btn" onclick="setFmt(1584,396,this)"><span class="fmt-icon">💼</span>LinkedIn<span class="fmt-size">1584×396</span></button>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="ed-right">
+      <div id="noSel" class="no-sel"><div style="font-size:2rem;margin-bottom:.5rem">👆</div>Выбери элемент на холсте чтобы изменить его свойства</div>
+
+      <!-- TEXT PROPS -->
+      <div id="txtProps" class="hidden">
+        <div class="prop-sec">
+          <div class="prop-lbl">Текст</div>
+          <textarea id="txtVal" class="prop-inp" rows="3" style="resize:none;margin-bottom:.4rem" oninput="setTxtProp('text',this.value)"></textarea>
+          <div class="prop-lbl" style="margin-top:.4rem">Шрифт</div>
+          <select class="font-sel" id="fontFam" onchange="setTxtProp('fontFamily',this.value)">
+            <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+            <option value="Unbounded">Unbounded</option>
+            <option value="Oswald">Oswald</option>
+            <option value="Impact">Impact</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Arial">Arial</option>
+            <option value="Courier New">Courier New</option>
+          </select>
+        </div>
+        <div class="prop-sec">
+          <div class="prop-lbl">Размер и стиль</div>
+          <div class="prop-row">
+            <div class="prop-label">Размер</div>
+            <input type="number" id="txtSize" class="prop-inp prop-inp-sm" onchange="setTxtProp('fontSize',+this.value)">
+          </div>
+          <div class="aln-btns">
+            <div class="aln-btn" onclick="toggleBold(this)"><b>Ж</b></div>
+            <div class="aln-btn" onclick="toggleItalic(this)"><i>К</i></div>
+            <div class="aln-btn" onclick="setTxtProp('textAlign','left')">◀</div>
+            <div class="aln-btn" onclick="setTxtProp('textAlign','center')">▬</div>
+            <div class="aln-btn" onclick="setTxtProp('textAlign','right')">▶</div>
+          </div>
+        </div>
+        <div class="prop-sec">
+          <div class="prop-lbl">Цвет</div>
+          <div class="color-row">
+            <div class="c-dot" style="background:#fff" onclick="setTxtProp('fill','#fff')"></div>
+            <div class="c-dot" style="background:#000;border:1px solid #444" onclick="setTxtProp('fill','#000')"></div>
+            <div class="c-dot" style="background:#ff3d5a" onclick="setTxtProp('fill','#ff3d5a')"></div>
+            <div class="c-dot" style="background:#ff9500" onclick="setTxtProp('fill','#ff9500')"></div>
+            <div class="c-dot" style="background:#fbbf24" onclick="setTxtProp('fill','#fbbf24')"></div>
+            <div class="c-dot" style="background:#00d4ff" onclick="setTxtProp('fill','#00d4ff')"></div>
+            <div class="c-dot" style="background:#a78bfa" onclick="setTxtProp('fill','#a78bfa')"></div>
+            <div class="c-dot" style="background:#10b981" onclick="setTxtProp('fill','#10b981')"></div>
+            <input type="color" value="#ffffff" style="width:22px;height:22px;border:none;border-radius:4px;cursor:pointer;padding:0" onchange="setTxtProp('fill',this.value)">
+          </div>
+        </div>
+        <div class="prop-sec">
+          <div class="prop-lbl">Прозрачность</div>
+          <input type="range" class="range-inp" min="0" max="100" value="100" oninput="setOpacity(this.value)">
+        </div>
+      </div>
+
+      <!-- SHAPE PROPS -->
+      <div id="shpProps" class="hidden">
+        <div class="prop-sec">
+          <div class="prop-lbl">Заливка</div>
+          <div class="color-row">
+            <div class="c-dot" style="background:#ff3d5a" onclick="setShpProp('fill','#ff3d5a')"></div>
+            <div class="c-dot" style="background:#ff9500" onclick="setShpProp('fill','#ff9500')"></div>
+            <div class="c-dot" style="background:#7c3aed" onclick="setShpProp('fill','#7c3aed')"></div>
+            <div class="c-dot" style="background:#06b6d4" onclick="setShpProp('fill','#06b6d4')"></div>
+            <div class="c-dot" style="background:#10b981" onclick="setShpProp('fill','#10b981')"></div>
+            <div class="c-dot" style="background:#fff" onclick="setShpProp('fill','#fff')"></div>
+            <div class="c-dot" style="background:#000;border:1px solid #444" onclick="setShpProp('fill','#000')"></div>
+            <div class="c-dot" style="background:transparent;border:1px solid #555;font-size:.6rem;display:flex;align-items:center;justify-content:center;color:#555" onclick="setShpProp('fill','transparent')">∅</div>
+            <input type="color" value="#ff3d5a" style="width:22px;height:22px;border:none;border-radius:4px;cursor:pointer;padding:0" onchange="setShpProp('fill',this.value)">
+          </div>
+        </div>
+        <div class="prop-sec">
+          <div class="prop-lbl">Обводка</div>
+          <div class="color-row">
+            <div class="c-dot" style="background:#ff3d5a" onclick="setShpProp('stroke','#ff3d5a')"></div>
+            <div class="c-dot" style="background:#fff" onclick="setShpProp('stroke','#fff')"></div>
+            <div class="c-dot" style="background:#000;border:1px solid #444" onclick="setShpProp('stroke','#000')"></div>
+            <div class="c-dot" style="background:transparent;border:1px solid #555;font-size:.6rem;display:flex;align-items:center;justify-content:center;color:#555" onclick="setShpProp('stroke','transparent')">∅</div>
+          </div>
+          <div class="prop-row" style="margin-top:.4rem">
+            <div class="prop-label">Толщина</div>
+            <input type="number" class="prop-inp prop-inp-sm" value="0" min="0" max="20" onchange="setShpProp('strokeWidth',+this.value)">
+          </div>
+        </div>
+        <div class="prop-sec">
+          <div class="prop-lbl">Прозрачность</div>
+          <input type="range" class="range-inp" min="0" max="100" value="100" oninput="setOpacity(this.value)">
+        </div>
+      </div>
+
+      <!-- LAYERS -->
+      <div class="prop-sec" style="margin-top:auto">
+        <div class="prop-lbl">Слои</div>
+        <div id="layersList"></div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="prop-sec" id="objActs" style="display:none">
+        <div class="prop-lbl">Действия</div>
+        <div class="act-btns">
+          <button class="act-btn" onclick="bringFwd()">▲ Вперёд</button>
+          <button class="act-btn" onclick="sendBk()">▼ Назад</button>
+          <button class="act-btn" onclick="centerObj()">⊕ Центр</button>
+          <button class="act-btn act-del" onclick="delSel()">🗑 Удалить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// TEMPLATES DATA
+// ══════════════════════════════════════════════════════════════════
+const TPLS = [
+  // CARS
+  {id:'car1',cat:'cars',name:'Авария / Шок',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75',ov:'ov-red',h:'ЭТА МАШИНА СТОИЛА МНЕ ВСЁ',s:'История которую я не хотел рассказывать',tag:'🔥 ШОКИРУЮЩЕЕ',tc:'#fff',tf:'Unbounded',cls:''},
+  {id:'car2',cat:'cars',name:'Суперкар',img:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=75',ov:'ov-dark',h:'Я КУПИЛ СВОЮ МЕЧТУ',s:'Сколько это стоило на самом деле',tag:'💎 ЛАЙФСТАЙЛ',tc:'#ff9500',tf:'Oswald',cls:'oswald'},
+  {id:'car3',cat:'cars',name:'Гонки / Скорость',img:'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=75',ov:'ov-dark',h:'300 КМ/Ч НА ТРЕКЕ',s:'Самый адреналиновый день в моей жизни',tag:'🏁 ГОНКИ',tc:'#fbbf24',tf:'Oswald',cls:'oswald'},
+  // LIFESTYLE
+  {id:'life1',cat:'lifestyle',name:'Ночной город',img:'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=75',ov:'ov-dark',h:'ОДИН ДЕНЬ В БОЛЬШОМ ГОРОДЕ',s:'Вот что я понял за 24 часа',tag:'✨ ВЛОГ',tc:'#fff',tf:'Unbounded',cls:''},
+  {id:'life2',cat:'lifestyle',name:'Роскошь / Отель',img:'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=75',ov:'ov-gold',h:'Я ОСТАНОВИЛСЯ В 5-ЗВЁЗДОЧНОМ ОТЕЛЕ',s:'Стоит ли оно того?',tag:'💎 ЛЮКС',tc:'#fbbf24',tf:'Unbounded',cls:''},
+  {id:'life3',cat:'lifestyle',name:'Рассвет / Медитация',img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=75',ov:'ov-center',h:'ЭТО ИЗМЕНИЛО МОЮ ЖИЗНЬ',s:'3 дня без телефона в горах',tag:'🧘 ОСОЗНАННОСТЬ',tc:'#fff',tf:'Unbounded',cls:''},
+  // FINANCE
+  {id:'fin1',cat:'finance',name:'Деньги',img:'https://images.unsplash.com/photo-1565514020179-026b92b2d70b?w=800&q=75',ov:'ov-gold',h:'КАК Я ЗАРАБОТАЛ ПЕРВЫЙ МИЛЛИОН',s:'5 шагов которые изменили всё',tag:'💰 ФИНАНСЫ',tc:'#fbbf24',tf:'Unbounded',cls:''},
+  {id:'fin2',cat:'finance',name:'Офис / Бизнес',img:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=75',ov:'ov-blue',h:'Я УВОЛИЛСЯ И ОТКРЫЛ БИЗНЕС',s:'Что пошло не так и как я это исправил',tag:'🏢 БИЗНЕС',tc:'#00d4ff',tf:'Unbounded',cls:''},
+  {id:'fin3',cat:'finance',name:'Ноутбук / Работа',img:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&q=75',ov:'ov-blue',h:'ТОП 5 ИНСТРУМЕНТОВ ДЛЯ РАБОТЫ',s:'Которые экономят мне 3 часа в день',tag:'💻 ПРОДУКТИВНОСТЬ',tc:'#00d4ff',tf:'Unbounded',cls:''},
+  // SPORT
+  {id:'spt1',cat:'sport',name:'Трансформация тела',img:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=75',ov:'ov-red',h:'Я ПОХУДЕЛ НА 30 КГ ЗА 90 ДНЕЙ',s:'Без голодания и без таблеток',tag:'💪 ТРАНСФОРМАЦИЯ',tc:'#fff',tf:'Oswald',cls:'oswald'},
+  {id:'spt2',cat:'sport',name:'Бокс / Борьба',img:'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&q=75',ov:'ov-red',h:'Я ДРАЛСЯ И ПРОИГРАЛ',s:'Урок который стоил мне дороже всего',tag:'🥊 СПОРТ',tc:'#fff',tf:'Oswald',cls:'oswald'},
+  {id:'spt3',cat:'sport',name:'Бег / Марафон',img:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=75',ov:'ov-dark',h:'Я ПРОБЕЖАЛ МАРАФОН С НУЛЯ',s:'Как готовился 6 месяцев',tag:'🏃 МАРАФОН',tc:'#10b981',tf:'Unbounded',cls:''},
+  // TECH
+  {id:'tch1',cat:'tech',name:'Технологии',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=75',ov:'ov-blue',h:'БУДУЩЕЕ УЖЕ ЗДЕСЬ',s:'Гаджеты которые изменят твою жизнь',tag:'🤖 ТЕХНОЛОГИИ',tc:'#00d4ff',tf:'Unbounded',cls:''},
+  {id:'tch2',cat:'tech',name:'Программирование',img:'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=75',ov:'ov-blue',h:'КАК Я ВЫУЧИЛ PYTHON ЗА 30 ДНЕЙ',s:'Полный план который реально работает',tag:'💻 КОД',tc:'#a78bfa',tf:'Unbounded',cls:''},
+  // DRAMA
+  {id:'drm1',cat:'drama',name:'Отношения',img:'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=75',ov:'ov-dark',h:'ОНА УШЛА И Я ПОНЯЛ ГЛАВНОЕ',s:'То о чём мужчины не говорят вслух',tag:'❤️ ОТНОШЕНИЯ',tc:'#fff',tf:'Unbounded',cls:''},
+  {id:'drm2',cat:'drama',name:'Провал / Кризис',img:'https://images.unsplash.com/photo-1541199249251-f713e6145474?w=800&q=75',ov:'ov-red',h:'Я ПОТЕРЯЛ ВСЁ',s:'И вот что из этого получилось',tag:'💔 ИСТОРИЯ',tc:'#fff',tf:'Oswald',cls:'oswald'},
+  // TRAVEL
+  {id:'trv1',cat:'travel',name:'Путешествие',img:'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800&q=75',ov:'ov-dark',h:'Я УЕХАЛ И НЕ ВЕРНУЛСЯ',s:'Как я сменил страну и начал всё заново',tag:'✈️ ЭМИГРАЦИЯ',tc:'#fff',tf:'Unbounded',cls:''},
+  {id:'trv2',cat:'travel',name:'Азия / Тайланд',img:'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=75',ov:'ov-gold',h:'30 ДНЕЙ В ТАИЛАНДЕ',s:'Сколько стоит жизнь за рубежом',tag:'🌴 ПУТЕШЕСТВИЕ',tc:'#fbbf24',tf:'Unbounded',cls:''},
+  // FOOD
+  {id:'fod1',cat:'food',name:'Рецепт',img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=75',ov:'ov-dark',h:'САМАЯ ВКУСНАЯ ПАСТА ЗА 10 МИНУТ',s:'Итальянский рецепт который изменит тебя',tag:'🍝 РЕЦЕПТ',tc:'#fbbf24',tf:'Oswald',cls:'oswald'},
+  {id:'fod2',cat:'food',name:'Бургер / Фастфуд',img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=75',ov:'ov-red',h:'ЛУЧШИЙ БУРГЕР В ГОРОДЕ',s:'Я попробовал 20 мест и вот победитель',tag:'🍔 ЕДА',tc:'#fff',tf:'Oswald',cls:'oswald'},
+  // BEAUTY
+  {id:'bty1',cat:'beauty',name:'Макияж / Красота',img:'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=75',ov:'ov-purple',h:'МАКИЯЖ ЗА 5 МИНУТ',s:'Который работает весь день',tag:'💄 BEAUTY',tc:'#e9d5ff',tf:'Unbounded',cls:''},
+  {id:'bty2',cat:'beauty',name:'Уход за кожей',img:'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=800&q=75',ov:'ov-purple',h:'КАК Я ИЗБАВИЛАСЬ ОТ ПРЫЩЕЙ',s:'3 средства которые реально работают',tag:'✨ УХОД',tc:'#fff',tf:'Unbounded',cls:''},
+  // GAMING
+  {id:'gm1',cat:'gaming',name:'Игры / ПК',img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=75',ov:'ov-purple',h:'ЭТА ИГРА СЛОМАЛА МНЕ МОЗГ',s:'Честный обзор без спойлеров',tag:'🎮 ОБЗОР',tc:'#a78bfa',tf:'Unbounded',cls:''},
+  {id:'gm2',cat:'gaming',name:'Консоль / Геймер',img:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=75',ov:'ov-blue',h:'Я НЕ СПАЛ 24 ЧАСА ИГРАЯ',s:'Вот что произошло с моим мозгом',tag:'😵 ЧЕЛЛЕНДЖ',tc:'#00d4ff',tf:'Oswald',cls:'oswald'},
+  // MOTIVATION
+  {id:'mot1',cat:'motivation',name:'Мотивация / Успех',img:'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=75',ov:'ov-gold',h:'5 ПРАВИЛ КОТОРЫЕ ИЗМЕНИЛИ МОЮ ЖИЗНЬ',s:'Начни применять их прямо сейчас',tag:'🧠 МОТИВАЦИЯ',tc:'#fbbf24',tf:'Unbounded',cls:''},
+  {id:'mot2',cat:'motivation',name:'Утренняя рутина',img:'https://images.unsplash.com/photo-1541480601022-2308c0f02487?w=800&q=75',ov:'ov-green',h:'Я ВСТАВАЛ В 5 УТРА 30 ДНЕЙ',s:'Честный результат без прикрас',tag:'⏰ ЧЕЛЛЕНДЖ',tc:'#6ee7b7',tf:'Unbounded',cls:''},
+];
+
+// ══════════════════════════════════════════════════════════════════
+// RENDER TEMPLATES
+// ══════════════════════════════════════════════════════════════════
+function renderTpls(list){
+  document.getElementById('tplGrid').innerHTML = list.map(t=>`
+    <div class="tpl-card">
+      <div class="tpl-thumb">
+        <img src="${t.img}" loading="lazy" alt="${t.name}">
+        <div class="tpl-ov ${t.ov}">
+          <div class="ov-tag tag-r">${t.tag}</div>
+          <div class="ov-h ${t.cls}" style="font-family:'${t.tf}';color:${t.tc}">${t.h}</div>
+          <div class="ov-s">${t.s}</div>
+        </div>
+      </div>
+      <div class="tpl-foot">
+        <div><div class="tpl-name">${t.name}</div><div class="tpl-meta2">1280×720 · YouTube / ВКонтакте</div></div>
+        <button class="btn-use" onclick="useTpl('${t.id}')">Изменить →</button>
+      </div>
+    </div>`).join('');
+}
+renderTpls(TPLS);
+
+function filterCat(cat,btn){
+  document.querySelectorAll('.s-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTpls(cat==='all'?TPLS:TPLS.filter(t=>t.cat===cat));
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MODE SWITCH
+// ══════════════════════════════════════════════════════════════════
+function setMode(mode, btn){
+  document.querySelectorAll('.mode-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const isEditor = mode==='editor';
+  document.getElementById('modeTemplates').style.display = isEditor?'none':'block';
+  document.getElementById('modeEditor').style.display = isEditor?'block':'none';
+  document.getElementById('btnUndo').style.display = isEditor?'':'none';
+  document.getElementById('btnClear').style.display = isEditor?'':'none';
+  document.getElementById('btnDownload').style.display = isEditor?'':'none';
+  const badge=document.getElementById('fmtBadge');
+  if(badge) badge.style.display=isEditor?'':'none';
+  if(isEditor && !canvas) initCanvas();
+  if(isEditor) setTimeout(scaleCanvas,50);
+}
+
+function useTpl(id){
+  const t = TPLS.find(x=>x.id===id);
+  if(!t) return;
+  setMode('editor', document.querySelectorAll('.mode-tab')[1]);
+  setTimeout(()=>loadTplInEditor(t), 200);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MINI TEMPLATE STRIP (in editor)
+// ══════════════════════════════════════════════════════════════════
+const miniTpls = TPLS.slice(0,12);
+document.getElementById('miniGrid').innerHTML = miniTpls.map(t=>`
+  <div class="tpl-mini" onclick="loadTplInEditor(TPLS.find(x=>x.id==='${t.id}'))">
+    <img src="${t.img}" loading="lazy">
+    <span class="tpl-mini-label">${t.name}</span>
+  </div>`).join('');
+
+// ══════════════════════════════════════════════════════════════════
+// CANVAS
+// ══════════════════════════════════════════════════════════════════
+let canvas = null;
+let CW=1280, CH=720;
+let history=[], historyIdx=-1;
+
+function initCanvas(){
+  canvas = new fabric.Canvas('mainCanvas',{width:CW,height:CH,backgroundColor:'#0a0a0f',preserveObjectStacking:true});
+  canvas.on('selection:created',showProps);
+  canvas.on('selection:updated',showProps);
+  canvas.on('selection:cleared',hideProps);
+  canvas.on('object:modified',()=>{saveH();updateLayers()});
+  canvas.on('object:added',updateLayers);
+  addDefaultContent();
+  scaleCanvas();
+}
+
+function scaleCanvas(){
+  if(!canvas) return;
+  const area = document.querySelector('.ed-canvas');
+  if(!area) return;
+  const maxW=area.clientWidth-60, maxH=area.clientHeight-70;
+  const scale=Math.min(maxW/CW, maxH/CH, 1);
+  const wrap=document.getElementById('canvasWrap');
+  wrap.style.transform=`scale(${scale})`;
+  wrap.style.transformOrigin='center center';
+}
+window.addEventListener('resize',scaleCanvas);
+
+function addDefaultContent(){
+  const t=new fabric.IText('ВАШ ЗАГОЛОВОК',{left:CW/2,top:CH/2-40,originX:'center',originY:'center',fontSize:72,fontFamily:'Unbounded',fontWeight:'bold',fill:'#ffffff',textAlign:'center'});
+  const s=new fabric.IText('Подзаголовок или описание',{left:CW/2,top:CH/2+55,originX:'center',originY:'center',fontSize:28,fontFamily:'Plus Jakarta Sans',fill:'rgba(255,255,255,.5)',textAlign:'center'});
+  canvas.add(t,s);
+  canvas.renderAll();
+  saveH();
+}
+
+function loadTplInEditor(t){
+  if(!canvas) return;
+  canvas.clear();
+  canvas.setBackgroundColor('#0a0a0f',()=>{});
+
+  fabric.Image.fromURL(t.img+'&w=1280', img=>{
+    const sc=Math.max(CW/img.width, CH/img.height);
+    img.set({
+      scaleX:sc, scaleY:sc, left:CW/2, top:CH/2,
+      originX:'center', originY:'center',
+      selectable:true, evented:true,
+      lockUniScaling:false,
+      hasBorders:true, hasControls:true,
+      cornerColor:'#ff3d5a', cornerSize:10, transparentCorners:false,
+      borderColor:'rgba(255,61,90,0.6)',
+      data:{ isBackground: true }
+    });
+    canvas.add(img);
+    canvas.sendToBack(img); // keep behind text
+
+    // overlay rect
+    const ovColor = {
+      'ov-red':'rgba(160,0,20,.65)','ov-blue':'rgba(0,10,70,.72)',
+      'ov-gold':'rgba(80,40,0,.65)','ov-purple':'rgba(50,0,80,.68)',
+      'ov-green':'rgba(0,50,20,.65)','ov-dark':'rgba(0,0,0,.55)',
+      'ov-center':'rgba(0,0,0,.55)','ov-side':'rgba(0,0,0,.55)'
+    }[t.ov]||'rgba(0,0,0,.55)';
+
+    const ov=new fabric.Rect({left:0,top:0,width:CW,height:CH,fill:ovColor,selectable:false,evented:false});
+    canvas.add(ov);
+
+    const tag=new fabric.IText(t.tag,{left:60,top:CH-200,fontSize:22,fontFamily:'Plus Jakarta Sans',fontWeight:'800',fill:'#ff3d5a',selectable:true});
+    const title=new fabric.IText(t.h,{left:60,top:CH-165,fontSize:t.cls==='oswald'?82:62,fontFamily:t.tf,fontWeight:'bold',fill:t.tc,width:CW-120,textAlign:'left',selectable:true});
+    const sub=new fabric.IText(t.s,{left:60,top:CH-55,fontSize:28,fontFamily:'Plus Jakarta Sans',fill:'rgba(255,255,255,.6)',selectable:true});
+    canvas.add(tag,title,sub);
+    canvas.renderAll();
+    saveH();
+    updateLayers();
+  },{crossOrigin:'anonymous'});
+}
+
+// ══════════════════════════════════════════════════════════════════
+// HISTORY
+// ══════════════════════════════════════════════════════════════════
+function saveH(){
+  history.push(JSON.stringify(canvas));
+  if(history.length>30) history.shift();
+}
+function undoAction(){
+  if(history.length<2) return;
+  history.pop();
+  canvas.loadFromJSON(history[history.length-1],()=>{canvas.renderAll();updateLayers()});
+}
+
+// ══════════════════════════════════════════════════════════════════
+// EDITOR TOOLS
+// ══════════════════════════════════════════════════════════════════
+function setBg(c){if(!canvas)return;canvas.setBackgroundColor(c,canvas.renderAll.bind(canvas));saveH();}
+
+function addText(str,size,bold){
+  const t=new fabric.IText(str,{left:CW/2,top:CH/2,originX:'center',originY:'center',fontSize:size,fontFamily:'Plus Jakarta Sans',fontWeight:bold?'bold':'normal',fill:'#ffffff',textAlign:'center'});
+  canvas.add(t);canvas.setActiveObject(t);canvas.renderAll();saveH();
+}
+function addRect(){
+  const r=new fabric.Rect({left:CW/2-150,top:CH/2-50,width:300,height:100,fill:'rgba(255,61,90,.25)',stroke:'#ff3d5a',strokeWidth:2,rx:14,ry:14});
+  canvas.add(r);canvas.setActiveObject(r);canvas.renderAll();saveH();
+}
+function addCircle(){
+  const c=new fabric.Circle({left:CW/2-70,top:CH/2-70,radius:70,fill:'rgba(124,58,237,.25)',stroke:'#7c3aed',strokeWidth:2});
+  canvas.add(c);canvas.setActiveObject(c);canvas.renderAll();saveH();
+}
+function addLine(){
+  const l=new fabric.Line([100,CH/2,CW-100,CH/2],{stroke:'#ff3d5a',strokeWidth:4});
+  canvas.add(l);canvas.setActiveObject(l);canvas.renderAll();saveH();
+}
+function addBadge(){
+  const g=new fabric.Group([
+    new fabric.Rect({width:200,height:52,rx:26,ry:26,fill:'#ff3d5a'}),
+    new fabric.IText('★ ТОП',{fontSize:22,fill:'#fff',fontWeight:'bold',originX:'center',originY:'center',left:100,top:26,fontFamily:'Unbounded'})
+  ],{left:CW/2-100,top:CH/2-26});
+  canvas.add(g);canvas.setActiveObject(g);canvas.renderAll();saveH();
+}
+function uploadImage(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    fabric.Image.fromURL(ev.target.result,img=>{
+      const sc=Math.min(CW/img.width,CH/img.height,1);
+      img.scale(sc).set({left:CW/2,top:CH/2,originX:'center',originY:'center'});
+      canvas.add(img);canvas.setActiveObject(img);canvas.renderAll();saveH();
+    });
+  };
+  r.readAsDataURL(file);
+}
+
+// Stickers
+const STKS=['🔥','⚡','💥','✨','🎯','🏆','💎','👑','🎬','📱','💡','🚀','❤️','💜','⭐','🎵','🎮','💰','👍','🤩','😎','🔴','🎪','🌟','💫'];
+document.getElementById('stkGrid').innerHTML=STKS.map(s=>`<div class="stk" onclick="addStk('${s}')">${s}</div>`).join('');
+function addStk(e){
+  const t=new fabric.IText(e,{left:CW/2,top:CH/2,originX:'center',originY:'center',fontSize:80});
+  canvas.add(t);canvas.setActiveObject(t);canvas.renderAll();saveH();
+}
+
+// Format
+const FMTS = {
+  '1280x720': '▶️ YouTube / ВКонтакте · 1280×720',
+  '1080x1920': '📱 Shorts / TikTok · 1080×1920',
+  '1080x1350': '📸 Instagram · 1080×1350',
+  '1080x1080': '📸 Instagram Square · 1080×1080',
+  '1200x630': '✈️ Telegram · 1200×630',
+  '1584x396': '💼 LinkedIn · 1584×396',
+};
+function setFmt(w,h,btn){
+  CW=w;CH=h;canvas.setWidth(w);canvas.setHeight(h);canvas.renderAll();
+  document.querySelectorAll('.fmt-btn').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+  const badge=document.getElementById('fmtBadge');
+  if(badge){badge.style.display='';badge.textContent=FMTS[w+'x'+h]||`${w}×${h}`;}
+  scaleCanvas();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PROPERTIES
+// ══════════════════════════════════════════════════════════════════
+function showProps(){
+  const o=canvas.getActiveObject();if(!o)return;
+  document.getElementById('noSel').classList.add('hidden');
+  document.getElementById('objActs').style.display='block';
+  const isText=o.type==='i-text'||o.type==='text';
+  document.getElementById('txtProps').classList.toggle('hidden',!isText);
+  document.getElementById('shpProps').classList.toggle('hidden',isText);
+  if(isText){
+    document.getElementById('txtVal').value=o.text;
+    document.getElementById('txtSize').value=o.fontSize;
+    document.getElementById('fontFam').value=o.fontFamily||'Plus Jakarta Sans';
+  }
+  updateLayers();
+}
+function hideProps(){
+  document.getElementById('noSel').classList.remove('hidden');
+  document.getElementById('txtProps').classList.add('hidden');
+  document.getElementById('shpProps').classList.add('hidden');
+  document.getElementById('objActs').style.display='none';
+}
+
+function setTxtProp(p,v){const o=canvas.getActiveObject();if(o){o.set(p,v);canvas.renderAll();saveH();}}
+function setShpProp(p,v){const o=canvas.getActiveObject();if(o){o.set(p,v);canvas.renderAll();saveH();}}
+function setOpacity(v){const o=canvas.getActiveObject();if(o){o.set('opacity',v/100);canvas.renderAll();}}
+function toggleBold(el){
+  const o=canvas.getActiveObject();if(!o)return;
+  o.set('fontWeight',o.fontWeight==='bold'?'normal':'bold');
+  el.classList.toggle('on');canvas.renderAll();
+}
+function toggleItalic(el){
+  const o=canvas.getActiveObject();if(!o)return;
+  o.set('fontStyle',o.fontStyle==='italic'?'normal':'italic');
+  el.classList.toggle('on');canvas.renderAll();
+}
+
+// Layers
+function updateLayers(){
+  if(!canvas)return;
+  const list=document.getElementById('layersList');
+  const objs=canvas.getObjects();
+  const icons={'i-text':'📝','text':'📝','rect':'▬','circle':'●','line':'—','image':'🖼','group':'📦'};
+  const names={'i-text':'Текст','text':'Текст','rect':'Прямоугольник','circle':'Круг','line':'Линия','image':'Фото','group':'Группа'};
+  list.innerHTML=[...objs].reverse().map((o,i)=>{
+    const ri=objs.length-1-i;
+    const active=canvas.getActiveObject()===o;
+    return `<div class="layer-item${active?' on':''}" onclick="selLayer(${ri})">
+      <span>${icons[o.type]||'◆'}</span>
+      <span style="flex:1">${names[o.type]||o.type} ${ri+1}</span>
+      <span class="layer-del" onclick="event.stopPropagation();rmLayer(${ri})">✕</span>
+    </div>`;
+  }).join('');
+}
+function selLayer(i){const o=canvas.item(i);if(o){canvas.setActiveObject(o);canvas.renderAll();showProps();updateLayers();}}
+function rmLayer(i){const o=canvas.item(i);if(o){canvas.remove(o);canvas.renderAll();saveH();updateLayers();}}
+
+// Object actions
+function bringFwd(){const o=canvas.getActiveObject();if(o){canvas.bringForward(o);canvas.renderAll();updateLayers();}}
+function sendBk(){const o=canvas.getActiveObject();if(o){canvas.sendBackwards(o);canvas.renderAll();updateLayers();}}
+function centerObj(){const o=canvas.getActiveObject();if(o){o.center();canvas.renderAll();}}
+function delSel(){const o=canvas.getActiveObject();if(o){canvas.remove(o);canvas.renderAll();saveH();updateLayers();}}
+function clearCanvas(){if(confirm('Очистить холст?')){canvas.clear();canvas.setBackgroundColor('#0a0a0f',canvas.renderAll.bind(canvas));saveH();updateLayers();}}
+
+// Download
+function downloadCanvas(){
+  if(!canvas)return;
+  const a=document.createElement('a');
+  a.download='обложка-blogerkit.png';
+  a.href=canvas.toDataURL({format:'png',multiplier:1});
+  a.click();
+}
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+  if((e.key==='Delete'||e.key==='Backspace')&&canvas){
+    const o=canvas.getActiveObject();
+    if(o&&o.type!=='i-text') delSel();
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key==='z') undoAction();
+});
+</script>
+
+</body>
+</html>
