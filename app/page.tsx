@@ -157,40 +157,40 @@ export default function HomePage() {
     <main>
       {/* NAV */}
       <nav className="sticky top-0 z-50 h-14 flex items-center justify-between px-6 bg-bg/95 backdrop-blur border-b border-border">
-        <div className="font-heading text-sm font-black flex items-center gap-2">
+        <div className="font-heading text-xl font-black flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-accent animate-pulse2" />
           БлогерКит
         </div>
         <div className="flex items-center gap-3">
           <Link
             href="/trends"
-            className="text-xs text-muted hover:text-white transition-colors"
+            className="text-lg text-muted hover:text-white transition-colors"
           >
             Тренды
           </Link>
           <Link
             href="/analyze"
-            className="text-xs text-muted hover:text-white transition-colors"
+            className="text-lg text-muted hover:text-white transition-colors"
           >
             Анализ
           </Link>
           <Link
             href="/covers"
-            className="text-xs text-muted hover:text-white transition-colors"
+            className="text-lg text-muted hover:text-white transition-colors"
           >
             Обложки
           </Link>
           <Link
             href="/blog"
-            className="text-xs text-muted hover:text-white transition-colors"
+            className="text-lg text-muted hover:text-white transition-colors"
           >
             Блог
           </Link>
           <Link
             href="/analyze"
-            className="px-3 py-1.5 bg-accent text-white text-xs font-bold rounded-lg hover:opacity-85 transition-opacity"
+            className="px-3 py-1.5 bg-accent text-white text-lg font-bold rounded-lg hover:opacity-85 transition-opacity"
           >
-            Начать →
+            Анализ →
           </Link>
         </div>
       </nav>
@@ -199,7 +199,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden pt-20 pb-16 px-6 text-center">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(255,61,90,0.08)_0%,transparent_70%)]" />
         <div className="relative max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-xs text-muted mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-lg text-muted mb-6">
             🚀 Актуально на 2026 год
           </div>
           <h1 className="font-heading text-4xl md:text-5xl font-black tracking-tight leading-tight mb-4">
@@ -254,25 +254,25 @@ export default function HomePage() {
               <div className="flex items-center gap-2 mb-2">
                 <h3 className="font-bold text-sm">{tool.name}</h3>
                 <span
-                  className={`text-xs px-2 py-0.5 rounded border font-bold ${tool.badgeColor}`}
+                  className={`text-lg px-2 py-0.5 rounded border font-bold ${tool.badgeColor}`}
                 >
                   {tool.badge}
                 </span>
               </div>
-              <p className="text-muted text-xs leading-relaxed mb-3">
+              <p className="text-muted text-lg leading-relaxed mb-3">
                 {tool.desc}
               </p>
               <ul className="flex flex-col gap-1">
                 {tool.features.map((f) => (
                   <li
                     key={f}
-                    className="text-xs text-muted flex items-center gap-1.5"
+                    className="text-lg text-muted flex items-center gap-1.5"
                   >
                     <span className="text-green-400">✓</span> {f}
                   </li>
                 ))}
               </ul>
-              <div className="mt-4 text-xs text-accent font-bold group-hover:underline">
+              <div className="mt-4 text-lg text-accent font-bold group-hover:underline">
                 Открыть →
               </div>
             </Link>
@@ -309,7 +309,7 @@ export default function HomePage() {
             >
               <div className="text-3xl mb-3">{item.icon}</div>
               <h3 className="font-bold text-sm mb-2">{item.title}</h3>
-              <p className="text-muted text-xs leading-relaxed">{item.desc}</p>
+              <p className="text-muted text-lg leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -327,7 +327,7 @@ export default function HomePage() {
               className="bg-card border border-border rounded-xl p-4"
             >
               <h3 className="font-bold text-sm mb-2">{faq.q}</h3>
-              <p className="text-muted text-xs leading-relaxed">{faq.a}</p>
+              <p className="text-muted text-lg leading-relaxed">{faq.a}</p>
             </div>
           ))}
         </div>
@@ -336,10 +336,10 @@ export default function HomePage() {
       {/* FOOTER */}
       <footer className="border-t border-border px-6 py-8 text-center">
         <div className="font-heading text-sm font-black mb-2">БлогерКит</div>
-        <p className="text-muted text-xs mb-4">
+        <p className="text-muted text-lg mb-4">
           Инструменты для блогеров · Бесплатно · 2026
         </p>
-        <div className="flex justify-center gap-6 text-xs text-muted">
+        <div className="flex justify-center gap-6 text-lg text-muted">
           <Link href="/covers" className="hover:text-white transition-colors">
             Обложки
           </Link>
