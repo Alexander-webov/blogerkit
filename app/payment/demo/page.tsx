@@ -1,5 +1,10 @@
 import { Suspense } from 'react'
+import type { Metadata } from 'next'
 import DemoPaymentClient from './DemoPaymentClient'
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 export default function DemoPaymentPage() {
   return (

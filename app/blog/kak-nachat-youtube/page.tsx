@@ -1,191 +1,133 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: "Как начать YouTube канал с нуля в 2026 — пошаговая инструкция",
-  description:
-    "Полная инструкция как создать YouTube канал с нуля: выбор ниши, оборудование, первые видео, продвижение. Без лишних трат.",
-  keywords: ["как начать youtube канал с нуля", "youtube блогер 2026", "старт"],
-  alternates: { canonical: "https://blogerkit.ru/blog/kak-nachat-youtube" },
+  title: 'Как начать YouTube канал с нуля в 2025 — пошаговая инструкция',
+  description: 'Полная пошаговая инструкция как начать YouTube канал с нуля: выбор ниши, оборудование, оформление, первые видео, продвижение. Реальные советы для начинающих.',
+  keywords: ['как начать youtube канал с нуля', 'создать youtube канал', 'начать вести youtube', 'youtube для начинающих 2025'],
+  alternates: { canonical: 'https://blogerkit.ru/blog/kak-nachat-youtube' },
   openGraph: {
-    title: "Как начать YouTube канал с нуля в 2026 — пошаговая инструкция",
-    description:
-      "Полная инструкция как создать YouTube канал с нуля: выбор ниши, оборудование, первые видео, продвижение. Без лишних трат.",
-    url: "https://blogerkit.ru/blog/kak-nachat-youtube",
+    title: 'Как начать YouTube канал с нуля в 2025 — пошаговая инструкция',
+    description: 'Полная инструкция для начинающих: ниша, оборудование, оформление, первые видео.',
+    url: 'https://blogerkit.ru/blog/kak-nachat-youtube',
   },
-};
+}
 
 export default function Article() {
   return (
     <div className="min-h-screen bg-bg">
-      <nav className="h-14 flex items-center justify-between px-6 border-b border-border">
-        <Link
-          href="/"
-          className="font-heading text-sm font-black flex items-center gap-2"
-        >
-          <div className="w-2 h-2 rounded-full bg-accent animate-pulse2" />
-          БлогерКит
+      <nav className="h-14 flex items-center justify-between px-4 sm:px-6 border-b border-border">
+        <Link href="/" className="font-heading text-sm font-black flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-accent animate-pulse2" />БлогерКит
         </Link>
-        <Link
-          href="/blog"
-          className="text-muted text-lg hover:text-white transition-colors"
-        >
-          ← Все статьи
-        </Link>
+        <Link href="/blog" className="text-muted text-sm hover:text-white transition-colors">← Все статьи</Link>
       </nav>
 
-      <article className="max-w-2xl mx-auto px-6 py-12">
-        <div className="flex items-center gap-2 text-muted text-lg mb-4">
-          <span>Старт</span>
-          <span>·</span>
-          <span>12 мин чтения</span>
-          <span>·</span>
-          <time dateTime="2026-05-10">10 мая 2026 г.</time>
+      <article className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
+        <div className="flex items-center gap-2 text-muted text-sm mb-4 flex-wrap">
+          <span>🚀 Старт</span><span>·</span><span>12 мин чтения</span><span>·</span>
+          <time dateTime="2025-01-10">Январь 2025</time>
         </div>
 
-        <h1 className="font-heading text-3xl font-black leading-tight mb-4">
-          Как начать YouTube канал с нуля в 2026 — пошаговая инструкция
-        </h1>
-        <p className="text-muted leading-relaxed mb-8">
-          Начать YouTube канал проще чем кажется. Сложнее — продолжать. Вот план
-          который реально работает.
-        </p>
+        <h1 className="font-heading text-3xl font-black leading-tight mb-4">Как начать YouTube канал с нуля в 2025 году — пошаговая инструкция</h1>
+        <p className="text-muted text-base leading-relaxed mb-8">YouTube остаётся одной из лучших платформ для старта в блогинге в 2025 году. Здесь живёт аудитория всех возрастов и интересов, есть монетизация, и контент работает годами. В этой инструкции — конкретные шаги от идеи до первых подписчиков.</p>
 
-        <div className="p-4 bg-accent/8 border border-accent/20 rounded-xl mb-8 flex items-center justify-between gap-4">
+        <div className="p-4 bg-accent/8 border border-accent/20 rounded-xl mb-8 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <div className="font-bold text-sm mb-0.5">
-              Создай первую обложку для своего канала
-            </div>
-            <div className="text-muted text-lg">БлогерКит · Бесплатно</div>
+            <div className="font-bold text-sm mb-0.5">Анализ конкурентов в твоей нише</div>
+            <div className="text-muted text-sm">Посмотри кто уже снимает на твою тему — бесплатно</div>
           </div>
-          <Link
-            href="/covers"
-            className="px-4 py-2 bg-accent text-white text-lg font-bold rounded-xl whitespace-nowrap hover:opacity-85 transition-opacity"
-          >
-            Конструктор обложек →
+          <Link href="/analyze" className="px-4 py-2 bg-accent text-white text-sm font-bold rounded-xl whitespace-nowrap hover:opacity-85 transition-opacity">
+            Анализировать →
           </Link>
         </div>
 
         <div className="text-sm leading-relaxed space-y-6">
+
           <div>
-            <h2 className="font-heading text-xl font-bold mt-8 mb-3">
-              Выбор ниши — самый важный шаг
-            </h2>
-            <p className="text-muted">
-              Ниша должна соответствовать трём критериям: тебе интересно (не
-              выгоришь), есть аудитория (люди это ищут), есть деньги
-              (рекламодатели платят). Финансы, IT, авто, здоровье — отличные
-              ниши. Слишком широкая тема ("жизнь") — плохо. Слишком узкая
-              (коллекционирование марок) — мало аудитории.
-            </p>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">Шаг 1. Выбери нишу — самое важное решение</h2>
+            <p className="text-muted mb-3">Ниша определяет всё: аудиторию, конкуренцию, скорость роста и потенциальный доход. Главная ошибка начинающих — выбирать нишу только потому что она «популярная». Популярность означает высокую конкуренцию.</p>
+            <p className="text-muted mb-3">Формула выбора ниши: пересечение трёх кругов — что тебе интересно, в чём ты разбираешься лучше большинства, и за что люди готовы платить внимание. Найди точку пересечения — это и есть твоя ниша.</p>
+            <p className="text-muted mb-3">Хорошие признаки ниши: ты можешь снимать контент на эту тему минимум год без выгорания, в нише есть аудитория которая активно ищет информацию, конкуренция существует но не доминирует 5–10 гигантских каналов.</p>
+            <p className="text-muted">Примеры перспективных нишевых тем в 2025: конкретные хобби (не «путешествия» а «бюджетные путешествия на авто»), профессиональные темы (бухгалтерия для ИП, юридические советы для малого бизнеса), локальный контент (жизнь в конкретном городе или регионе).</p>
           </div>
+
           <div>
-            <h2 className="font-heading text-xl font-bold mt-8 mb-3">
-              Минимальное оборудование для старта
-            </h2>
-            <p className="text-muted">
-              Телефон с хорошей камерой (любой флагман последних 3 лет) +
-              петличный микрофон (1000-3000 рублей). Это всё что нужно. Хороший
-              звук важнее хорошей картинки. Студийный свет (3000-8000 рублей) —
-              следующий шаг когда начнёшь расти.
-            </p>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">Шаг 2. Создай и оформи канал</h2>
+            <p className="text-muted mb-3">Зайди на youtube.com, нажми на иконку аккаунта Google, выбери «Создать канал». Если хочешь отделить канал от личного аккаунта — создай отдельный Google аккаунт специально для канала.</p>
+            <p className="text-muted mb-3">Название канала: должно быть коротким (1–3 слова), запоминающимся, и желательно отражать тематику. Проверь что такого канала ещё нет. Хорошее название легко произносить вслух и легко найти в поиске.</p>
+            <p className="text-muted mb-3">Баннер канала (2560×1440 пикселей): укажи нишу и частоту выхода видео. Например «Финансы для обычных людей · Каждую пятницу». Используй 3–4 цвета максимум, крупный читаемый шрифт.</p>
+            <p className="text-muted mb-3">Аватар (800×800 пикселей): для личного бренда — твоё фото с нейтральным фоном. Для тематического канала — логотип или иллюстрация. Аватар должен хорошо смотреться в маленьком размере — его часто показывают 30–40 пикселей.</p>
+            <p className="text-muted">Описание канала: первые 150 символов показываются в поиске. Начни с ключевой фразы («Учу инвестировать с нуля»), затем добавь расписание выхода видео и призыв подписаться.</p>
           </div>
+
           <div>
-            <h2 className="font-heading text-xl font-bold mt-8 mb-3">
-              Первые 10 видео — эксперимент
-            </h2>
-            <p className="text-muted">
-              Не жди идеального качества. Сними первые 10 видео как можно
-              быстрее. Это период обучения — ты найдёшь свой стиль, поймёшь что
-              нравится аудитории. Большинство успешных каналов стыдятся своих
-              первых видео. Это нормально.
-            </p>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">Шаг 3. Минимальное оборудование для старта</h2>
+            <p className="text-muted mb-3">Главная ошибка: откладывать старт потому что «нет нормальной камеры». YouTube алгоритм не ранжирует видео по качеству картинки. Он ранжирует по CTR и удержанию. Начни с того что есть.</p>
+            <p className="text-muted mb-3">Камера: современный смартфон (любой флагман последних 3 лет) снимает лучше чем профессиональные камеры 10-летней давности. Этого достаточно для старта. Держи смартфон горизонтально, используй штатив или положи на что-нибудь устойчивое.</p>
+            <p className="text-muted mb-3">Звук важнее картинки. Плохой звук заставляет зрителей уходить быстрее чем плохое видео. Минимальное вложение: петличный микрофон за 500–1500 рублей даёт кратно лучший звук чем встроенный микрофон телефона.</p>
+            <p className="text-muted mb-3">Свет: снимай у окна днём. Естественный свет — лучший вариант для начинающих. Если снимаешь вечером — купи кольцевую лампу (600–1500 рублей). Правило: источник света должен быть перед тобой, а не сзади.</p>
+            <p className="text-muted">Монтаж: бесплатные программы CapCut или DaVinci Resolve делают всё необходимое для YouTube. CapCut особенно прост для начинающих — есть на телефоне и на компьютере.</p>
           </div>
+
           <div>
-            <h2 className="font-heading text-xl font-bold mt-8 mb-3">
-              SEO с первого видео
-            </h2>
-            <p className="text-muted">
-              Даже без подписчиков правильная SEO-оптимизация приносит просмотры
-              из поиска. Ключевое слово в заголовке, описании и тегах. Это
-              бесплатный трафик который работает 24/7.
-            </p>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">Шаг 4. Первые 10 видео — стратегия старта</h2>
+            <p className="text-muted mb-3">Первые 10 видео — это обучение. Не жди что они наберут миллион просмотров. Цель первых видео: научиться снимать, монтировать, делать обложки и понять что заходит аудитории.</p>
+            <p className="text-muted mb-3">Структура видео которая работает: крючок в первые 30 секунд (почему зритель должен остаться), основное содержание (разбей на 3–5 чётких пункта), завершение с призывом к действию (подпишись, напиши комментарий, посмотри следующее видео).</p>
+            <p className="text-muted mb-3">Длина первых видео: 5–10 минут оптимально. Это достаточно чтобы дать ценность, и не так долго чтобы потерять зрителя. Не растягивай видео ради длины — это убивает удержание.</p>
+            <p className="text-muted">Загружай видео регулярно. Один раз в неделю в одно и то же время — лучшая стратегия. YouTube алгоритм даёт приоритет каналам с предсказуемым расписанием, а зрители привыкают ждать твои видео.</p>
           </div>
+
           <div>
-            <h2 className="font-heading text-xl font-bold mt-8 mb-3">
-              Как не выгореть в первые месяцы
-            </h2>
-            <p className="text-muted">
-              Первые 3-6 месяцев — самые сложные. Просмотров мало, рост
-              медленный. Поставь реалистичную цель: 100 подписчиков за 3 месяца.
-              Найди сообщество других блогеров для поддержки. Фокусируйся на
-              качестве контента, а не на цифрах.
-            </p>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">Шаг 5. Обложки и заголовки — твоё главное оружие</h2>
+            <p className="text-muted mb-3">CTR (кликабельность) определяется обложкой и заголовком. Это важнее качества самого видео для начала роста. Потрать на создание хорошей обложки столько же времени сколько на монтаж.</p>
+            <p className="text-muted mb-3">Правила хорошей обложки: крупное лицо с эмоцией или интригующий объект, текст из 3–5 слов который читается за секунду, контрастные цвета которые выделяются на фоне других видео, минимум деталей — максимум фокус на главном.</p>
+            <p className="text-muted mb-3">Правила хорошего заголовка: содержит ключевое слово (люди ищут это в поиске), конкретный результат или польза («Как я заработал первые 10 000 рублей»), вопрос или интрига которую хочется разгадать. Длина: 50–60 символов оптимально.</p>
+            <p className="text-muted">Создавай обложки в конструкторе — там есть шаблоны специально под YouTube с правильными размерами и соотношением сторон.</p>
           </div>
+
+          <div>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">Шаг 6. SEO для YouTube — как тебя находят через поиск</h2>
+            <p className="text-muted mb-3">YouTube — второй по размеру поисковик в мире. Многие зрители приходят на видео через поиск. Правильно заполненные метаданные увеличивают количество просмотров из поиска в 2–3 раза.</p>
+            <p className="text-muted mb-3">Заголовок видео: помести ключевое слово в первые 3–5 слов. Например: «Как инвестировать с нуля — пошаговое руководство 2025». Ключевое слово здесь — «как инвестировать с нуля».</p>
+            <p className="text-muted mb-3">Описание видео: первые 150 символов видны без раскрытия — поместите туда суть видео и ключевое слово. Затем добавь развёрнутое описание на 200–400 слов, временные метки (00:00 Вступление, 02:30 Первый шаг), и ссылки на другие видео канала.</p>
+            <p className="text-muted">Теги: добавляй 5–10 тегов — ключевое слово, его вариации, и связанные темы. Теги в 2025 году менее важны чем раньше, но всё равно помогают алгоритму понять тематику видео.</p>
+          </div>
+
+          <div>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">Частые ошибки начинающих которых стоит избежать</h2>
+            <p className="text-muted mb-3">Ждать «подходящего момента». Нет никакого подходящего момента. Первое видео всегда будет несовершенным — и это нормально. Главное начать и улучшаться с каждым следующим видео.</p>
+            <p className="text-muted mb-3">Покупать дорогое оборудование до первого видео. Сначала сними 10 видео на телефон. Если тебе это нравится и есть результат — тогда инвестируй в оборудование. Не наоборот.</p>
+            <p className="text-muted mb-3">Копировать чужой стиль. Зрители чувствуют неаутентичность. Изучай что работает у конкурентов, но оставайся собой — именно уникальность привлекает лояльную аудиторию.</p>
+            <p className="text-muted mb-3">Сдаваться после первых 20 видео. Большинство каналов которые сейчас имеют сотни тысяч подписчиков — первые полгода почти не росли. Алгоритм YouTube набирает данные о канале и начинает активно продвигать только когда видит стабильность.</p>
+            <p className="text-muted">Игнорировать аналитику. YouTube Studio — бесплатный инструмент который показывает всё: откуда приходят зрители, какие видео работают лучше, где уходит аудитория. Смотри аналитику минимум раз в неделю.</p>
+          </div>
+
         </div>
 
-        <div className="mt-10 p-6 bg-gradient-to-r from-accent/8 to-transparent border border-accent/20 rounded-2xl text-center">
-          <div className="font-heading text-lg font-black mb-2">
-            Создай первую обложку для своего канала
-          </div>
-          <p className="text-muted text-lg mb-4">БлогерКит · Бесплатно</p>
-          <Link
-            href="/covers"
-            className="inline-block px-6 py-3 bg-accent text-white font-bold text-sm rounded-xl hover:opacity-85 transition-opacity"
-          >
-            Конструктор обложек →
+        <div className="mt-10 p-5 sm:p-6 bg-gradient-to-r from-accent/8 to-transparent border border-accent/20 rounded-2xl text-center">
+          <div className="font-heading text-lg font-black mb-2">Создай обложку для первого видео</div>
+          <p className="text-muted text-sm mb-4">25+ шаблонов специально для YouTube · Бесплатно</p>
+          <Link href="/covers" className="inline-block px-6 py-3 bg-accent text-white font-bold text-sm rounded-xl hover:opacity-85 transition-opacity">
+            Создать обложку →
           </Link>
         </div>
 
         <div className="mt-10">
-          <div className="text-muted text-lg uppercase tracking-widest mb-3">
-            Читай также
-          </div>
+          <div className="text-muted text-sm uppercase tracking-widest mb-3">Читай также</div>
           <div className="flex flex-col gap-2">
-            <Link
-              href="/blog/kak-prodvigat-youtube-kanal"
-              className="flex items-center gap-2 text-sm text-muted hover:text-white transition-colors"
-            >
-              <span>📈 Как продвигать YouTube канал</span>
-              <span className="text-accent">→</span>
-            </Link>
-            <Link
-              href="/blog/algoritm-youtube-2026"
-              className="flex items-center gap-2 text-sm text-muted hover:text-white transition-colors"
-            >
-              <span>⚙️ Алгоритм YouTube 2026</span>
-              <span className="text-accent">→</span>
-            </Link>
-            <Link
-              href="/blog/kak-sdelat-oblozhku-youtube"
-              className="flex items-center gap-2 text-sm text-muted hover:text-white transition-colors"
-            >
-              <span>🎨 Как сделать кликабельную обложку</span>
-              <span className="text-accent">→</span>
-            </Link>
+            {[
+              ['/blog/algoritm-youtube-2025', 'Алгоритм YouTube 2025 — как он работает'],
+              ['/blog/kak-sdelat-oblozhku-youtube', 'Как сделать кликабельную обложку для YouTube'],
+              ['/blog/monetizaciya-youtube', 'Монетизация YouTube — когда и как подключить'],
+            ].map(([href, title]) => (
+              <Link key={href} href={href} className="text-sm text-muted hover:text-white transition-colors border border-border rounded-lg px-4 py-2.5 hover:border-white/20">
+                {title} →
+              </Link>
+            ))}
           </div>
         </div>
       </article>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Article",
-            headline:
-              "Как начать YouTube канал с нуля в 2026 — пошаговая инструкция",
-            author: { "@type": "Organization", name: "БлогерКит" },
-            publisher: {
-              "@type": "Organization",
-              name: "БлогерКит",
-              url: "https://blogerkit.ru",
-            },
-            datePublished: "2026-05-10",
-            mainEntityOfPage: "https://blogerkit.ru/blog/kak-nachat-youtube",
-          }),
-        }}
-      />
     </div>
-  );
+  )
 }

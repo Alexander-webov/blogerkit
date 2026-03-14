@@ -2,277 +2,247 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "БлогерКит — бесплатные инструменты для блогеров 2026",
+  title: "БлогерКит — инструменты для YouTube блогеров, бесплатно",
   description:
-    "Конструктор обложек YouTube, анализ конкурентов, калькулятор стоимости рекламы и советы по продвижению. Всё бесплатно для блогеров.",
+    "Анализ YouTube канала, медиакит PDF, кроп видео для Shorts, генератор заголовков. Без регистрации. Бесплатные и Pro инструменты для блогеров.",
   alternates: { canonical: "https://blogerkit.ru" },
 };
 
-const tools = [
-  {
-    icon: "🔥",
-    name: "Тренды YouTube",
-    desc: "Что набирает просмотры прямо сейчас — по 10 нишам. Обновляется каждые 2 часа.",
-    features: [
-      "Реальные данные YouTube API",
-      "10 ниш: авто, финансы, игры...",
-      "Анализ заголовков и паттернов",
-    ],
-    href: "/trends",
-    badge: "Бесплатно",
-    badgeColor: "text-green-400 bg-green-400/10 border-green-400/20",
-    gradient: "from-red-500 to-orange-400",
-  },
-  {
-    icon: "🔍",
-    name: "Анализ конкурентов",
-    desc: "Реальные данные с YouTube API. Топ видео, просмотры, лайки, паттерны заголовков.",
-    features: [
-      "Реальные данные YouTube",
-      "Паттерны топ-видео",
-      "Советы по нише",
-    ],
-    href: "/analyze",
-    badge: "29 ₽",
-    badgeColor: "text-cyan-400 bg-cyan-400/10 border-cyan-400/20",
-    gradient: "from-cyan-500 to-blue-500",
-  },
-  {
-    icon: "🤖",
-    name: "AI-генератор заголовков",
-    desc: "Claude AI придумает 8 кликабельных заголовков по теме видео с оценкой CTR.",
-    features: [
-      "8 вариантов за секунду",
-      "Оценка CTR каждого",
-      "5 стилей: вирусный, SEO, список...",
-    ],
-    href: "/titles",
-    badge: "Pro",
-    badgeColor: "text-purple-400 bg-purple-400/10 border-purple-400/20",
-    gradient: "from-purple-500 to-pink-500",
-  },
+const proTools = [
   {
     icon: "📡",
     name: "Анализ своего канала",
-    desc: "Вставь ссылку на канал — получи полную статистику и персональные советы.",
-    features: [
-      "Просмотры, вовлечённость, рост",
-      "Лучшее и худшее видео",
-      "AI-советы по улучшению",
-    ],
+    desc: "Статистика, топ видео, AI-советы по развитию. Без регистрации — вставь ссылку и получи результат.",
     href: "/channel-analysis",
-    badge: "Pro",
-    badgeColor: "text-red-400 bg-red-400/10 border-red-400/20",
-    gradient: "from-red-500 to-pink-500",
+    price: "49 ₽",
+    features: ["Подписчики и просмотры", "Топ-10 видео", "AI-советы от Claude"],
   },
   {
     icon: "📄",
     name: "Медиакит PDF",
-    desc: "Профессиональный медиакит для рекламодателей за 5 минут — скачай PDF.",
-    features: [
-      "Данные, цены, контакты",
-      "Темный дизайн с брендингом",
-      "Скачивание в 1 клик",
-    ],
+    desc: "Профессиональный документ для рекламодателей за 5 минут. Статистика, цены, контакты.",
     href: "/mediakit",
-    badge: "Pro",
-    badgeColor: "text-yellow-400 bg-yellow-400/10 border-yellow-400/20",
-    gradient: "from-yellow-400 to-orange-400",
+    price: "149 ₽",
+    features: ["Статистика канала", "Форматы и цены", "Скачать PDF"],
+  },
+  {
+    icon: "✂️",
+    name: "Видеоредактор Shorts",
+    desc: "Кроп 16:9 → 9:16, нарезка, субтитры, фильтры. В браузере без загрузки на сервер.",
+    href: "/crop",
+    price: "Pro 149 ₽",
+    features: ["Кроп бесплатно", "Нарезка на части", "AI-субтитры"],
+  },
+  {
+    icon: "🤖",
+    name: "AI-заголовки",
+    desc: "8 кликабельных вариантов за секунду с оценкой CTR. Вирусный, SEO, список — 5 стилей.",
+    href: "/titles",
+    price: "Бесплатно",
+    features: ["8 вариантов сразу", "Оценка CTR", "5 стилей"],
+    free: true,
+  },
+];
+
+const freeTools = [
+  {
+    icon: "🔥",
+    name: "Тренды YouTube",
+    desc: "Что набирает просмотры прямо сейчас",
+    href: "/trends",
+  },
+  {
+    icon: "🔍",
+    name: "Анализ конкурентов",
+    desc: "Топ видео и паттерны любого канала",
+    href: "/analyze",
   },
   {
     icon: "🎨",
     name: "Конструктор обложек",
-    desc: "25+ шаблонов для YouTube, TikTok, Instagram. Редактор прямо в браузере.",
-    features: ["YouTube, TikTok, Instagram", "25+ шаблонов", "Бесплатно"],
+    desc: "25+ шаблонов для YouTube и соцсетей",
     href: "/covers",
-    badge: "Бесплатно",
-    badgeColor: "text-green-400 bg-green-400/10 border-green-400/20",
-    gradient: "from-pink-500 to-orange-400",
   },
   {
     icon: "💰",
     name: "Калькулятор рекламы",
-    desc: "Узнай сколько стоит реклама на твоём канале с учётом ниши и платформы.",
-    features: [
-      "YouTube, TikTok, Telegram, VK",
-      "Учитывает нишу и охват",
-      "Диапазон min–max",
-    ],
+    desc: "Сколько стоит реклама на твоём канале",
     href: "/calculator",
-    badge: "Бесплатно",
-    badgeColor: "text-green-400 bg-green-400/10 border-green-400/20",
-    gradient: "from-orange-400 to-yellow-400",
   },
   {
-    icon: "✂️",
-    name: "Кроп для Shorts",
-    desc: "Загрузи горизонтальное видео — скачай вертикальное 9:16 для Shorts и TikTok.",
-    features: [
-      "16:9 → 9:16, 1:1, 4:5",
-      "Прямо в браузере",
-      "Без установки программ",
-    ],
-    href: "/crop",
-    badge: "Бесплатно",
-    badgeColor: "text-green-400 bg-green-400/10 border-green-400/20",
-    gradient: "from-purple-500 to-pink-500",
+    icon: "💡",
+    name: "Советы блогера",
+    desc: "Алгоритм, монетизация, рост канала",
+    href: "/tips",
   },
   {
     icon: "📬",
-    name: "Советы на почту",
-    desc: "Еженедельная рассылка: тренды, алгоритм YouTube, монетизация — только полезное.",
-    features: ["Каждый вторник", "Персонализация по нише", "Отписка в 1 клик"],
+    name: "Рассылка",
+    desc: "Тренды и советы каждую неделю",
     href: "/subscribe",
-    badge: "Бесплатно",
-    badgeColor: "text-green-400 bg-green-400/10 border-green-400/20",
-    gradient: "from-green-400 to-teal-400",
   },
 ];
 
 const faqs = [
   {
-    q: "Сколько стоит БлогерКит?",
-    a: "Базовые инструменты бесплатны: тренды, обложки, калькулятор, кроп видео, советы, рассылка. Pro-подписка (149 ₽/мес) открывает: AI-генератор заголовков, анализ своего канала, медиакит PDF и безлимитный анализ конкурентов.",
-  },
-  {
-    q: "Какие данные используются в анализе?",
-    a: "Мы используем официальный YouTube Data API v3. Все данные реальные и актуальные — просмотры, лайки, комментарии.",
-  },
-  {
     q: "Нужно ли регистрироваться?",
-    a: "Нет. Все инструменты работают без регистрации прямо в браузере. Pro активируется разовым платежом.",
+    a: "Нет. Все инструменты работают без регистрации прямо в браузере. Pro активируется разовым платежом через ЮКасса.",
   },
   {
-    q: "Как подключить Pro?",
-    a: 'Нажми "Pro" в любом платном инструменте. Оплата через Prodamus — карта или СБП. Без автосписания, отмена в любой момент.',
+    q: "Сколько стоит Pro?",
+    a: "Разовые платежи — платишь только за нужный инструмент: анализ канала 49 ₽, медиакит PDF 149 ₽, видеоредактор Pro 149 ₽. Без подписок и автосписаний.",
   },
   {
-    q: "Работает ли калькулятор для Telegram?",
-    a: "Да, калькулятор учитывает специфику каждой платформы: YouTube, TikTok, Telegram, ВКонтакте и Instagram с разными коэффициентами.",
+    q: "Откуда берутся данные?",
+    a: "Официальный YouTube Data API v3 — те же данные что в YouTube Studio. Актуальные и достоверные.",
+  },
+  {
+    q: "Видео загружается на сервер?",
+    a: "Нет. Видеоредактор работает локально в браузере через Canvas API. Никакие файлы никуда не отправляются.",
   },
 ];
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="min-h-screen bg-bg text-white">
       {/* NAV */}
-      <nav className="sticky top-0 z-50 h-14 flex items-center justify-between px-6 bg-bg/95 backdrop-blur border-b border-border">
-        <div className="font-heading text-xl font-black flex items-center gap-2">
+      <nav className="sticky top-0 z-50 h-14 flex items-center justify-between px-4 sm:px-6 bg-bg/95 backdrop-blur border-b border-border">
+        <div className="font-heading text-sm font-black flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-accent animate-pulse2" />
           БлогерКит
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link
             href="/trends"
-            className="text-lg text-muted hover:text-white transition-colors"
+            className="text-sm text-muted hover:text-white transition-colors hidden sm:block"
           >
             Тренды
           </Link>
           <Link
-            href="/analyze"
-            className="text-lg text-muted hover:text-white transition-colors"
-          >
-            Анализ
-          </Link>
-          <Link
             href="/covers"
-            className="text-lg text-muted hover:text-white transition-colors"
+            className="text-sm text-muted hover:text-white transition-colors hidden sm:block"
           >
             Обложки
           </Link>
           <Link
             href="/blog"
-            className="text-lg text-muted hover:text-white transition-colors"
+            className="text-sm text-muted hover:text-white transition-colors hidden md:block"
           >
             Блог
           </Link>
           <Link
-            href="/analyze"
-            className="px-3 py-1.5 bg-accent text-white text-lg font-bold rounded-lg hover:opacity-85 transition-opacity"
+            href="/channel-analysis"
+            className="px-3 py-1.5 bg-accent text-white text-sm font-bold rounded-lg hover:opacity-90 transition-opacity"
           >
-            Анализ →
+            Попробовать →
           </Link>
         </div>
       </nav>
 
       {/* HERO */}
-      <section className="relative overflow-hidden pt-20 pb-16 px-6 text-center">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(255,61,90,0.08)_0%,transparent_70%)]" />
-        <div className="relative max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-lg text-muted mb-6">
-            🚀 Актуально на 2026 год
-          </div>
-          <h1 className="font-heading text-4xl md:text-5xl font-black tracking-tight leading-tight mb-4">
-            Все инструменты блогера
-            <br />
-            <span className="bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent">
-              в одном месте
-            </span>
-          </h1>
-          <p className="text-muted text-sm leading-relaxed max-w-lg mx-auto mb-8">
-            Конструктор обложек, анализ конкурентов, калькулятор рекламы и
-            советы по продвижению. Бесплатно для YouTube, TikTok, ВКонтакте и
-            Telegram.
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link
-              href="/analyze"
-              className="px-6 py-3 bg-accent text-white font-bold text-sm rounded-xl hover:opacity-85 transition-all hover:-translate-y-0.5"
-            >
-              Анализировать конкурентов →
-            </Link>
-            <Link
-              href="/covers"
-              className="px-6 py-3 border border-border text-sm rounded-xl hover:border-white/20 transition-colors"
-            >
-              Создать обложку
-            </Link>
-          </div>
+      <section className="pt-16 sm:pt-20 pb-12 sm:pb-14 px-4 sm:px-6 text-center max-w-3xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-sm text-muted mb-6 sm:mb-8">
+          🚀 Работает без регистрации · Данные YouTube API
+        </div>
+        <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight mb-4 sm:mb-5">
+          Инструменты для
+          <br />
+          <span className="text-accent">YouTube блогеров</span>
+        </h1>
+        <p className="text-muted text-base sm:text-lg leading-relaxed max-w-xl mx-auto mb-6 sm:mb-8">
+          Анализ канала, медиакит для рекламодателей, кроп видео для Shorts и
+          AI-заголовки. Бесплатно и без регистрации.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Link
+            href="/covers"
+            className="px-6 py-3 bg-accent text-white font-bold text-sm rounded-xl hover:opacity-90 transition-opacity text-center"
+          >
+            Создать Обложку →
+          </Link>
+          <Link
+            href="/mediakit"
+            className="px-6 py-3 bg-surface border border-border text-white text-sm font-medium rounded-xl hover:border-white/30 transition-colors text-center"
+          >
+            Создать медиакит
+          </Link>
         </div>
       </section>
+      {/* FREE TOOLS */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+        <div className="flex items-center gap-3 mb-5 sm:mb-6">
+          <h2 className="font-heading text-lg font-black">
+            Бесплатные инструменты
+          </h2>
+          <span className="text-sm px-2 py-0.5 bg-green-400/10 text-green-400 rounded border border-green-400/20 font-medium">
+            без регистрации
+          </span>
+        </div>
 
-      {/* TOOLS GRID */}
-      <section className="max-w-6xl mx-auto px-6 pb-20" id="tools">
-        <h2 className="font-heading text-xl font-bold text-center mb-2">
-          Инструменты
-        </h2>
-        <p className="text-muted text-sm text-center mb-10">
-          9 инструментов · бесплатно и Pro · без регистрации
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tools.map((tool) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {freeTools.map((tool) => (
             <Link
               key={tool.href}
               href={tool.href}
-              className="group block bg-card border border-border rounded-2xl p-5 hover:border-white/15 transition-all hover:-translate-y-1"
+              className="group bg-surface border border-border rounded-xl p-4 hover:border-white/20 hover:bg-white/5 transition-all block"
             >
-              <div
-                className={`w-full h-0.5 rounded-full bg-gradient-to-r ${tool.gradient} mb-4 opacity-70 group-hover:opacity-100 transition-opacity`}
-              />
-              <div className="text-3xl mb-3">{tool.icon}</div>
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="font-bold text-sm">{tool.name}</h3>
+              <div className="text-xl mb-2">{tool.icon}</div>
+              <h3 className="font-bold text-sm text-white mb-1">{tool.name}</h3>
+              <p className="text-muted text-sm leading-relaxed">{tool.desc}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+      {/* PRO TOOLS */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+        <div className="flex items-center gap-3 mb-5 sm:mb-6">
+          <h2 className="font-heading text-lg font-black">
+            Основные инструменты
+          </h2>
+          <span className="text-sm px-2 py-0.5 bg-yellow-400/10 text-yellow-400 rounded border border-yellow-400/20 font-medium">
+            платные и Pro
+          </span>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          {proTools.map((tool) => (
+            <Link
+              key={tool.href}
+              href={tool.href}
+              className="group bg-surface border border-border rounded-2xl p-5 sm:p-6 hover:border-white/20 hover:bg-white/5 transition-all block"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{tool.icon}</span>
+                  <h3 className="font-bold text-base text-white">
+                    {tool.name}
+                  </h3>
+                </div>
                 <span
-                  className={`text-lg px-2 py-0.5 rounded border font-bold ${tool.badgeColor}`}
+                  className={`text-sm px-2.5 py-1 rounded-lg font-bold whitespace-nowrap ${
+                    tool.free
+                      ? "bg-green-400/10 text-green-400"
+                      : "bg-yellow-400/10 text-yellow-400"
+                  }`}
                 >
-                  {tool.badge}
+                  {tool.price}
                 </span>
               </div>
-              <p className="text-muted text-lg leading-relaxed mb-3">
+              <p className="text-muted text-sm leading-relaxed mb-4">
                 {tool.desc}
               </p>
-              <ul className="flex flex-col gap-1">
+              <ul className="flex flex-col gap-1.5 mb-4">
                 {tool.features.map((f) => (
                   <li
                     key={f}
-                    className="text-lg text-muted flex items-center gap-1.5"
+                    className="text-sm text-muted flex items-center gap-2"
                   >
-                    <span className="text-green-400">✓</span> {f}
+                    <span className="w-1 h-1 rounded-full bg-border flex-shrink-0" />
+                    {f}
                   </li>
                 ))}
               </ul>
-              <div className="mt-4 text-lg text-accent font-bold group-hover:underline">
+              <div className="text-sm text-accent font-bold group-hover:underline">
                 Открыть →
               </div>
             </Link>
@@ -280,88 +250,81 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SEO CONTENT — важно для Google */}
-      <section className="max-w-4xl mx-auto px-6 pb-20">
-        <h2 className="font-heading text-xl font-bold text-center mb-10">
-          Для кого БлогерКит?
-        </h2>
-        <div className="grid md:grid-cols-3 gap-6 text-center">
+      {/* WHY NO REG */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+        <div className="bg-surface border border-border rounded-2xl p-6 sm:p-8 grid sm:grid-cols-3 gap-6 sm:gap-8 text-center">
           {[
             {
-              icon: "🎬",
-              title: "YouTube блогеры",
-              desc: "Анализируй конкурентов, создавай кликабельные обложки и публикуй в лучшее время",
+              icon: "⚡",
+              title: "Без регистрации",
+              desc: "Открыл — сразу работает. Никаких аккаунтов, паролей и подтверждений почты.",
             },
             {
-              icon: "🎵",
-              title: "TikTok авторы",
-              desc: "Советы по алгоритму, кроп видео в формат 9:16 и анализ трендовых ниш",
+              icon: "🔒",
+              title: "Видео не уходит на сервер",
+              desc: "Видеоредактор обрабатывает файлы прямо в браузере. Твои данные остаются у тебя.",
             },
             {
-              icon: "✈️",
-              title: "Telegram каналы",
-              desc: "Рассчитай стоимость рекламы и узнай как правильно расти в Telegram в 2026",
+              icon: "📊",
+              title: "Официальные данные YouTube",
+              desc: "Используем YouTube Data API v3 — те же данные что в YouTube Studio.",
             },
           ].map((item) => (
-            <div
-              key={item.title}
-              className="bg-card border border-border rounded-xl p-5"
-            >
-              <div className="text-3xl mb-3">{item.icon}</div>
-              <h3 className="font-bold text-sm mb-2">{item.title}</h3>
-              <p className="text-muted text-lg leading-relaxed">{item.desc}</p>
+            <div key={item.title}>
+              <div className="text-2xl mb-3">{item.icon}</div>
+              <h3 className="font-bold text-base text-white mb-2">
+                {item.title}
+              </h3>
+              <p className="text-muted text-sm leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* FAQ — важно для SEO */}
-      <section className="max-w-2xl mx-auto px-6 pb-24">
-        <h2 className="font-heading text-xl font-bold text-center mb-8">
+      {/* FAQ */}
+      <section className="max-w-2xl mx-auto px-4 sm:px-6 pb-16 sm:pb-20">
+        <h2 className="font-heading text-xl font-black text-center mb-6 sm:mb-8">
           Частые вопросы
         </h2>
         <div className="flex flex-col gap-3">
           {faqs.map((faq) => (
             <div
               key={faq.q}
-              className="bg-card border border-border rounded-xl p-4"
+              className="bg-surface border border-border rounded-xl p-4 sm:p-5"
             >
-              <h3 className="font-bold text-sm mb-2">{faq.q}</h3>
-              <p className="text-muted text-lg leading-relaxed">{faq.a}</p>
+              <h3 className="font-bold text-base text-white mb-2">{faq.q}</h3>
+              <p className="text-muted text-sm leading-relaxed">{faq.a}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-border px-6 py-8 text-center">
+      <footer className="border-t border-border bg-surface px-4 sm:px-6 py-8 sm:py-10 text-center">
         <div className="font-heading text-sm font-black mb-2">БлогерКит</div>
-        <p className="text-muted text-lg mb-4">
-          Инструменты для блогеров · Бесплатно · 2026
+        <p className="text-muted text-sm mb-5">
+          Инструменты для YouTube блогеров · 2025
         </p>
-        <div className="flex justify-center gap-6 text-lg text-muted">
-          <Link href="/covers" className="hover:text-white transition-colors">
-            Обложки
-          </Link>
-          <Link href="/analyze" className="hover:text-white transition-colors">
-            Анализ
-          </Link>
-          <Link
-            href="/calculator"
-            className="hover:text-white transition-colors"
-          >
-            Калькулятор
-          </Link>
-          <Link href="/tips" className="hover:text-white transition-colors">
-            Советы
-          </Link>
-          <Link href="/crop" className="hover:text-white transition-colors">
-            Кроп
-          </Link>
+        <div className="flex justify-center gap-4 sm:gap-6 text-sm text-muted flex-wrap">
+          {[
+            ["/channel-analysis", "Анализ канала"],
+            ["/mediakit", "Медиакит"],
+            ["/crop", "Видеоредактор"],
+            ["/titles", "AI-заголовки"],
+            ["/covers", "Обложки"],
+            ["/blog", "Блог"],
+          ].map(([href, label]) => (
+            <Link
+              key={href}
+              href={href}
+              className="hover:text-white transition-colors"
+            >
+              {label}
+            </Link>
+          ))}
         </div>
       </footer>
 
-      {/* JSON-LD structured data для Google */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -371,7 +334,7 @@ export default function HomePage() {
             name: "БлогерКит",
             url: "https://blogerkit.ru",
             description:
-              "Бесплатные инструменты для блогеров YouTube, TikTok, Telegram",
+              "Бесплатные инструменты для YouTube блогеров без регистрации",
             potentialAction: {
               "@type": "SearchAction",
               target: "https://blogerkit.ru/analyze?q={search_term_string}",

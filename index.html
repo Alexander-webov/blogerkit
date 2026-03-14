@@ -1,24 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>БлогерКит — Все инструменты блогера в одном месте</title>
-  <meta name="description"
-    content="Обложки для видео, нарезка на Shorts, автопостинг во все соцсети, генерация описаний, поиск рекламодателей и оценка стоимости рекламы на канале." />
+  <meta name="description" content="Обложки для видео, нарезка на Shorts, автопостинг во все соцсети, генерация описаний, поиск рекламодателей и оценка стоимости рекламы на канале." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg: #060608;
@@ -32,9 +22,7 @@
       --card: #0b0b10;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -44,14 +32,10 @@
     }
 
     /* CURSOR */
-    * {
-      cursor: none;
-    }
-
+    * { cursor: none; }
     .cursor {
       position: fixed;
-      width: 10px;
-      height: 10px;
+      width: 10px; height: 10px;
       background: var(--accent);
       border-radius: 50%;
       pointer-events: none;
@@ -59,12 +43,10 @@
       transition: transform 0.1s;
       mix-blend-mode: screen;
     }
-
     .cursor-ring {
       position: fixed;
-      width: 36px;
-      height: 36px;
-      border: 1px solid rgba(255, 61, 90, 0.4);
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,61,90,0.4);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9998;
@@ -74,15 +56,13 @@
     /* NAV */
     nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 100;
       padding: 1rem 2.5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(6, 6, 8, 0.9);
+      background: rgba(6,6,8,0.9);
       backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
     }
@@ -98,8 +78,7 @@
     }
 
     .logo-dot {
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       background: var(--accent);
       border-radius: 50%;
       animation: pulse 2s ease infinite;
@@ -118,9 +97,7 @@
       transition: color 0.2s;
     }
 
-    .nav-links a:hover {
-      color: var(--text);
-    }
+    .nav-links a:hover { color: var(--text); }
 
     .nav-cta {
       padding: 0.5rem 1.3rem;
@@ -146,54 +123,44 @@
     .hero-grid {
       position: absolute;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(255, 61, 90, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 61, 90, 0.04) 1px, transparent 1px);
+      background-image: 
+        linear-gradient(rgba(255,61,90,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,61,90,0.04) 1px, transparent 1px);
       background-size: 60px 60px;
       mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
     }
 
     .hero-orb1 {
       position: absolute;
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(255, 61, 90, 0.08) 0%, transparent 60%);
-      top: 50%;
-      left: 50%;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(255,61,90,0.08) 0%, transparent 60%);
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
     }
 
     .hero-orb2 {
       position: absolute;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(255, 149, 0, 0.07) 0%, transparent 60%);
-      top: 20%;
-      right: 5%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(255,149,0,0.07) 0%, transparent 60%);
+      top: 20%; right: 5%;
     }
 
     .hero-orb3 {
       position: absolute;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(0, 212, 255, 0.06) 0%, transparent 60%);
-      bottom: 10%;
-      left: 5%;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 60%);
+      bottom: 10%; left: 5%;
     }
 
-    .hero-inner {
-      position: relative;
-      z-index: 1;
-      max-width: 800px;
-    }
+    .hero-inner { position: relative; z-index: 1; max-width: 800px; }
 
     .live-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       padding: 0.4rem 1rem;
-      background: rgba(255, 61, 90, 0.1);
-      border: 1px solid rgba(255, 61, 90, 0.25);
+      background: rgba(255,61,90,0.1);
+      border: 1px solid rgba(255,61,90,0.25);
       border-radius: 100px;
       font-size: 0.72rem;
       color: #ff8099;
@@ -202,8 +169,7 @@
     }
 
     .live-dot {
-      width: 6px;
-      height: 6px;
+      width: 6px; height: 6px;
       background: var(--accent);
       border-radius: 50%;
       animation: pulse 1.5s ease infinite;
@@ -251,12 +217,12 @@
       font-size: 0.9rem;
       text-decoration: none;
       transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 0 30px rgba(255, 61, 90, 0.3);
+      box-shadow: 0 0 30px rgba(255,61,90,0.3);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 50px rgba(255, 61, 90, 0.5);
+      box-shadow: 0 0 50px rgba(255,61,90,0.5);
     }
 
     .btn-ghost {
@@ -270,9 +236,7 @@
       transition: border-color 0.2s;
     }
 
-    .btn-ghost:hover {
-      border-color: var(--muted);
-    }
+    .btn-ghost:hover { border-color: var(--muted); }
 
     /* SOCIAL LOGOS */
     .socials-row {
@@ -350,13 +314,8 @@
     }
 
     @media (max-width: 700px) {
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .feat-big {
-        grid-column: 1 !important;
-      }
+      .features-grid { grid-template-columns: 1fr; }
+      .feat-big { grid-column: 1 !important; }
     }
 
     .feat-card {
@@ -370,7 +329,7 @@
     }
 
     .feat-card:hover {
-      border-color: rgba(255, 61, 90, 0.3);
+      border-color: rgba(255,61,90,0.3);
       transform: translateY(-3px);
     }
 
@@ -385,18 +344,14 @@
     .feat-card::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 61, 90, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,61,90,0.4), transparent);
       opacity: 0;
       transition: opacity 0.2s;
     }
 
-    .feat-card:hover::after {
-      opacity: 1;
-    }
+    .feat-card:hover::after { opacity: 1; }
 
     .feat-icon {
       font-size: 2rem;
@@ -460,9 +415,7 @@
 
     .mock-canvas-bar {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       height: 3px;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
     }
@@ -475,8 +428,8 @@
     .mock-btn {
       flex: 1;
       padding: 0.4rem;
-      background: rgba(255, 61, 90, 0.15);
-      border: 1px solid rgba(255, 61, 90, 0.2);
+      background: rgba(255,61,90,0.15);
+      border: 1px solid rgba(255,61,90,0.2);
       border-radius: 6px;
       font-size: 0.65rem;
       color: #ff8099;
@@ -500,24 +453,20 @@
     }
 
     .tool-card:hover {
-      border-color: rgba(255, 61, 90, 0.3);
+      border-color: rgba(255,61,90,0.3);
       transform: translateY(-2px);
     }
 
     .tool-num {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
+      top: 1rem; right: 1rem;
       font-family: 'Clash Display', sans-serif;
       font-size: 0.65rem;
       color: var(--border);
       font-weight: 700;
     }
 
-    .tool-icon {
-      font-size: 1.6rem;
-      margin-bottom: 0.8rem;
-    }
+    .tool-icon { font-size: 1.6rem; margin-bottom: 0.8rem; }
 
     .tool-name {
       font-family: 'Clash Display', sans-serif;
@@ -542,20 +491,9 @@
       font-weight: 600;
     }
 
-    .tag-free {
-      background: rgba(0, 212, 255, 0.1);
-      color: #67e8f9;
-    }
-
-    .tag-pro {
-      background: rgba(255, 61, 90, 0.1);
-      color: #ff8099;
-    }
-
-    .tag-new {
-      background: rgba(255, 149, 0, 0.1);
-      color: #fbbf24;
-    }
+    .tag-free { background: rgba(0,212,255,0.1); color: #67e8f9; }
+    .tag-pro { background: rgba(255,61,90,0.1); color: #ff8099; }
+    .tag-new { background: rgba(255,149,0,0.1); color: #fbbf24; }
 
     /* PRICING */
     .pricing-grid {
@@ -565,9 +503,7 @@
     }
 
     @media (max-width: 700px) {
-      .pricing-grid {
-        grid-template-columns: 1fr;
-      }
+      .pricing-grid { grid-template-columns: 1fr; }
     }
 
     .price-card {
@@ -579,19 +515,16 @@
       transition: transform 0.2s;
     }
 
-    .price-card:hover {
-      transform: translateY(-3px);
-    }
+    .price-card:hover { transform: translateY(-3px); }
 
     .price-card.popular {
       border-color: var(--accent);
-      background: linear-gradient(180deg, rgba(255, 61, 90, 0.05) 0%, var(--card) 100%);
+      background: linear-gradient(180deg, rgba(255,61,90,0.05) 0%, var(--card) 100%);
     }
 
     .popular-badge {
       position: absolute;
-      top: -12px;
-      left: 50%;
+      top: -12px; left: 50%;
       transform: translateX(-50%);
       padding: 0.2rem 0.9rem;
       background: var(--accent);
@@ -639,23 +572,10 @@
       gap: 0.5rem;
     }
 
-    .price-features li:last-child {
-      border-bottom: none;
-    }
-
-    .price-features li.on {
-      color: var(--text);
-    }
-
-    .check {
-      color: var(--accent);
-      font-size: 0.8rem;
-    }
-
-    .cross {
-      color: var(--muted);
-      font-size: 0.8rem;
-    }
+    .price-features li:last-child { border-bottom: none; }
+    .price-features li.on { color: var(--text); }
+    .check { color: var(--accent); font-size: 0.8rem; }
+    .cross { color: var(--muted); font-size: 0.8rem; }
 
     .btn-plan {
       display: block;
@@ -671,21 +591,17 @@
     .btn-plan-primary {
       background: var(--accent);
       color: white;
-      box-shadow: 0 0 20px rgba(255, 61, 90, 0.3);
+      box-shadow: 0 0 20px rgba(255,61,90,0.3);
     }
 
-    .btn-plan-primary:hover {
-      box-shadow: 0 0 40px rgba(255, 61, 90, 0.5);
-    }
+    .btn-plan-primary:hover { box-shadow: 0 0 40px rgba(255,61,90,0.5); }
 
     .btn-plan-ghost {
       border: 1px solid var(--border);
       color: var(--text);
     }
 
-    .btn-plan-ghost:hover {
-      border-color: var(--muted);
-    }
+    .btn-plan-ghost:hover { border-color: var(--muted); }
 
     /* CALCULATOR */
     .calc-section {
@@ -715,11 +631,7 @@
       margin-bottom: 1rem;
     }
 
-    @media (max-width: 600px) {
-      .calc-row {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 600px) { .calc-row { grid-template-columns: 1fr; } }
 
     .calc-field label {
       display: block;
@@ -743,22 +655,18 @@
     }
 
     .calc-field select:focus,
-    .calc-field input:focus {
-      border-color: var(--accent);
-    }
+    .calc-field input:focus { border-color: var(--accent); }
 
     .calc-result {
-      background: linear-gradient(135deg, rgba(255, 61, 90, 0.1), rgba(255, 149, 0, 0.08));
-      border: 1px solid rgba(255, 61, 90, 0.2);
+      background: linear-gradient(135deg, rgba(255,61,90,0.1), rgba(255,149,0,0.08));
+      border: 1px solid rgba(255,61,90,0.2);
       border-radius: 14px;
       padding: 1.5rem;
       margin-top: 1rem;
       display: none;
     }
 
-    .calc-result.show {
-      display: block;
-    }
+    .calc-result.show { display: block; }
 
     .calc-result-title {
       font-size: 0.75rem;
@@ -776,11 +684,7 @@
       letter-spacing: -0.03em;
     }
 
-    .calc-price-sub {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 0.3rem;
-    }
+    .calc-price-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; }
 
     .btn-calc {
       width: 100%;
@@ -796,9 +700,7 @@
       transition: opacity 0.2s;
     }
 
-    .btn-calc:hover {
-      opacity: 0.85;
-    }
+    .btn-calc:hover { opacity: 0.85; }
 
     /* CTA */
     .cta-section {
@@ -812,7 +714,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255, 61, 90, 0.07) 0%, transparent 70%);
+      background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255,61,90,0.07) 0%, transparent 70%);
     }
 
     .cta-section h2 {
@@ -842,394 +744,364 @@
     }
 
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-
-      50% {
-        opacity: 0.5;
-        transform: scale(0.8);
-      }
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
     }
   </style>
 </head>
-
 <body>
 
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-  <nav>
-    <div class="logo">
-      <div class="logo-dot"></div>
-      БлогерКит
-    </div>
-    <div class="nav-links">
-      <a href="#tools">Инструменты</a>
-      <a href="#calc">Калькулятор</a>
-      <a href="#pricing">Цены</a>
-      <a href="#" class="nav-cta">Попробовать бесплатно</a>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-orb1"></div>
-    <div class="hero-orb2"></div>
-    <div class="hero-orb3"></div>
-    <div class="hero-inner">
-      <div class="live-badge">
-        <div class="live-dot"></div>
-        Запущен бета-доступ — первые 100 пользователей бесплатно
-      </div>
-      <h1>Все инструменты<br><span class="h1-line2">блогера</span><br>в одном месте</h1>
-      <p class="hero-sub">Обложки, Shorts, автопостинг, AI описания, поиск рекламодателей и оценка стоимости рекламы.
-        Перестань тратить время — начни расти.</p>
-      <div class="hero-btns">
-        <a href="#" class="btn-primary">Начать бесплатно →</a>
-        <a href="#tools" class="btn-ghost">Смотреть инструменты</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SOCIALS -->
-  <div class="socials-row">
-    <span class="socials-label">Работает с:</span>
-    <div class="social-pill">▶️ YouTube</div>
-    <div class="social-pill">🎵 TikTok</div>
-    <div class="social-pill">🔵 ВКонтакте</div>
-    <div class="social-pill">✈️ Telegram</div>
-    <div class="social-pill">📸 Instagram</div>
+<nav>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    БлогерКит
   </div>
+  <div class="nav-links">
+    <a href="#tools">Инструменты</a>
+    <a href="#calc">Калькулятор</a>
+    <a href="#pricing">Цены</a>
+    <a href="#" class="nav-cta">Попробовать бесплатно</a>
+  </div>
+</nav>
 
-  <!-- MAIN FEATURES -->
-  <section class="section">
-    <div class="section-label">Возможности</div>
-    <h2 class="section-title">Один сервис вместо десяти</h2>
-    <p class="section-sub">Всё что нужно блогеру — от создания обложки до поиска рекламодателя.</p>
-
-    <div class="features-grid">
-
-      <!-- BIG CARD: Cover maker -->
-      <div class="feat-card feat-big">
-        <div>
-          <span class="feat-icon">🎨</span>
-          <div class="feat-title">Конструктор обложек</div>
-          <p class="feat-desc">Делай профессиональные обложки для видео ВКонтакте и YouTube за 2 минуты. Готовые
-            шаблоны, загрузка своих фото, текст и эффекты. Никакого Photoshop — всё в браузере.</p>
-        </div>
-        <div class="mock-cover">
-          <div class="mock-title">Предпросмотр обложки</div>
-          <div class="mock-canvas">
-            <div class="mock-canvas-text">
-              <div style="font-size:0.9rem; margin-bottom:0.3rem">ТОП 10 ЛАЙФХАКОВ</div>
-              <div style="font-size:0.55rem; color:rgba(255,255,255,0.5)">которые изменят твою жизнь</div>
-            </div>
-            <div class="mock-canvas-bar"></div>
-          </div>
-          <div class="mock-row">
-            <div class="mock-btn">📐 Шаблоны</div>
-            <div class="mock-btn">🎨 Стили</div>
-            <div class="mock-btn">⬇️ Скачать</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="feat-card">
-        <span class="feat-icon">✂️</span>
-        <div class="feat-title">Нарезка на Shorts</div>
-        <p class="feat-desc">Загружаешь длинное видео — AI сам находит лучшие моменты и нарезает на вертикальные Shorts
-          для TikTok, YouTube и Reels. Субтитры генерируются автоматически.</p>
-      </div>
-
-      <div class="feat-card">
-        <span class="feat-icon">🚀</span>
-        <div class="feat-title">Автопостинг во все соцсети</div>
-        <p class="feat-desc">Залей видео один раз — оно автоматически публикуется на YouTube, ВКонтакте, TikTok и
-          Telegram в нужное время. Больше не нужно делать это вручную.</p>
-      </div>
-
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb1"></div>
+  <div class="hero-orb2"></div>
+  <div class="hero-orb3"></div>
+  <div class="hero-inner">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      Запущен бета-доступ — первые 100 пользователей бесплатно
     </div>
-  </section>
+    <h1>Все инструменты<br><span class="h1-line2">блогера</span><br>в одном месте</h1>
+    <p class="hero-sub">Обложки, Shorts, автопостинг, AI описания, поиск рекламодателей и оценка стоимости рекламы. Перестань тратить время — начни расти.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-primary">Начать бесплатно →</a>
+      <a href="#tools" class="btn-ghost">Смотреть инструменты</a>
+    </div>
+  </div>
+</section>
 
-  <!-- TOOLS -->
-  <section class="section" id="tools" style="padding-top:0">
-    <div class="section-label">Все инструменты</div>
-    <h2 class="section-title">8 инструментов для роста</h2>
-    <p class="section-sub">Всё что тебе нужно чтобы развивать канал быстрее.</p>
+<!-- SOCIALS -->
+<div class="socials-row">
+  <span class="socials-label">Работает с:</span>
+  <div class="social-pill">▶️ YouTube</div>
+  <div class="social-pill">🎵 TikTok</div>
+  <div class="social-pill">🔵 ВКонтакте</div>
+  <div class="social-pill">✈️ Telegram</div>
+  <div class="social-pill">📸 Instagram</div>
+</div>
 
-    <div class="tools-grid">
-      <div class="tool-card">
-        <div class="tool-num">01</div>
-        <div class="tool-icon">🎨</div>
-        <div class="tool-name">Обложки для видео</div>
-        <div class="tool-desc">Конструктор обложек для YouTube и ВКонтакте. Шаблоны, кастомизация, скачивание в нужном
-          формате.</div>
-        <span class="tool-tag tag-free">Бесплатно</span>
+<!-- MAIN FEATURES -->
+<section class="section">
+  <div class="section-label">Возможности</div>
+  <h2 class="section-title">Один сервис вместо десяти</h2>
+  <p class="section-sub">Всё что нужно блогеру — от создания обложки до поиска рекламодателя.</p>
+
+  <div class="features-grid">
+
+    <!-- BIG CARD: Cover maker -->
+    <div class="feat-card feat-big">
+      <div>
+        <span class="feat-icon">🎨</span>
+        <div class="feat-title">Конструктор обложек</div>
+        <p class="feat-desc">Делай профессиональные обложки для видео ВКонтакте и YouTube за 2 минуты. Готовые шаблоны, загрузка своих фото, текст и эффекты. Никакого Photoshop — всё в браузере.</p>
       </div>
-
-      <div class="tool-card">
-        <div class="tool-num">02</div>
-        <div class="tool-icon">✂️</div>
-        <div class="tool-name">Нарезка на Shorts</div>
-        <div class="tool-desc">AI нарезает длинное видео на короткие вертикальные ролики с субтитрами. Экономишь часы
-          монтажа.</div>
-        <span class="tool-tag tag-pro">Pro</span>
-      </div>
-
-      <div class="tool-card">
-        <div class="tool-num">03</div>
-        <div class="tool-icon">🤖</div>
-        <div class="tool-name">AI описания и названия</div>
-        <div class="tool-desc">Генерируешь цепляющее название, описание с ключевыми словами и хэштеги для любой
-          платформы за 10 секунд.</div>
-        <span class="tool-tag tag-free">Бесплатно</span>
-      </div>
-
-      <div class="tool-card">
-        <div class="tool-num">04</div>
-        <div class="tool-icon">🚀</div>
-        <div class="tool-name">Автопостинг</div>
-        <div class="tool-desc">Одно видео — все платформы. YouTube, ВКонтакте, TikTok, Telegram. Планируй публикации
-          заранее.</div>
-        <span class="tool-tag tag-pro">Pro</span>
-      </div>
-
-      <div class="tool-card">
-        <div class="tool-num">05</div>
-        <div class="tool-icon">💰</div>
-        <div class="tool-name">Поиск рекламодателей</div>
-        <div class="tool-desc">База рекламодателей которые ищут блогеров в твоей нише. Подаёшь заявку — они пишут
-          напрямую.</div>
-        <span class="tool-tag tag-new">Новинка</span>
-      </div>
-
-      <div class="tool-card">
-        <div class="tool-num">06</div>
-        <div class="tool-icon">📊</div>
-        <div class="tool-name">Оценка стоимости рекламы</div>
-        <div class="tool-desc">Введи данные канала — узнай сколько стоит реклама на твоём канале на YouTube, ВКонтакте и
-          TikTok.</div>
-        <span class="tool-tag tag-free">Бесплатно</span>
-      </div>
-
-      <div class="tool-card">
-        <div class="tool-num">07</div>
-        <div class="tool-icon">📈</div>
-        <div class="tool-name">Советы по продвижению</div>
-        <div class="tool-desc">AI анализирует твой канал и даёт персональные советы что изменить чтобы набирать больше
-          просмотров.</div>
-        <span class="tool-tag tag-pro">Pro</span>
-      </div>
-
-      <div class="tool-card">
-        <div class="tool-num">08</div>
-        <div class="tool-icon">📅</div>
-        <div class="tool-name">Контент-план</div>
-        <div class="tool-desc">AI составляет план публикаций на месяц с темами, форматами и оптимальным временем
-          постинга.</div>
-        <span class="tool-tag tag-free">Бесплатно</span>
+      <div class="mock-cover">
+        <div class="mock-title">Предпросмотр обложки</div>
+        <div class="mock-canvas">
+          <div class="mock-canvas-text">
+            <div style="font-size:0.9rem; margin-bottom:0.3rem">ТОП 10 ЛАЙФХАКОВ</div>
+            <div style="font-size:0.55rem; color:rgba(255,255,255,0.5)">которые изменят твою жизнь</div>
+          </div>
+          <div class="mock-canvas-bar"></div>
+        </div>
+        <div class="mock-row">
+          <div class="mock-btn">📐 Шаблоны</div>
+          <div class="mock-btn">🎨 Стили</div>
+          <div class="mock-btn">⬇️ Скачать</div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- CALCULATOR -->
-  <div class="calc-section" id="calc">
-    <div class="calc-inner">
-      <div class="section-label">Калькулятор</div>
-      <h2 class="section-title">Сколько стоит реклама<br>на твоём канале?</h2>
-      <p class="section-sub">Введи данные канала и узнай реальную рыночную стоимость рекламной интеграции.</p>
+    <div class="feat-card">
+      <span class="feat-icon">✂️</span>
+      <div class="feat-title">Нарезка на Shorts</div>
+      <p class="feat-desc">Загружаешь длинное видео — AI сам находит лучшие моменты и нарезает на вертикальные Shorts для TikTok, YouTube и Reels. Субтитры генерируются автоматически.</p>
+    </div>
 
-      <div class="calc-card">
-        <div class="calc-row">
-          <div class="calc-field">
-            <label>Платформа</label>
-            <select id="platform">
-              <option>YouTube</option>
-              <option>ВКонтакте</option>
-              <option>TikTok</option>
-              <option>Telegram</option>
-            </select>
-          </div>
-          <div class="calc-field">
-            <label>Количество подписчиков</label>
-            <input type="number" id="subs" placeholder="например 10000" />
-          </div>
-        </div>
-        <div class="calc-row">
-          <div class="calc-field">
-            <label>Среднее количество просмотров</label>
-            <input type="number" id="views" placeholder="например 5000" />
-          </div>
-          <div class="calc-field">
-            <label>Тематика канала</label>
-            <select id="niche">
-              <option>Развлечения</option>
-              <option>Технологии / IT</option>
-              <option>Финансы / Бизнес</option>
-              <option>Красота / Лайфстайл</option>
-              <option>Игры</option>
-              <option>Образование</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn-calc" onclick="calcPrice()">Рассчитать стоимость →</button>
+    <div class="feat-card">
+      <span class="feat-icon">🚀</span>
+      <div class="feat-title">Автопостинг во все соцсети</div>
+      <p class="feat-desc">Залей видео один раз — оно автоматически публикуется на YouTube, ВКонтакте, TikTok и Telegram в нужное время. Больше не нужно делать это вручную.</p>
+    </div>
 
-        <div class="calc-result" id="calcResult">
-          <div class="calc-result-title">Рекомендуемая цена рекламы</div>
-          <div class="calc-price" id="calcPrice">—</div>
-          <div class="calc-price-sub" id="calcSub">за одну интеграцию</div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="section" id="tools" style="padding-top:0">
+  <div class="section-label">Все инструменты</div>
+  <h2 class="section-title">8 инструментов для роста</h2>
+  <p class="section-sub">Всё что тебе нужно чтобы развивать канал быстрее.</p>
+
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-num">01</div>
+      <div class="tool-icon">🎨</div>
+      <div class="tool-name">Обложки для видео</div>
+      <div class="tool-desc">Конструктор обложек для YouTube и ВКонтакте. Шаблоны, кастомизация, скачивание в нужном формате.</div>
+      <span class="tool-tag tag-free">Бесплатно</span>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-num">02</div>
+      <div class="tool-icon">✂️</div>
+      <div class="tool-name">Нарезка на Shorts</div>
+      <div class="tool-desc">AI нарезает длинное видео на короткие вертикальные ролики с субтитрами. Экономишь часы монтажа.</div>
+      <span class="tool-tag tag-pro">Pro</span>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-num">03</div>
+      <div class="tool-icon">🤖</div>
+      <div class="tool-name">AI описания и названия</div>
+      <div class="tool-desc">Генерируешь цепляющее название, описание с ключевыми словами и хэштеги для любой платформы за 10 секунд.</div>
+      <span class="tool-tag tag-free">Бесплатно</span>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-num">04</div>
+      <div class="tool-icon">🚀</div>
+      <div class="tool-name">Автопостинг</div>
+      <div class="tool-desc">Одно видео — все платформы. YouTube, ВКонтакте, TikTok, Telegram. Планируй публикации заранее.</div>
+      <span class="tool-tag tag-pro">Pro</span>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-num">05</div>
+      <div class="tool-icon">💰</div>
+      <div class="tool-name">Поиск рекламодателей</div>
+      <div class="tool-desc">База рекламодателей которые ищут блогеров в твоей нише. Подаёшь заявку — они пишут напрямую.</div>
+      <span class="tool-tag tag-new">Новинка</span>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-num">06</div>
+      <div class="tool-icon">📊</div>
+      <div class="tool-name">Оценка стоимости рекламы</div>
+      <div class="tool-desc">Введи данные канала — узнай сколько стоит реклама на твоём канале на YouTube, ВКонтакте и TikTok.</div>
+      <span class="tool-tag tag-free">Бесплатно</span>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-num">07</div>
+      <div class="tool-icon">📈</div>
+      <div class="tool-name">Советы по продвижению</div>
+      <div class="tool-desc">AI анализирует твой канал и даёт персональные советы что изменить чтобы набирать больше просмотров.</div>
+      <span class="tool-tag tag-pro">Pro</span>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-num">08</div>
+      <div class="tool-icon">📅</div>
+      <div class="tool-name">Контент-план</div>
+      <div class="tool-desc">AI составляет план публикаций на месяц с темами, форматами и оптимальным временем постинга.</div>
+      <span class="tool-tag tag-free">Бесплатно</span>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<div class="calc-section" id="calc">
+  <div class="calc-inner">
+    <div class="section-label">Калькулятор</div>
+    <h2 class="section-title">Сколько стоит реклама<br>на твоём канале?</h2>
+    <p class="section-sub">Введи данные канала и узнай реальную рыночную стоимость рекламной интеграции.</p>
+
+    <div class="calc-card">
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>Платформа</label>
+          <select id="platform">
+            <option>YouTube</option>
+            <option>ВКонтакте</option>
+            <option>TikTok</option>
+            <option>Telegram</option>
+          </select>
         </div>
+        <div class="calc-field">
+          <label>Количество подписчиков</label>
+          <input type="number" id="subs" placeholder="например 10000" />
+        </div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>Среднее количество просмотров</label>
+          <input type="number" id="views" placeholder="например 5000" />
+        </div>
+        <div class="calc-field">
+          <label>Тематика канала</label>
+          <select id="niche">
+            <option>Развлечения</option>
+            <option>Технологии / IT</option>
+            <option>Финансы / Бизнес</option>
+            <option>Красота / Лайфстайл</option>
+            <option>Игры</option>
+            <option>Образование</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-calc" onclick="calcPrice()">Рассчитать стоимость →</button>
+
+      <div class="calc-result" id="calcResult">
+        <div class="calc-result-title">Рекомендуемая цена рекламы</div>
+        <div class="calc-price" id="calcPrice">—</div>
+        <div class="calc-price-sub" id="calcSub">за одну интеграцию</div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- PRICING -->
-  <section class="section" id="pricing">
-    <div class="section-label">Тарифы</div>
-    <h2 class="section-title">Прозрачные цены</h2>
-    <p class="section-sub">Начни бесплатно, переходи на Pro когда будешь готов.</p>
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-label">Тарифы</div>
+  <h2 class="section-title">Прозрачные цены</h2>
+  <p class="section-sub">Начни бесплатно, переходи на Pro когда будешь готов.</p>
 
-    <div class="pricing-grid">
-      <div class="price-card">
-        <div class="price-plan">Старт</div>
-        <div class="price-val">0 ₽</div>
-        <div class="price-period">навсегда бесплатно</div>
-        <ul class="price-features">
-          <li class="on"><span class="check">✓</span> Конструктор обложек</li>
-          <li class="on"><span class="check">✓</span> AI описания (5/мес)</li>
-          <li class="on"><span class="check">✓</span> Калькулятор рекламы</li>
-          <li class="on"><span class="check">✓</span> Контент-план (1/мес)</li>
-          <li><span class="cross">✗</span> Нарезка на Shorts</li>
-          <li><span class="cross">✗</span> Автопостинг</li>
-          <li><span class="cross">✗</span> Поиск рекламодателей</li>
-        </ul>
-        <a href="#" class="btn-plan btn-plan-ghost">Начать бесплатно</a>
-      </div>
-
-      <div class="price-card popular">
-        <div class="popular-badge">★ Популярный</div>
-        <div class="price-plan">Блогер</div>
-        <div class="price-val">799 ₽</div>
-        <div class="price-period">в месяц · отменить в любой момент</div>
-        <ul class="price-features">
-          <li class="on"><span class="check">✓</span> Всё из Старта</li>
-          <li class="on"><span class="check">✓</span> AI описания (безлимит)</li>
-          <li class="on"><span class="check">✓</span> Нарезка на Shorts (10/мес)</li>
-          <li class="on"><span class="check">✓</span> Автопостинг (3 платформы)</li>
-          <li class="on"><span class="check">✓</span> Поиск рекламодателей</li>
-          <li class="on"><span class="check">✓</span> Советы по продвижению</li>
-          <li><span class="cross">✗</span> Безлимитный Shorts</li>
-        </ul>
-        <a href="#" class="btn-plan btn-plan-primary">Попробовать 7 дней бесплатно</a>
-      </div>
-
-      <div class="price-card">
-        <div class="price-plan">Студия</div>
-        <div class="price-val">1 990 ₽</div>
-        <div class="price-period">в месяц · для команд</div>
-        <ul class="price-features">
-          <li class="on"><span class="check">✓</span> Всё из Блогера</li>
-          <li class="on"><span class="check">✓</span> Безлимитный Shorts</li>
-          <li class="on"><span class="check">✓</span> Автопостинг (все платформы)</li>
-          <li class="on"><span class="check">✓</span> До 5 каналов</li>
-          <li class="on"><span class="check">✓</span> Приоритетная поддержка</li>
-          <li class="on"><span class="check">✓</span> API доступ</li>
-          <li class="on"><span class="check">✓</span> White label</li>
-        </ul>
-        <a href="#" class="btn-plan btn-plan-ghost">Связаться с нами</a>
-      </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-plan">Старт</div>
+      <div class="price-val">0 ₽</div>
+      <div class="price-period">навсегда бесплатно</div>
+      <ul class="price-features">
+        <li class="on"><span class="check">✓</span> Конструктор обложек</li>
+        <li class="on"><span class="check">✓</span> AI описания (5/мес)</li>
+        <li class="on"><span class="check">✓</span> Калькулятор рекламы</li>
+        <li class="on"><span class="check">✓</span> Контент-план (1/мес)</li>
+        <li><span class="cross">✗</span> Нарезка на Shorts</li>
+        <li><span class="cross">✗</span> Автопостинг</li>
+        <li><span class="cross">✗</span> Поиск рекламодателей</li>
+      </ul>
+      <a href="#" class="btn-plan btn-plan-ghost">Начать бесплатно</a>
     </div>
-  </section>
 
-  <!-- CTA -->
-  <section class="cta-section">
-    <h2>Начни расти сегодня</h2>
-    <p>Первые 100 пользователей получают Pro доступ бесплатно на 3 месяца.</p>
-    <a href="#" class="btn-primary">Получить бесплатный доступ →</a>
-  </section>
+    <div class="price-card popular">
+      <div class="popular-badge">★ Популярный</div>
+      <div class="price-plan">Блогер</div>
+      <div class="price-val">799 ₽</div>
+      <div class="price-period">в месяц · отменить в любой момент</div>
+      <ul class="price-features">
+        <li class="on"><span class="check">✓</span> Всё из Старта</li>
+        <li class="on"><span class="check">✓</span> AI описания (безлимит)</li>
+        <li class="on"><span class="check">✓</span> Нарезка на Shorts (10/мес)</li>
+        <li class="on"><span class="check">✓</span> Автопостинг (3 платформы)</li>
+        <li class="on"><span class="check">✓</span> Поиск рекламодателей</li>
+        <li class="on"><span class="check">✓</span> Советы по продвижению</li>
+        <li><span class="cross">✗</span> Безлимитный Shorts</li>
+      </ul>
+      <a href="#" class="btn-plan btn-plan-primary">Попробовать 7 дней бесплатно</a>
+    </div>
 
-  <footer>
-    <p>© 2026 БлогерКит — Все инструменты блогера в одном месте</p>
-  </footer>
+    <div class="price-card">
+      <div class="price-plan">Студия</div>
+      <div class="price-val">1 990 ₽</div>
+      <div class="price-period">в месяц · для команд</div>
+      <ul class="price-features">
+        <li class="on"><span class="check">✓</span> Всё из Блогера</li>
+        <li class="on"><span class="check">✓</span> Безлимитный Shorts</li>
+        <li class="on"><span class="check">✓</span> Автопостинг (все платформы)</li>
+        <li class="on"><span class="check">✓</span> До 5 каналов</li>
+        <li class="on"><span class="check">✓</span> Приоритетная поддержка</li>
+        <li class="on"><span class="check">✓</span> API доступ</li>
+        <li class="on"><span class="check">✓</span> White label</li>
+      </ul>
+      <a href="#" class="btn-plan btn-plan-ghost">Связаться с нами</a>
+    </div>
+  </div>
+</section>
 
-  <script>
-    // Custom cursor
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Начни расти сегодня</h2>
+  <p>Первые 100 пользователей получают Pro доступ бесплатно на 3 месяца.</p>
+  <a href="#" class="btn-primary">Получить бесплатный доступ →</a>
+</section>
 
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.left = mx - 5 + 'px';
-      cursor.style.top = my - 5 + 'px';
-    });
+<footer>
+  <p>© 2025 БлогерКит — Все инструменты блогера в одном месте</p>
+</footer>
 
-    function animRing() {
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      ring.style.left = rx - 18 + 'px';
-      ring.style.top = ry - 18 + 'px';
-      requestAnimationFrame(animRing);
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 5 + 'px';
+    cursor.style.top = my - 5 + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 18 + 'px';
+    ring.style.top = ry - 18 + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Calculator
+  function calcPrice() {
+    const platform = document.getElementById('platform').value;
+    const subs = parseInt(document.getElementById('subs').value) || 0;
+    const views = parseInt(document.getElementById('views').value) || 0;
+    const niche = document.getElementById('niche').value;
+
+    if (!subs || !views) {
+      alert('Введи количество подписчиков и просмотров');
+      return;
     }
-    animRing();
 
-    // Calculator
-    function calcPrice() {
-      const platform = document.getElementById('platform').value;
-      const subs = parseInt(document.getElementById('subs').value) || 0;
-      const views = parseInt(document.getElementById('views').value) || 0;
-      const niche = document.getElementById('niche').value;
+    const nicheMultiplier = {
+      'Финансы / Бизнес': 2.5,
+      'Технологии / IT': 2.0,
+      'Образование': 1.7,
+      'Красота / Лайфстайл': 1.4,
+      'Игры': 1.2,
+      'Развлечения': 1.0,
+    }[niche] || 1.0;
 
-      if (!subs || !views) {
-        alert('Введи количество подписчиков и просмотров');
-        return;
-      }
+    const platformBase = {
+      'YouTube': 1.0,
+      'ВКонтакте': 0.7,
+      'TikTok': 0.8,
+      'Telegram': 1.3,
+    }[platform] || 1.0;
 
-      const nicheMultiplier = {
-        'Финансы / Бизнес': 2.5,
-        'Технологии / IT': 2.0,
-        'Образование': 1.7,
-        'Красота / Лайфстайл': 1.4,
-        'Игры': 1.2,
-        'Развлечения': 1.0,
-      }[niche] || 1.0;
+    const base = views * 0.08 * nicheMultiplier * platformBase;
+    const min = Math.round(base * 0.8 / 100) * 100;
+    const max = Math.round(base * 1.2 / 100) * 100;
 
-      const platformBase = {
-        'YouTube': 1.0,
-        'ВКонтакте': 0.7,
-        'TikTok': 0.8,
-        'Telegram': 1.3,
-      }[platform] || 1.0;
-
-      const base = views * 0.08 * nicheMultiplier * platformBase;
-      const min = Math.round(base * 0.8 / 100) * 100;
-      const max = Math.round(base * 1.2 / 100) * 100;
-
-      document.getElementById('calcPrice').textContent =
-        min.toLocaleString('ru') + ' — ' + max.toLocaleString('ru') + ' ₽';
-      document.getElementById('calcSub').textContent =
-        `за одну интеграцию на ${platform} · тематика: ${niche}`;
-      document.getElementById('calcResult').classList.add('show');
-    }
-  </script>
+    document.getElementById('calcPrice').textContent =
+      min.toLocaleString('ru') + ' — ' + max.toLocaleString('ru') + ' ₽';
+    document.getElementById('calcSub').textContent =
+      `за одну интеграцию на ${platform} · тематика: ${niche}`;
+    document.getElementById('calcResult').classList.add('show');
+  }
+</script>
 
 </body>
-
 </html>

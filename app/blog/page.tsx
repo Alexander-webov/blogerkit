@@ -2,22 +2,22 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Блог для блогеров — гайды по YouTube, TikTok, Telegram 2026',
-  description: 'Полезные статьи для блогеров: алгоритм YouTube, обложки, монетизация, продвижение. 23 актуальных гайда 2026.',
+  title: 'Блог для блогеров — гайды по YouTube, TikTok, Telegram 2025',
+  description: 'Полезные статьи для блогеров: алгоритм YouTube, обложки, монетизация, продвижение. 28 актуальных гайдов 2025.',
   alternates: { canonical: 'https://blogerkit.ru/blog' },
 }
 
 const ARTICLES = [
   { slug: 'kak-nachat-youtube',            icon: '🚀', title: 'Как начать YouTube канал с нуля',                 tag: 'Старт',       tagColor: 'text-green-400 bg-green-400/10',   readTime: '12 мин' },
-  { slug: 'algoritm-youtube-2026',          icon: '⚙️', title: 'Алгоритм YouTube 2026 — как он работает',        tag: 'Алгоритм',    tagColor: 'text-blue-400 bg-blue-400/10',     readTime: '9 мин'  },
+  { slug: 'algoritm-youtube-2025',          icon: '⚙️', title: 'Алгоритм YouTube 2025 — как он работает',        tag: 'Алгоритм',    tagColor: 'text-blue-400 bg-blue-400/10',     readTime: '9 мин'  },
   { slug: 'kak-prodvigat-youtube-kanal',    icon: '📈', title: 'Как продвигать YouTube канал — полный гайд',     tag: 'Продвижение', tagColor: 'text-purple-400 bg-purple-400/10', readTime: '12 мин' },
   { slug: 'kak-sdelat-oblozhku-youtube',    icon: '🎨', title: 'Как сделать обложку для YouTube',                tag: 'Дизайн',      tagColor: 'text-pink-400 bg-pink-400/10',     readTime: '8 мин'  },
   { slug: 'kak-sdelat-viral-video',         icon: '🔥', title: 'Как сделать вирусное видео на YouTube',          tag: 'Контент',     tagColor: 'text-orange-400 bg-orange-400/10', readTime: '10 мин' },
   { slug: 'analiz-konkurentov-youtube',     icon: '🔍', title: 'Как анализировать конкурентов на YouTube',       tag: 'Стратегия',   tagColor: 'text-cyan-400 bg-cyan-400/10',     readTime: '10 мин' },
-  { slug: 'youtube-seo-prodvizhenie',       icon: '🔎', title: 'YouTube SEO — продвижение в поиске 2026',        tag: 'SEO',         tagColor: 'text-indigo-400 bg-indigo-400/10', readTime: '10 мин' },
+  { slug: 'youtube-seo-prodvizhenie',       icon: '🔎', title: 'YouTube SEO — продвижение в поиске 2025',        tag: 'SEO',         tagColor: 'text-indigo-400 bg-indigo-400/10', readTime: '10 мин' },
   { slug: 'kak-zarabotat-na-youtube',       icon: '💰', title: 'Как заработать на YouTube — все способы',        tag: 'Монетизация', tagColor: 'text-yellow-400 bg-yellow-400/10', readTime: '11 мин' },
   { slug: 'monetizaciya-youtube',           icon: '💎', title: 'Монетизация YouTube с нуля — полный гайд',       tag: 'Монетизация', tagColor: 'text-yellow-400 bg-yellow-400/10', readTime: '8 мин'  },
-  { slug: 'skolko-stoit-reklama-u-blogera', icon: '📊', title: 'Сколько стоит реклама у блогера 2026',           tag: 'Монетизация', tagColor: 'text-yellow-400 bg-yellow-400/10', readTime: '7 мин'  },
+  { slug: 'skolko-stoit-reklama-u-blogera', icon: '📊', title: 'Сколько стоит реклама у блогера 2025',           tag: 'Монетизация', tagColor: 'text-yellow-400 bg-yellow-400/10', readTime: '7 мин'  },
   { slug: 'rabota-s-reklamodatelyami',      icon: '🤝', title: 'Как работать с рекламодателями',                 tag: 'Монетизация', tagColor: 'text-yellow-400 bg-yellow-400/10', readTime: '10 мин' },
   { slug: 'youtube-shorts-prosmotr',        icon: '📱', title: 'YouTube Shorts — как набрать просмотры',         tag: 'Shorts',      tagColor: 'text-red-400 bg-red-400/10',       readTime: '8 мин'  },
   { slug: 'kak-sdelat-shorts',              icon: '✂️', title: 'Как сделать Shorts из обычного видео',           tag: 'Shorts',      tagColor: 'text-red-400 bg-red-400/10',       readTime: '6 мин'  },
@@ -30,7 +30,12 @@ const ARTICLES = [
   { slug: 'youtube-tegi',                   icon: '🏷', title: 'Теги YouTube — как использовать правильно',     tag: 'SEO',         tagColor: 'text-indigo-400 bg-indigo-400/10', readTime: '5 мин'  },
   { slug: 'tiktok-vs-youtube',              icon: '⚔', title: 'TikTok vs YouTube — где начинать блогеру',      tag: 'Стратегия',   tagColor: 'text-cyan-400 bg-cyan-400/10',     readTime: '8 мин'  },
   { slug: 'kanalnyj-trejler',               icon: '🎬', title: 'Как сделать трейлер YouTube канала',             tag: 'Контент',     tagColor: 'text-orange-400 bg-orange-400/10', readTime: '6 мин'  },
-  { slug: 'prodvizhenie-telegram',          icon: '✈', title: 'Продвижение Telegram канала с нуля 2026',        tag: 'Telegram',    tagColor: 'text-sky-400 bg-sky-400/10',       readTime: '9 мин'  },
+  { slug: 'kak-snyat-video-youtube-telefon',       icon: '📱', title: 'Как снять видео для YouTube на телефон',         tag: 'Съёмка',      tagColor: 'text-teal-400 bg-teal-400/10',     readTime: '10 мин' },
+  { slug: 'programmy-montazha-youtube-besplatno',   icon: '🎬', title: 'Программы для монтажа YouTube бесплатно',        tag: 'Монтаж',      tagColor: 'text-rose-400 bg-rose-400/10',     readTime: '9 мин'  },
+  { slug: 'kak-oformit-youtube-kanal',              icon: '✨', title: 'Как оформить YouTube канал с нуля',              tag: 'Старт',       tagColor: 'text-green-400 bg-green-400/10',  readTime: '9 мин'  },
+  { slug: 'mikrofon-dlya-youtube',                  icon: '🎙', title: 'Какой микрофон купить для YouTube — обзор',      tag: 'Оборудование', tagColor: 'text-lime-400 bg-lime-400/10',    readTime: '9 мин'  },
+  { slug: 'osveshenie-dlya-semki-video',            icon: '💡', title: 'Освещение для съёмки видео дома',                tag: 'Съёмка',      tagColor: 'text-teal-400 bg-teal-400/10',    readTime: '8 мин'  },
+  { slug: 'prodvizhenie-telegram',          icon: '✈', title: 'Продвижение Telegram канала с нуля 2025',        tag: 'Telegram',    tagColor: 'text-sky-400 bg-sky-400/10',       readTime: '9 мин'  },
 ]
 
 export default function BlogPage() {
@@ -41,7 +46,7 @@ export default function BlogPage() {
           <div className="w-2 h-2 rounded-full bg-accent animate-pulse2" />
           БлогерКит
         </Link>
-        <Link href="/" className="text-muted text-lg hover:text-white transition-colors">
+        <Link href="/" className="text-muted text-xs hover:text-white transition-colors">
           Инструменты →
         </Link>
       </nav>
@@ -49,7 +54,7 @@ export default function BlogPage() {
       <div className="max-w-3xl mx-auto px-6 py-12">
         <div className="mb-8">
           <h1 className="font-heading text-3xl font-black mb-2">Блог</h1>
-          <p className="text-muted text-sm">23 статьи про YouTube, TikTok и Telegram · Актуально в 2026</p>
+          <p className="text-muted text-sm">28 статей про YouTube, TikTok и Telegram · Актуально в 2025</p>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4 mb-6">
@@ -58,9 +63,9 @@ export default function BlogPage() {
               className="group relative bg-card border border-border rounded-2xl p-5 hover:border-white/15 transition-all hover:-translate-y-0.5 overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent to-accent2 opacity-60 group-hover:opacity-100 transition-opacity" />
               <div className="text-3xl mb-3">{a.icon}</div>
-              <span className={"text-lg px-2 py-0.5 rounded font-semibold " + a.tagColor}>{a.tag}</span>
+              <span className={"text-xs px-2 py-0.5 rounded font-semibold " + a.tagColor}>{a.tag}</span>
               <h2 className="font-bold text-sm leading-snug mt-2 mb-1 group-hover:text-white/80 transition-colors">{a.title}</h2>
-              <div className="text-muted text-lg">{a.readTime}</div>
+              <div className="text-muted text-xs">{a.readTime}</div>
             </Link>
           ))}
         </div>
@@ -72,8 +77,8 @@ export default function BlogPage() {
               <div className="text-xl w-7 text-center flex-shrink-0">{a.icon}</div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className={"text-lg px-1.5 py-0.5 rounded font-semibold " + a.tagColor}>{a.tag}</span>
-                  <span className="text-muted text-lg">{a.readTime}</span>
+                  <span className={"text-xs px-1.5 py-0.5 rounded font-semibold " + a.tagColor}>{a.tag}</span>
+                  <span className="text-muted text-xs">{a.readTime}</span>
                 </div>
                 <h2 className="font-semibold text-sm group-hover:text-white/80 transition-colors">{a.title}</h2>
               </div>
@@ -84,10 +89,10 @@ export default function BlogPage() {
 
         <div className="mt-12 p-6 bg-card border border-border rounded-2xl text-center">
           <div className="font-heading text-sm font-bold mb-1">Попробуй инструменты БлогерКит</div>
-          <p className="text-muted text-lg mb-4">Анализ конкурентов, тренды YouTube, калькулятор рекламы</p>
+          <p className="text-muted text-xs mb-4">Анализ конкурентов, тренды YouTube, калькулятор рекламы</p>
           <div className="flex gap-3 justify-center flex-wrap">
-            <Link href="/analyze" className="px-4 py-2 bg-accent text-white font-bold text-lg rounded-xl hover:opacity-85 transition-opacity">Анализ конкурентов</Link>
-            <Link href="/trends"  className="px-4 py-2 border border-border text-lg rounded-xl hover:border-white/20 transition-colors">Тренды YouTube</Link>
+            <Link href="/analyze" className="px-4 py-2 bg-accent text-white font-bold text-xs rounded-xl hover:opacity-85 transition-opacity">Анализ конкурентов</Link>
+            <Link href="/trends"  className="px-4 py-2 border border-border text-xs rounded-xl hover:border-white/20 transition-colors">Тренды YouTube</Link>
           </div>
         </div>
       </div>
