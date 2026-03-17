@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Блог для блогеров — гайды по YouTube, TikTok, Telegram 2025',
-  description: 'Полезные статьи для блогеров: алгоритм YouTube, обложки, монетизация, продвижение. 28 актуальных гайдов 2025.',
+  description: 'Полезные статьи для блогеров: алгоритм YouTube, обложки, монетизация, продвижение. 38 статей 2025.',
   alternates: { canonical: 'https://blogerkit.ru/blog' },
 }
 
@@ -28,6 +28,16 @@ const ARTICLES = [
   { slug: 'kak-sdelat-thumbnail-abtest',    icon: '🔬', title: 'A/B тест обложек YouTube — как увеличить CTR',  tag: 'Дизайн',      tagColor: 'text-pink-400 bg-pink-400/10',     readTime: '7 мин'  },
   { slug: 'kak-pisat-opisanie-youtube',     icon: '📝', title: 'Как писать описание к видео на YouTube',         tag: 'SEO',         tagColor: 'text-indigo-400 bg-indigo-400/10', readTime: '7 мин'  },
   { slug: 'youtube-tegi',                   icon: '🏷', title: 'Теги YouTube — как использовать правильно',     tag: 'SEO',         tagColor: 'text-indigo-400 bg-indigo-400/10', readTime: '5 мин'  },
+  { slug: 'kak-prodvigatsya-vk-video',          icon: '🔵', title: 'Как продвигаться в VK Видео с нуля',          tag: 'VK Видео',    tagColor: 'text-blue-400 bg-blue-400/10',     readTime: '11 мин' },
+  { slug: 'vk-klipy-algoritm',                  icon: '🔵', title: 'VK Клипы — алгоритм и просмотры 2025',        tag: 'VK Клипы',    tagColor: 'text-blue-400 bg-blue-400/10',     readTime: '9 мин'  },
+  { slug: 'kak-zarabotat-vk-video',             icon: '💰', title: 'Как заработать на VK Видео — все способы',    tag: 'VK Видео',    tagColor: 'text-blue-400 bg-blue-400/10',     readTime: '9 мин'  },
+  { slug: 'rutube-kak-nabrat-prosmotry',        icon: '🟠', title: 'Как набрать просмотры на Rutube — гайд 2025', tag: 'Rutube',      tagColor: 'text-orange-400 bg-orange-400/10', readTime: '10 мин' },
+  { slug: 'rutube-monetizatsiya-2025',          icon: '🟠', title: 'Монетизация на Rutube в 2025 году',           tag: 'Rutube',      tagColor: 'text-orange-400 bg-orange-400/10', readTime: '8 мин'  },
+  { slug: 'mediakit-dlya-vk-blogerov',          icon: '📄', title: 'Медиакит для VK-блогера — что включить',      tag: 'Монетизация', tagColor: 'text-yellow-400 bg-yellow-400/10', readTime: '8 мин'  },
+  { slug: 'reklama-u-blogerov-vkontakte',       icon: '💼', title: 'Реклама у блогеров ВКонтакте — цены 2025',    tag: 'Монетизация', tagColor: 'text-yellow-400 bg-yellow-400/10', readTime: '8 мин'  },
+  { slug: 'kak-vesti-telegram-kanal',           icon: '✈️', title: 'Как вести Telegram-канал для блогера',        tag: 'Telegram',    tagColor: 'text-sky-400 bg-sky-400/10',       readTime: '9 мин'  },
+  { slug: 'vk-vs-youtube-gde-nachat',           icon: '⚔️', title: 'VK Видео vs YouTube — где начинать в 2025',  tag: 'Стратегия',   tagColor: 'text-cyan-400 bg-cyan-400/10',     readTime: '9 мин'  },
+  { slug: 'prodvizhenie-na-russkih-platformah', icon: '📊', title: 'Продвижение на российских платформах 2025',  tag: 'Стратегия',   tagColor: 'text-cyan-400 bg-cyan-400/10',     readTime: '10 мин' },
   { slug: 'tiktok-vs-youtube',              icon: '⚔', title: 'TikTok vs YouTube — где начинать блогеру',      tag: 'Стратегия',   tagColor: 'text-cyan-400 bg-cyan-400/10',     readTime: '8 мин'  },
   { slug: 'kanalnyj-trejler',               icon: '🎬', title: 'Как сделать трейлер YouTube канала',             tag: 'Контент',     tagColor: 'text-orange-400 bg-orange-400/10', readTime: '6 мин'  },
   { slug: 'kak-snyat-video-youtube-telefon',       icon: '📱', title: 'Как снять видео для YouTube на телефон',         tag: 'Съёмка',      tagColor: 'text-teal-400 bg-teal-400/10',     readTime: '10 мин' },
@@ -54,7 +64,7 @@ export default function BlogPage() {
       <div className="max-w-3xl mx-auto px-6 py-12">
         <div className="mb-8">
           <h1 className="font-heading text-3xl font-black mb-2">Блог</h1>
-          <p className="text-muted text-sm">28 статей про YouTube, TikTok и Telegram · Актуально в 2025</p>
+          <p className="text-muted text-sm">38 статей про YouTube, TikTok и Telegram · Актуально в 2025</p>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4 mb-6">

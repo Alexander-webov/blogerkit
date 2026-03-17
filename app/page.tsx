@@ -303,7 +303,7 @@ export default function HomePage() {
       <footer className="border-t border-border bg-surface px-4 sm:px-6 py-8 sm:py-10 text-center">
         <div className="font-heading text-sm font-black mb-2">БлогерКит</div>
         <p className="text-muted text-sm mb-5">
-          Инструменты для YouTube блогеров · 2025
+          Инструменты для блогеров · ИНН 575106298345 · 2025
         </p>
         <div className="flex justify-center gap-4 sm:gap-6 text-sm text-muted flex-wrap">
           {[

@@ -109,7 +109,7 @@ export default function ChannelAnalysisTool() {
             Анализ{' '}
             <span className="bg-gradient-to-r from-accent to-red-400 bg-clip-text text-transparent">YouTube канала</span>
           </h1>
-          <p className="text-muted text-sm">Вставь ссылку — полная аналитика и AI-советы · <span className="text-yellow-400 font-bold">49 ₽</span></p>
+          <p className="text-muted text-sm">Вставь ссылку — полная аналитика и AI-советы · <span className="text-yellow-400 font-bold">149 ₽</span></p>
         </div>
       </div>
 
@@ -121,7 +121,7 @@ export default function ChannelAnalysisTool() {
             className="flex-1 px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-accent/60 transition-colors placeholder:text-muted" />
           <button onClick={analyze} disabled={loading || !url.trim()}
             className="px-5 py-3 bg-accent text-white font-bold text-sm rounded-xl disabled:opacity-40 hover:opacity-90 transition-all whitespace-nowrap">
-            {loading ? '...' : paid ? 'Анализировать' : '🔒 49 ₽ →'}
+            {loading ? '...' : paid ? 'Анализировать' : '🔒 149 ₽ →'}
           </button>
         </div>
 
@@ -140,7 +140,7 @@ export default function ChannelAnalysisTool() {
             </div>
             <button onClick={() => setShowPay(true)}
               className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-black text-sm rounded-xl hover:opacity-90 transition-all">
-              💳 Получить анализ · 49 ₽
+              💳 Получить анализ · 149 ₽
             </button>
             <p className="text-muted text-xs mt-3">Оплата картой или СБП · мгновенный доступ</p>
           </div>

@@ -1,45 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server'
-import crypto from 'crypto'
+import { randomUUID } from 'crypto'
 
-// Prodamus payment creation
-// Docs: https://prodamus.ru/docs/api/
-// Self-employed friendly, no ИП needed
+const SHOP_ID    = process.env.YOOKASSA_SHOP_ID
+const SECRET_KEY = process.env.YOOKASSA_SECRET_KEY
+const SITE_URL   = process.env.NEXT_PUBLIC_SITE_URL || 'https://blogerkit.ru'
+
+const PRODUCTS: Record<string, { amount: number; description: string }> = {
+  'channel-analysis': { amount: 149, description: 'Анализ YouTube канала — БлогерКит' },
+  'mediakit':         { amount: 149, description: 'Медиакит PDF для блогера — БлогерКит' },
+  'crop-pro':         { amount: 149, description: 'Видеоредактор Pro — БлогерКит' },
+}
 
 export async function POST(req: NextRequest) {
-  const { product, amount, orderId, returnUrl } = await req.json()
+  const { product, returnUrl } = await req.json()
+  const item = PRODUCTS[product]
+  if (!item) return NextResponse.json({ error: 'Unknown product' }, { status: 400 })
 
-  const shopUrl    = process.env.PRODAMUS_SHOP_URL    // e.g. https://myblog.payform.ru
-  const secretKey  = process.env.PRODAMUS_SECRET_KEY  // from Prodamus dashboard
+  // Без ключей — демо режим
+  if (!SHOP_ID || !SECRET_KEY) {
+    const demoUrl = `${SITE_URL}/payment/demo?product=${product}&returnUrl=${encodeURIComponent(returnUrl || SITE_URL)}`
+    return NextResponse.json({ url: demoUrl })
+  }
 
-  if (!shopUrl || !secretKey) {
-    // DEV MODE: return mock payment URL for local testing
-    console.warn('[payment] Prodamus not configured — returning dev mock')
-    return NextResponse.json({
-      payUrl:  `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/payment/mock?orderId=${orderId}&product=${product}&returnUrl=${encodeURIComponent(returnUrl)}`,
-      orderId,
+  try {
+    const res = await fetch('https://api.yookassa.ru/v3/payments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Idempotence-Key': randomUUID(),
+        'Authorization': 'Basic ' + Buffer.from(`${SHOP_ID}:${SECRET_KEY}`).toString('base64'),
+      },
+      body: JSON.stringify({
+        amount: { value: item.amount.toFixed(2), currency: 'RUB' },
+        confirmation: { type: 'redirect', return_url: `${returnUrl || SITE_URL}?paid=1&product=${product}` },
+        capture: true,
+        description: item.description,
+        metadata: { product },
+      }),
     })
+    const payment = await res.json()
+    if (!res.ok) throw new Error(payment.description || 'ЮКасса error')
+    return NextResponse.json({ url: payment.confirmation.confirmation_url })
+  } catch (e: any) {
+    console.error('YooKassa error:', e.message)
+    return NextResponse.json({ error: e.message }, { status: 500 })
   }
-
-  // Build Prodamus payment link
-  const params: Record<string, string> = {
-    order_id:         orderId,
-    order_num:        orderId,
-    customer_phone:   '',
-    products:         JSON.stringify([{ name: product, price: String(amount), quantity: '1' }]),
-    urlReturn:        returnUrl,
-    urlSuccess:       returnUrl,
-    urlNotification:  `${process.env.NEXT_PUBLIC_SITE_URL}/api/payment/webhook`,
-    do:               'link',
-  }
-
-  // Sign request
-  const sortedKeys = Object.keys(params).sort()
-  const signStr    = sortedKeys.map(k => `${k}=${params[k]}`).join('&')
-  const sign       = crypto.createHmac('sha256', secretKey).update(signStr).digest('hex')
-  params.sign      = sign
-
-  const qs  = new URLSearchParams(params).toString()
-  const url = `${shopUrl}?${qs}`
-
-  return NextResponse.json({ payUrl: url, orderId })
 }

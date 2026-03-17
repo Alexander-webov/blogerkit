@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 export type ProductId = 'channel-analysis' | 'mediakit' | 'crop-pro'
 
 export const PRODUCTS: Record<ProductId, { name: string; price: number; label: string }> = {
-  'channel-analysis': { name: 'Анализ YouTube канала',         price: 49,  label: '49 ₽' },
+  'channel-analysis': { name: 'Анализ YouTube канала',         price: 149, label: '149 ₽' },
   'mediakit':         { name: 'Медиакит PDF для блогера',       price: 149, label: '149 ₽' },
   'crop-pro':         { name: 'Видеоредактор Pro — нарезка, субтитры, фильтры', price: 149, label: '149 ₽' },
 }
