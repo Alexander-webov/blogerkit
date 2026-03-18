@@ -396,6 +396,7 @@ export default function HomePage() {
             ["/titles", "AI-заголовки"],
             ["/covers", "Обложки"],
             ["/blog", "Блог"],
+            ["/contacts", "Контакты"],
           ].map(([href, label]) => (
             <Link
               key={href}
