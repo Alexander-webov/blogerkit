@@ -14,7 +14,7 @@ const proTools = [
     name: "Анализ своего канала",
     desc: "Статистика, топ видео, AI-советы по развитию. Без регистрации — вставь ссылку и получи результат.",
     href: "/channel-analysis",
-    price: "49 ₽",
+    price: "Pro 149 ₽",
     features: ["Подписчики и просмотры", "Топ-10 видео", "AI-советы от Claude"],
   },
   {
@@ -22,7 +22,7 @@ const proTools = [
     name: "Медиакит PDF",
     desc: "Профессиональный документ для рекламодателей за 5 минут. Статистика, цены, контакты.",
     href: "/mediakit",
-    price: "149 ₽",
+    price: "Pro 149 ₽",
     features: ["Статистика канала", "Форматы и цены", "Скачать PDF"],
   },
   {
@@ -37,7 +37,7 @@ const proTools = [
     icon: "🤖",
     name: "AI-заголовки",
     desc: "8 кликабельных вариантов за секунду с оценкой CTR. Вирусный, SEO, список — 5 стилей.",
-    href: "/titles",
+    href: "" /* "/titles", */,
     price: "Бесплатно",
     features: ["8 вариантов сразу", "Оценка CTR", "5 стилей"],
     free: true,
@@ -205,8 +205,91 @@ export default function HomePage() {
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          {proTools.map((tool) => (
-            <Link
+          {proTools.map(
+            (tool) =>
+              tool.href === "" ? (
+                <div
+                  key={tool.href}
+                  className="group bg-surface border border-border rounded-2xl p-5 sm:p-6 hover:border-white/20 hover:bg-white/5 transition-all block"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{tool.icon}</span>
+                      <h3 className="font-bold text-base text-white">
+                        {tool.name}
+                      </h3>
+                    </div>
+                    <span
+                      className={`text-sm px-2.5 py-1 rounded-lg font-bold whitespace-nowrap ${
+                        tool.free
+                          ? "bg-green-400/10 text-green-400"
+                          : "bg-yellow-400/10 text-yellow-400"
+                      }`}
+                    >
+                      {tool.price}
+                    </span>
+                  </div>
+                  <p className="text-muted text-sm leading-relaxed mb-4">
+                    {tool.desc}
+                  </p>
+                  <ul className="flex flex-col gap-1.5 mb-4">
+                    {tool.features.map((f) => (
+                      <li
+                        key={f}
+                        className="text-sm text-muted flex items-center gap-2"
+                      >
+                        <span className="w-1 h-1 rounded-full bg-border flex-shrink-0" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="text-sm text-accent font-bold group-hover:underline">
+                    СКОРО
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  key={tool.href}
+                  href={tool.href}
+                  className="group bg-surface border border-border rounded-2xl p-5 sm:p-6 hover:border-white/20 hover:bg-white/5 transition-all block"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{tool.icon}</span>
+                      <h3 className="font-bold text-base text-white">
+                        {tool.name}
+                      </h3>
+                    </div>
+                    <span
+                      className={`text-sm px-2.5 py-1 rounded-lg font-bold whitespace-nowrap ${
+                        tool.free
+                          ? "bg-green-400/10 text-green-400"
+                          : "bg-yellow-400/10 text-yellow-400"
+                      }`}
+                    >
+                      {tool.price}
+                    </span>
+                  </div>
+                  <p className="text-muted text-sm leading-relaxed mb-4">
+                    {tool.desc}
+                  </p>
+                  <ul className="flex flex-col gap-1.5 mb-4">
+                    {tool.features.map((f) => (
+                      <li
+                        key={f}
+                        className="text-sm text-muted flex items-center gap-2"
+                      >
+                        <span className="w-1 h-1 rounded-full bg-border flex-shrink-0" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="text-sm text-accent font-bold group-hover:underline">
+                    Открыть →
+                  </div>
+                </Link>
+              ),
+            /*             <Link
               key={tool.href}
               href={tool.href}
               className="group bg-surface border border-border rounded-2xl p-5 sm:p-6 hover:border-white/20 hover:bg-white/5 transition-all block"
@@ -245,8 +328,8 @@ export default function HomePage() {
               <div className="text-sm text-accent font-bold group-hover:underline">
                 Открыть →
               </div>
-            </Link>
-          ))}
+            </Link> */
+          )}
         </div>
       </section>
 
