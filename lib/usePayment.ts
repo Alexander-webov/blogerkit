@@ -14,28 +14,23 @@ function storageKey(product: ProductId) {
 }
 
 export function usePayment(product: ProductId) {
-  const [paid,     setPaid]     = useState(false)
-  const [loading,  setLoading]  = useState(false)
-  const [showPay,  setShowPay]  = useState(false)
-  const [error,    setError]    = useState('')
+  const [paid,    setPaid]    = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [showPay, setShowPay] = useState(false)
+  const [error,   setError]   = useState('')
 
-  // Check localStorage on mount (persists across page refreshes)
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(storageKey(product))
-      if (stored === '1') setPaid(true)
+      if (localStorage.getItem(storageKey(product)) === '1') setPaid(true)
     } catch {}
 
-    // Check URL params — payment redirect back
     const params = new URLSearchParams(window.location.search)
     if (params.get('paid') === '1' && params.get('product') === product) {
       setPaid(true)
       try { localStorage.setItem(storageKey(product), '1') } catch {}
-      // Clean URL
       const url = new URL(window.location.href)
       url.searchParams.delete('paid')
       url.searchParams.delete('product')
-      url.searchParams.delete('orderId')
       window.history.replaceState({}, '', url.toString())
     }
   }, [product])
@@ -43,22 +38,17 @@ export function usePayment(product: ProductId) {
   const startPayment = useCallback(async () => {
     setLoading(true); setError('')
     try {
-      const orderId   = `${product}-${Date.now()}`
-      const returnUrl = window.location.href
-
       const res = await fetch('/api/payment/create', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          product:   PRODUCTS[product].name,
-          amount:    PRODUCTS[product].price,
-          orderId,
-          returnUrl,
+          product,                        // ← отправляем ID: 'channel-analysis', не имя
+          returnUrl: window.location.href,
         }),
       })
       const data = await res.json()
-      if (data.payUrl) {
-        window.location.href = data.payUrl
+      if (data.url) {
+        window.location.href = data.url   // ← читаем data.url, не data.payUrl
       } else {
         throw new Error(data.error || 'Ошибка создания платежа')
       }
