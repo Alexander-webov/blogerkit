@@ -65,6 +65,7 @@ export default function CropTool() {
   const [subLoading,  setSubLoading]  = useState(false)
   const [subText,     setSubText]     = useState('')
   const [subError,    setSubError]    = useState('')
+  const [isPlaying,   setIsPlaying]   = useState(false)
 
   const { paid, showPay, setShowPay } = usePayment('crop-pro')
 
@@ -76,6 +77,7 @@ export default function CropTool() {
   const pendingInit   = useRef<any>(null)
   const audioCtxRef   = useRef<AudioContext | null>(null)
   const audioDestRef  = useRef<MediaStreamAudioDestinationNode | null>(null)
+  const audioSrcRef   = useRef<MediaElementAudioSourceNode | null>(null)
   const fileUrlRef    = useRef<string>('')
 
   // ── RENDER LOOP ──────────────────────────────────────────────────────────────
@@ -154,8 +156,11 @@ export default function CropTool() {
   // ── FILE LOAD ────────────────────────────────────────────────────────────────
   function handleFile(file:File){
     if(!file.type.startsWith('video/')) return
-    setFileName(file.name);setLoaded(false);setSubtitles([])
+    setFileName(file.name);setLoaded(false);setSubtitles([]);setIsPlaying(false)
     if(fileUrlRef.current) URL.revokeObjectURL(fileUrlRef.current)
+    // Close old audio context so new file gets fresh audio node
+    if(audioCtxRef.current){ audioCtxRef.current.close(); audioCtxRef.current=null }
+    audioSrcRef.current = null
     const url=URL.createObjectURL(file)
     fileUrlRef.current=url
     const vid=videoRef.current
@@ -166,21 +171,32 @@ export default function CropTool() {
       const dw=Math.round(vid.videoWidth*scale),dh=Math.round(vid.videoHeight*scale)
       setDuration(vid.duration);pendingInit.current={dw,dh};setLoaded(true)
     }
-    vid.play().catch(()=>{})
+    vid.onplay  = () => setIsPlaying(true)
+    vid.onpause = () => setIsPlaying(false)
+    vid.onended = () => setIsPlaying(false)
+    // НЕ запускаем автовоспроизведение — пользователь сам нажмёт Play
   }
 
   // ── SETUP AUDIO CONTEXT (once per file) ─────────────────────────────────────
   function setupAudio(vid:HTMLVideoElement){
     try{
-      if(audioCtxRef.current) audioCtxRef.current.close()
       const AudioCtx=window.AudioContext||(window as any).webkitAudioContext
-      const ctx=new AudioCtx()
-      const src=ctx.createMediaElementSource(vid)
-      const dest=ctx.createMediaStreamDestination()
-      src.connect(dest)
-      src.connect(ctx.destination)
-      audioCtxRef.current=ctx
-      audioDestRef.current=dest
+      // Create context once per file load
+      if(!audioCtxRef.current || audioCtxRef.current.state === 'closed'){
+        audioCtxRef.current = new AudioCtx()
+        audioSrcRef.current = null // reset source when new context created
+      }
+      const ctx = audioCtxRef.current
+      // Create source node only once — can't recreate for same element
+      if(!audioSrcRef.current){
+        audioSrcRef.current = ctx.createMediaElementSource(vid)
+      }
+      // Create fresh destination each time
+      const dest = ctx.createMediaStreamDestination()
+      audioSrcRef.current.connect(dest)
+      audioSrcRef.current.connect(ctx.destination)
+      audioDestRef.current = dest
+      if(ctx.state === 'suspended') ctx.resume()
       return dest.stream.getAudioTracks()
     }catch(e){
       console.warn('Audio setup failed:',e)
@@ -428,7 +444,9 @@ export default function CropTool() {
               <div className="bg-card border border-border rounded-xl p-3 mb-3">
                 <div className="flex items-center gap-3 mb-2">
                   <button onClick={()=>{const v=videoRef.current!;v.paused?v.play():v.pause()}}
-                    className="w-8 h-8 flex items-center justify-center bg-purple-500/20 rounded-lg text-purple-400 text-sm hover:bg-purple-500/30">▶</button>
+                    className="w-8 h-8 flex items-center justify-center bg-purple-500/20 rounded-lg text-purple-400 text-sm hover:bg-purple-500/30">
+                    {isPlaying ? '⏸' : '▶'}
+                  </button>
                   <div className="text-muted text-xs">{fmtT(currentTime)} / {fmtT(duration)}</div>
                   {mode==='split'&&(
                     <button onClick={()=>setSplitPoints(prev=>[...prev,currentTime].sort((a,b)=>a-b))}
