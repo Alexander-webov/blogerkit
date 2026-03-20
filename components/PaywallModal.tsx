@@ -15,6 +15,7 @@ export default function PaywallModal({ product, features, onClose, onPaid }: Pro
     'channel-analysis': '📡',
     'mediakit':         '📄',
     'crop-pro':         '✂️',
+    'analyze':          '🔍',
   }
 
   return (
