@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import PaywallModal from '@/components/PaywallModal'
 import { usePayment } from '@/lib/usePayment'
+import PaymentSuccessToast from '@/components/PaymentSuccessToast'
 
 type Mode = 'crop' | 'split' | 'subtitles' | 'filters'
 
@@ -67,7 +68,7 @@ export default function CropTool() {
   const [subError,    setSubError]    = useState('')
   const [isPlaying,   setIsPlaying]   = useState(false)
 
-  const { paid, showPay, setShowPay } = usePayment('crop-pro')
+  const { paid, showPay, setShowPay, justPaid, info } = usePayment('crop-pro')
 
   const videoRef      = useRef<HTMLVideoElement>(null)
   const mainCanvasRef = useRef<HTMLCanvasElement>(null)

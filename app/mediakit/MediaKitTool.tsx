@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import PaywallModal from '@/components/PaywallModal'
-import { usePayment } from '@/lib/usePayment'
+import { usePayment, saveStateBeforePayment, restoreStateAfterPayment } from '@/lib/usePayment'
+import PaymentSuccessToast from '@/components/PaymentSuccessToast'
 
 interface MediaKitData {
   channelName:string; niche:string
@@ -163,7 +164,13 @@ export default function MediaKitTool() {
   const [step,    setStep]    = useState(1)
   const [loading, setLoading] = useState(false)
 
-  const { paid, showPay, setShowPay } = usePayment('mediakit')
+  const { paid, showPay, setShowPay, justPaid, info } = usePayment('mediakit')
+
+  // Restore form data after payment redirect
+  useEffect(() => {
+    const saved = restoreStateAfterPayment<{data: MediaKitData; step: number}>('mediakit')
+    if (saved) { setData(saved.data); setStep(saved.step) }
+  }, [])
 
   const set=(k:keyof MediaKitData)=>(e:React.ChangeEvent<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>)=>
     setData(prev=>({...prev,[k]:e.target.value}))
@@ -175,7 +182,7 @@ export default function MediaKitTool() {
   }
 
   async function download() {
-    if(!paid){setShowPay(true);return}
+    if(!paid){ saveStateBeforePayment('mediakit', { data, step }); setShowPay(true); return }
     setLoading(true)
     try{await buildPDF(data)}finally{setLoading(false)}
   }
@@ -184,6 +191,7 @@ export default function MediaKitTool() {
 
   return (
     <div className="min-h-screen bg-bg">
+      <PaymentSuccessToast show={justPaid} productName={info.name} />
       {showPay && (
         <PaywallModal
           product="mediakit"

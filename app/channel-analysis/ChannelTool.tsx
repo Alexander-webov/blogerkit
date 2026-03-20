@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import PaywallModal from '@/components/PaywallModal'
-import { usePayment } from '@/lib/usePayment'
+import { usePayment, saveStateBeforePayment, restoreStateAfterPayment } from '@/lib/usePayment'
+import PaymentSuccessToast from '@/components/PaymentSuccessToast'
 
 function fmt(n: number) {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M'
@@ -37,11 +38,17 @@ export default function ChannelAnalysisTool() {
   const [data,    setData]    = useState<ChannelData | null>(null)
   const [error,   setError]   = useState('')
 
-  const { paid, showPay, setShowPay } = usePayment('channel-analysis')
+  const { paid, showPay, setShowPay, justPaid, info } = usePayment('channel-analysis')
+
+  // Restore url after payment redirect
+  useEffect(() => {
+    const saved = restoreStateAfterPayment<{url: string}>('channel-analysis')
+    if (saved?.url) setUrl(saved.url)
+  }, [])
 
   async function analyze() {
     if (!url.trim()) return
-    if (!paid) { setShowPay(true); return }
+    if (!paid) { saveStateBeforePayment('channel-analysis', { url }); setShowPay(true); return }
     setLoading(true); setError(''); setData(null)
     try {
       const res  = await fetch(`/api/channel?url=${encodeURIComponent(url)}`)
@@ -85,6 +92,7 @@ export default function ChannelAnalysisTool() {
 
   return (
     <div className="min-h-screen bg-bg">
+      <PaymentSuccessToast show={justPaid} productName={info.name} />
 
       {showPay && (
         <PaywallModal

@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePayment } from '@/lib/usePayment'
+import { usePayment, saveStateBeforePayment, restoreStateAfterPayment } from '@/lib/usePayment'
+import PaymentSuccessToast from '@/components/PaymentSuccessToast'
 
 // ── TYPES ──────────────────────────────────────────────────────
 interface Video {
@@ -36,7 +37,11 @@ function Paywall({ query, onSuccess, onClose }: {
 }) {
   const { startPayment, loading, error, paid } = usePayment('analyze')
 
-  // Если оплата прошла (редирект вернулся с ?paid=1) — вызываем onSuccess
+  useEffect(() => {
+    // Save query+results to session before payment redirect
+    if (query) saveStateBeforePayment('analyze', { query, videos })
+  }, [query, videos])
+
   if (paid) {
     onSuccess()
     return null
@@ -109,8 +114,19 @@ export default function AnalyzeTool() {
   const [paywallQ, setPaywallQ] = useState('')
   const [paywallV, setPaywallV] = useState<Video[]>([])
 
-  // Проверяем при загрузке — вернулся ли пользователь после оплаты
-  const { paid } = usePayment('analyze')
+  const { paid, justPaid, info } = usePayment('analyze')
+
+  // Restore query + results after payment redirect
+  useEffect(() => {
+    const saved = restoreStateAfterPayment<{query: string; videos: Video[]}>('analyze')
+    if (saved?.videos?.length) {
+      setQuery(saved.query)
+      setPaywallQ(saved.query)
+      setPaywallV(saved.videos)
+      setVideos(saved.videos)
+      setStatus('results')
+    }
+  }, [])
 
   async function search() {
     const q = query.trim()
@@ -123,7 +139,6 @@ export default function AnalyzeTool() {
       if (!res.ok) throw new Error(data.error || 'Ошибка API')
       setPaywallQ(q)
       setPaywallV(data.videos)
-      // Если уже оплачено — сразу показываем результаты
       if (paid) {
         setVideos(data.videos)
         setStatus('results')
@@ -152,6 +167,7 @@ export default function AnalyzeTool() {
 
   return (
     <>
+      <PaymentSuccessToast show={justPaid} productName={info.name} />
       {/* PAYWALL */}
       {status === 'paywall' && (
         <Paywall
