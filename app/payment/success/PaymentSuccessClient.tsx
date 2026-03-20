@@ -6,6 +6,7 @@ const MSGS: Record<string, { title: string; desc: string; link: string; btn: str
   'channel-analysis': { title: 'Анализ канала разблокирован!',  desc: 'Введи ссылку на YouTube канал — получи полную статистику.', link: '/channel-analysis', btn: 'Анализировать канал →' },
   'mediakit':         { title: 'Медиакит доступен!',            desc: 'Заполни данные и скачай PDF прямо сейчас.',                 link: '/mediakit',         btn: 'Создать медиакит →'  },
   'crop-pro':         { title: 'Видеоредактор Pro активирован!', desc: 'Нарезка, субтитры и фильтры теперь доступны.',             link: '/crop',             btn: 'Открыть редактор →'  },
+  'analyze':          { title: 'Результаты готовы!',             desc: 'Топ видео конкурентов и инсайты уже доступны.',            link: '/analyze',          btn: 'Смотреть результаты →' },
 }
 
 export default function PaymentSuccessClient() {

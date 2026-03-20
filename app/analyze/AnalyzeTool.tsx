@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePayment } from '@/lib/usePayment'
 
 // ── TYPES ──────────────────────────────────────────────────────
 interface Video {
@@ -28,43 +29,18 @@ function fmt(n: number): string {
 const HINTS = ['авто обзор','похудение','криптовалюта','рецепты','игры','путешествия','макияж','инвестиции']
 
 // ── PAYWALL COMPONENT ──────────────────────────────────────────
-function Paywall({ query, videos, onSuccess, onClose }: {
+function Paywall({ query, onSuccess, onClose }: {
   query: string
-  videos: Video[]
   onSuccess: () => void
   onClose: () => void
 }) {
-  const [state, setState] = useState<'offer'|'card'|'processing'>('offer')
-  const [card, setCard] = useState({ num: '', exp: '', cvv: '', email: '' })
-  const [step, setStep] = useState(0)
+  const { startPayment, loading, error, paid } = usePayment('analyze')
 
-  function formatCardNum(v: string) {
-    return v.replace(/\D/g,'').substring(0,16).match(/.{1,4}/g)?.join(' ') || ''
+  // Если оплата прошла (редирект вернулся с ?paid=1) — вызываем onSuccess
+  if (paid) {
+    onSuccess()
+    return null
   }
-  function formatExp(v: string) {
-    const d = v.replace(/\D/g,'')
-    return d.length >= 2 ? d.substring(0,2) + '/' + d.substring(2,4) : d
-  }
-
-  function pay() {
-    if (card.num.replace(/\s/g,'').length < 16 || card.exp.length < 5 || card.cvv.length < 3) {
-      alert('Заполни все поля карты')
-      return
-    }
-    setState('processing')
-    let i = 0
-    const iv = setInterval(() => {
-      i++
-      setStep(i)
-      if (i >= 3) {
-        clearInterval(iv)
-        setTimeout(onSuccess, 600)
-      }
-    }, 900)
-  }
-
-  const steps = ['Проверка карты...','Авторизация платежа...','Загрузка результатов...']
-  const doneSteps = ['✓ Карта проверена','✓ Платёж авторизован','✓ Результаты загружены']
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
@@ -72,101 +48,52 @@ function Paywall({ query, videos, onSuccess, onClose }: {
       <div className="bg-surface border border-border rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center"
            onClick={(e) => e.stopPropagation()}>
 
-        {/* OFFER */}
-        {state === 'offer' && (
-          <div className="animate-fadeUp">
-            <div className="text-4xl mb-3">🔍</div>
-            <div className="font-heading text-lg font-black mb-2">
-              Результаты <span className="bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent">готовы!</span>
-            </div>
-            <p className="text-muted text-xs leading-relaxed mb-4">
-              Нашли реальные видео конкурентов с YouTube.<br/>Получи полный отчёт за один платёж.
-            </p>
-            <div className="inline-block px-3 py-1 rounded-lg border border-accent/25 bg-accent/10 text-accent text-xs font-semibold mb-4">
-              🔎 {query}
-            </div>
-            <div className="font-heading text-5xl font-black text-yellow-400 leading-none mb-1">29 ₽</div>
-            <div className="text-muted text-xs mb-5">разовый платёж · результат сразу</div>
+        <div className="text-4xl mb-3">🔍</div>
+        <div className="font-heading text-lg font-black mb-2">
+          Результаты <span className="bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent">готовы!</span>
+        </div>
+        <p className="text-muted text-xs leading-relaxed mb-4">
+          Нашли реальные видео конкурентов с YouTube.<br/>Получи полный отчёт за один платёж.
+        </p>
+        <div className="inline-block px-3 py-1 rounded-lg border border-accent/25 bg-accent/10 text-accent text-xs font-semibold mb-4">
+          🔎 {query}
+        </div>
 
-            <div className="flex flex-col gap-2 mb-5 text-left bg-white/3 border border-border rounded-xl p-4">
-              {['Топ-10 реальных видео конкурентов','Просмотры, лайки, комментарии','Инсайты и паттерны заголовков','Анализ цветов обложек','Лучшее время публикации'].map(f => (
-                <div key={f} className="flex items-center gap-2 text-xs">
-                  <span className="text-green-400 text-xs font-black">✓</span> {f}
-                </div>
-              ))}
-            </div>
-            <button onClick={() => setState('card')}
-              className="w-full py-3 bg-gradient-to-r from-accent2 to-orange-600 text-black font-black text-sm rounded-xl mb-2 hover:opacity-90 transition-all hover:-translate-y-0.5">
-              Оплатить 29 ₽ →
-            </button>
-            <button onClick={onClose} className="w-full py-2 border border-border text-muted text-xs rounded-xl hover:text-white transition-colors">
-              Отмена
-            </button>
-          </div>
-        )}
+        <div className="font-heading text-5xl font-black text-yellow-400 leading-none mb-1">49 ₽</div>
+        <div className="text-muted text-xs mb-5">разовый платёж · результат сразу</div>
 
-        {/* CARD FORM */}
-        {state === 'card' && (
-          <div className="animate-fadeUp text-left">
-            <button onClick={() => setState('offer')} className="text-muted text-xs mb-4 flex items-center gap-1 hover:text-white transition-colors bg-transparent border-none cursor-pointer">
-              ← Назад
-            </button>
-            <div className="font-heading text-sm font-bold text-center mb-5">💳 Оплата</div>
-            <div className="mb-3">
-              <label className="text-muted text-xs uppercase tracking-widest block mb-1">Номер карты</label>
-              <input className="w-full px-3 py-2.5 bg-bg border border-border rounded-lg text-sm outline-none focus:border-accent2 transition-colors"
-                placeholder="0000 0000 0000 0000" maxLength={19}
-                value={card.num} onChange={e => setCard({...card, num: formatCardNum(e.target.value)})} />
+        <div className="flex flex-col gap-2 mb-5 text-left bg-white/3 border border-border rounded-xl p-4">
+          {['Топ-10 реальных видео конкурентов','Просмотры, лайки, комментарии','Инсайты и паттерны заголовков','Анализ цветов обложек','Лучшее время публикации'].map(f => (
+            <div key={f} className="flex items-center gap-2 text-xs">
+              <span className="text-green-400 text-xs font-black">✓</span> {f}
             </div>
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div>
-                <label className="text-muted text-xs uppercase tracking-widest block mb-1">Срок</label>
-                <input className="w-full px-3 py-2.5 bg-bg border border-border rounded-lg text-sm outline-none focus:border-accent2 transition-colors"
-                  placeholder="ММ/ГГ" maxLength={5}
-                  value={card.exp} onChange={e => setCard({...card, exp: formatExp(e.target.value)})} />
-              </div>
-              <div>
-                <label className="text-muted text-xs uppercase tracking-widest block mb-1">CVV</label>
-                <input type="password" className="w-full px-3 py-2.5 bg-bg border border-border rounded-lg text-sm outline-none focus:border-accent2 transition-colors"
-                  placeholder="•••" maxLength={3}
-                  value={card.cvv} onChange={e => setCard({...card, cvv: e.target.value})} />
-              </div>
-            </div>
-            <div className="mb-4">
-              <label className="text-muted text-xs uppercase tracking-widest block mb-1">Email для чека</label>
-              <input type="email" className="w-full px-3 py-2.5 bg-bg border border-border rounded-lg text-sm outline-none focus:border-accent2 transition-colors"
-                placeholder="your@email.com"
-                value={card.email} onChange={e => setCard({...card, email: e.target.value})} />
-            </div>
-            <div className="text-center text-muted text-xs mb-4 flex items-center justify-center gap-1">
-              🔒 Демо-режим · реальных списаний нет
-            </div>
-            <button onClick={pay}
-              className="w-full py-3 bg-gradient-to-r from-accent2 to-orange-600 text-black font-black text-sm rounded-xl mb-2 hover:opacity-90 transition-all">
-              Оплатить 29 ₽ →
-            </button>
-            <button onClick={() => setState('offer')} className="w-full py-2 border border-border text-muted text-xs rounded-xl hover:text-white transition-colors">
-              Отмена
-            </button>
-          </div>
-        )}
+          ))}
+        </div>
 
-        {/* PROCESSING */}
-        {state === 'processing' && (
-          <div className="animate-fadeUp py-4">
-            <div className="w-11 h-11 border-[3px] border-border border-t-accent2 rounded-full animate-spin mx-auto mb-4" />
-            <div className="font-heading text-sm font-bold mb-1">Обрабатываем платёж...</div>
-            <div className="text-muted text-xs mb-6">Не закрывай страницу</div>
-            <div className="flex flex-col gap-2 text-left">
-              {steps.map((s, i) => (
-                <div key={s} className={`flex items-center gap-2 text-xs transition-colors ${step > i ? 'text-green-400' : 'text-muted'}`}>
-                  <div className="w-1.5 h-1.5 rounded-full bg-current" />
-                  {step > i ? doneSteps[i] : s}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {error && <div className="text-red-400 text-xs mb-3 p-2 bg-red-500/10 rounded-lg">{error}</div>}
+
+        <button
+          onClick={startPayment}
+          disabled={loading}
+          className="w-full py-3 bg-gradient-to-r from-accent2 to-orange-600 text-black font-black text-sm rounded-xl mb-2 hover:opacity-90 transition-all disabled:opacity-50">
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+              Перенаправляю на оплату...
+            </span>
+          ) : 'Оплатить 49 ₽ → Получить доступ'}
+        </button>
+
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <span className="text-muted text-xs">Visa</span>
+          <span className="text-muted text-xs">Mastercard</span>
+          <span className="text-muted text-xs">СБП</span>
+          <span className="text-muted text-xs">Мир</span>
+        </div>
+
+        <button onClick={onClose} className="w-full py-2 border border-border text-muted text-xs rounded-xl hover:text-white transition-colors">
+          Отмена
+        </button>
       </div>
     </div>
   )
@@ -181,7 +108,9 @@ export default function AnalyzeTool() {
   const [sort,     setSort]     = useState('views')
   const [paywallQ, setPaywallQ] = useState('')
   const [paywallV, setPaywallV] = useState<Video[]>([])
-  const [unlocked, setUnlocked] = useState(false)
+
+  // Проверяем при загрузке — вернулся ли пользователь после оплаты
+  const { paid } = usePayment('analyze')
 
   async function search() {
     const q = query.trim()
@@ -194,7 +123,13 @@ export default function AnalyzeTool() {
       if (!res.ok) throw new Error(data.error || 'Ошибка API')
       setPaywallQ(q)
       setPaywallV(data.videos)
-      setStatus('paywall')
+      // Если уже оплачено — сразу показываем результаты
+      if (paid) {
+        setVideos(data.videos)
+        setStatus('results')
+      } else {
+        setStatus('paywall')
+      }
     } catch(e: any) {
       setError(e.message)
       setStatus('idle')
@@ -203,7 +138,6 @@ export default function AnalyzeTool() {
 
   function onPaySuccess() {
     setVideos(paywallV)
-    setUnlocked(true)
     setStatus('results')
   }
 
@@ -222,7 +156,6 @@ export default function AnalyzeTool() {
       {status === 'paywall' && (
         <Paywall
           query={paywallQ}
-          videos={paywallV}
           onSuccess={onPaySuccess}
           onClose={() => setStatus('idle')}
         />
@@ -245,7 +178,7 @@ export default function AnalyzeTool() {
             <h1 className="font-heading text-3xl md:text-4xl font-black tracking-tight leading-tight mb-3">
               Анализ <span className="bg-gradient-to-r from-accent3 to-green-400 bg-clip-text text-transparent">конкурентов</span>
             </h1>
-            <p className="text-muted text-sm mb-6">Реальные данные с YouTube · 29 ₽ за запрос</p>
+            <p className="text-muted text-sm mb-6">Реальные данные с YouTube · 49 ₽ за запрос</p>
 
             {/* SEARCH BAR */}
             <div className="flex gap-2 max-w-lg mx-auto mb-4">

@@ -9,6 +9,7 @@ const PRODUCTS: Record<string, { amount: number; description: string }> = {
   'channel-analysis': { amount: 149, description: 'Анализ YouTube канала — БлогерКит' },
   'mediakit':         { amount: 149, description: 'Медиакит PDF для блогера — БлогерКит' },
   'crop-pro':         { amount: 149, description: 'Видеоредактор Pro — БлогерКит' },
+  'analyze':          { amount: 49,  description: 'Анализ конкурентов YouTube — БлогерКит' },
 }
 
 export async function POST(req: NextRequest) {

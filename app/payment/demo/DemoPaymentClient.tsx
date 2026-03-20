@@ -3,24 +3,23 @@
 import { useSearchParams, useRouter } from 'next/navigation'
 
 const PRICES: Record<string, { label: string; price: number }> = {
-  'channel-analysis': { label: 'Анализ YouTube канала', price: 49  },
+  'channel-analysis': { label: 'Анализ YouTube канала', price: 149 },
   'mediakit':         { label: 'Медиакит PDF',           price: 149 },
   'crop-pro':         { label: 'Видеоредактор Pro',      price: 149 },
+  'analyze':          { label: 'Анализ конкурентов',     price: 49  },
 }
 
 export default function DemoPaymentClient() {
-  const params     = useSearchParams()
-  const router     = useRouter()
-  const product    = params.get('product')    || ''
-  const orderId    = params.get('orderId')    || ''
-  const returnUrl  = params.get('returnUrl')  || '/'
+  const params    = useSearchParams()
+  const router    = useRouter()
+  const product   = params.get('product')   || ''
+  const returnUrl = params.get('returnUrl') || '/'
   const p = PRICES[product] || { label: product, price: 0 }
 
-  async function simulatePay() {
+  function simulatePay() {
     const url = new URL(returnUrl, window.location.origin)
     url.searchParams.set('paid', '1')
     url.searchParams.set('product', product)
-    url.searchParams.set('orderId', orderId)
     router.push(url.pathname + url.search)
   }
 
@@ -39,7 +38,8 @@ export default function DemoPaymentClient() {
           ✓ Симулировать оплату
         </button>
         <p className="text-muted text-xs mt-3">
-          Добавь <code className="bg-white/10 px-1 rounded">PRODAMUS_SHOP_URL</code> в .env.local для реальных платежей
+          Добавь <code className="bg-white/10 px-1 rounded">YOOKASSA_SHOP_ID</code> и{' '}
+          <code className="bg-white/10 px-1 rounded">YOOKASSA_SECRET_KEY</code> в Vercel для реальных платежей
         </p>
       </div>
     </div>

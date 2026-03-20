@@ -1,12 +1,13 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
 
-export type ProductId = 'channel-analysis' | 'mediakit' | 'crop-pro'
+export type ProductId = 'channel-analysis' | 'mediakit' | 'crop-pro' | 'analyze'
 
 export const PRODUCTS: Record<ProductId, { name: string; price: number; label: string }> = {
   'channel-analysis': { name: 'Анализ YouTube канала',         price: 149, label: '149 ₽' },
   'mediakit':         { name: 'Медиакит PDF для блогера',       price: 149, label: '149 ₽' },
-  'crop-pro':         { name: 'Видеоредактор Pro — нарезка, субтитры, фильтры', price: 149, label: '149 ₽' },
+  'crop-pro':         { name: 'Видеоредактор Pro',              price: 149, label: '149 ₽' },
+  'analyze':          { name: 'Анализ конкурентов YouTube',     price: 49,  label: '49 ₽'  },
 }
 
 function storageKey(product: ProductId) {
@@ -42,13 +43,13 @@ export function usePayment(product: ProductId) {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          product,                        // ← отправляем ID: 'channel-analysis', не имя
+          product,                        // отправляем ID продукта
           returnUrl: window.location.href,
         }),
       })
       const data = await res.json()
       if (data.url) {
-        window.location.href = data.url   // ← читаем data.url, не data.payUrl
+        window.location.href = data.url   // редиректим на ЮКасса
       } else {
         throw new Error(data.error || 'Ошибка создания платежа')
       }
