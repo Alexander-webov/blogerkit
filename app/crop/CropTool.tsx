@@ -190,13 +190,15 @@ export default function CropTool() {
       // Create source node only once — can't recreate for same element
       if(!audioSrcRef.current){
         audioSrcRef.current = ctx.createMediaElementSource(vid)
+      } else {
+        // Disconnect from previous destination before reconnecting
+        try { audioSrcRef.current.disconnect() } catch(_){}
       }
       // Create fresh destination each time
       const dest = ctx.createMediaStreamDestination()
       audioSrcRef.current.connect(dest)
       audioSrcRef.current.connect(ctx.destination)
       audioDestRef.current = dest
-      if(ctx.state === 'suspended') ctx.resume()
       return dest.stream.getAudioTracks()
     }catch(e){
       console.warn('Audio setup failed:',e)
@@ -242,10 +244,25 @@ export default function CropTool() {
     const scaleY = vid.videoHeight / vidH
     const segDuration = endTime - startTime
 
-    // Setup audio capture
-    const audioTracks = setupAudio(vid)
+    // ── Step 1: seek to start position ──────────────────────────────────────
+    await new Promise<void>(res => {
+      if(Math.abs(vid.currentTime - startTime) < 0.05) { res(); return }
+      vid.onseeked = () => { vid.onseeked = null; res() }
+      vid.currentTime = startTime
+    })
 
-    // Build stream: canvas video + audio
+    // ── Step 2: draw first frame so captureStream has content ────────────────
+    ctx.filter = filter.css || 'none'
+    ctx.drawImage(vid, cropX*scaleX, cropY*scaleY, cropW*scaleX, cropH*scaleY, 0, 0, outCanvas.width, outCanvas.height)
+
+    // ── Step 3: setup audio (must happen after user gesture path) ────────────
+    const audioTracks = setupAudio(vid)
+    // Resume AudioContext if suspended (browser policy)
+    if(audioCtxRef.current && audioCtxRef.current.state === 'suspended'){
+      await audioCtxRef.current.resume()
+    }
+
+    // ── Step 4: build MediaRecorder from canvas stream ───────────────────────
     const canvasStream = (outCanvas as any).captureStream(30) as MediaStream
     const tracks = [...canvasStream.getVideoTracks(), ...audioTracks]
     const finalStream = new MediaStream(tracks)
@@ -258,56 +275,65 @@ export default function CropTool() {
 
     const recorder = new MediaRecorder(finalStream, { mimeType, videoBitsPerSecond: 8_000_000 })
     const chunks: Blob[] = []
-    recorder.ondataavailable = e => { if(e.data.size>0) chunks.push(e.data) }
+    recorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data) }
 
-    return new Promise<void>(resolve => {
+    // ── Step 5: start recorder, then play ────────────────────────────────────
+    recorder.start(100) // request data every 100ms
+    await new Promise(r => setTimeout(r, 80)) // tiny pause so recorder initialises
+
+    // Draw render loop
+    let rafId = 0
+    const drawFrame = () => {
+      ctx.filter = filter.css || 'none'
+      ctx.drawImage(vid, cropX*scaleX, cropY*scaleY, cropW*scaleX, cropH*scaleY, 0, 0, outCanvas.width, outCanvas.height)
+      const sub = subtitles.find(s => vid.currentTime >= s.start && vid.currentTime <= s.end)
+      if(sub){
+        ctx.fillStyle = 'rgba(0,0,0,0.75)'
+        ctx.fillRect(0, outCanvas.height-100, outCanvas.width, 80)
+        ctx.fillStyle = '#ffffff'
+        ctx.font = `bold ${Math.round(outCanvas.width/22)}px Arial`
+        ctx.textAlign = 'center'
+        ctx.fillText(sub.text, outCanvas.width/2, outCanvas.height-42)
+        ctx.textAlign = 'left'
+      }
+      const elapsed = vid.currentTime - startTime
+      setProgress(Math.round(Math.min(elapsed / segDuration * 100, 99)))
+      rafId = requestAnimationFrame(drawFrame)
+    }
+    rafId = requestAnimationFrame(drawFrame)
+
+    await vid.play()
+
+    // ── Step 6: wait for segment to end, then stop ───────────────────────────
+    await new Promise<void>(resolve => {
+      const checkEnd = setInterval(() => {
+        if(vid.currentTime >= endTime - 0.05 || vid.ended){
+          clearInterval(checkEnd)
+          cancelAnimationFrame(rafId)
+          vid.pause()
+          // Request any remaining data, then stop after buffer
+          recorder.requestData()
+          setTimeout(() => {
+            recorder.stop()
+          }, 300)
+        }
+      }, 50)
+
       recorder.onstop = () => {
         const blob = new Blob(chunks, { type: 'video/webm' })
-        const a = document.createElement('a')
-        a.href = URL.createObjectURL(blob)
-        a.download = filename
-        a.click()
-        resolve()
-      }
-
-      // Seek to start, then play and record in REAL TIME
-      vid.currentTime = startTime
-      vid.onseeked = async () => {
-        vid.onseeked = null
-        recorder.start(100) // collect data every 100ms
-
-        // Draw render loop while playing
-        let rafId = 0
-        const drawFrame = () => {
-          ctx.filter = filter.css || 'none'
-          ctx.drawImage(vid, cropX*scaleX, cropY*scaleY, cropW*scaleX, cropH*scaleY, 0, 0, outCanvas.width, outCanvas.height)
-          // Burn subtitles
-          const sub = subtitles.find(s => vid.currentTime >= s.start && vid.currentTime <= s.end)
-          if(sub){
-            ctx.fillStyle='rgba(0,0,0,0.75)'
-            ctx.fillRect(0, outCanvas.height-100, outCanvas.width, 80)
-            ctx.fillStyle='#ffffff'; ctx.font=`bold ${Math.round(outCanvas.width/22)}px Arial`
-            ctx.textAlign='center'; ctx.fillText(sub.text, outCanvas.width/2, outCanvas.height-42)
-            ctx.textAlign='left'
-          }
-          // Update progress
-          const elapsed = vid.currentTime - startTime
-          setProgress(Math.round(elapsed / segDuration * 100))
-          rafId = requestAnimationFrame(drawFrame)
+        if(blob.size === 0){
+          console.error('Recording produced 0 bytes — MediaRecorder may not be supported')
+          alert('Ошибка записи: файл пустой. Попробуй Chrome или Edge.')
+        } else {
+          const a = document.createElement('a')
+          a.href = URL.createObjectURL(blob)
+          a.download = filename
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
         }
-        rafId = requestAnimationFrame(drawFrame)
-
-        await vid.play()
-
-        // Stop when segment ends
-        const checkEnd = setInterval(() => {
-          if(vid.currentTime >= endTime - 0.05 || vid.ended || vid.paused){
-            clearInterval(checkEnd)
-            cancelAnimationFrame(rafId)
-            vid.pause()
-            setTimeout(() => recorder.stop(), 200) // small buffer
-          }
-        }, 50)
+        setProgress(100)
+        resolve()
       }
     })
   }
