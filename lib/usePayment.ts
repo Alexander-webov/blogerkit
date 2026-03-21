@@ -7,12 +7,12 @@ export const PRODUCTS: Record<ProductId, { name: string; price: number; label: s
   'channel-analysis': { name: 'Анализ YouTube канала',     price: 149, label: '149 ₽' },
   'mediakit':         { name: 'Медиакит PDF для блогера',   price: 149, label: '149 ₽' },
   'crop-pro':         { name: 'Видеоредактор Pro',          price: 149, label: '149 ₽' },
-  'analyze':          { name: 'Анализ конкурентов YouTube', price: 149,  label: '49 ₽'  },
+  'analyze':          { name: 'Анализ конкурентов YouTube', price: 149, label: '149 ₽' },
 }
 
-function paidKey      (p: ProductId) { return `bk_paid_${p}` }
-function stateKey     (p: ProductId) { return `bk_state_${p}` }
-function pendingPidKey(p: ProductId) { return `bk_pid_${p}` }
+function paidKey  (p: ProductId) { return `bk_paid_${p}` }
+function stateKey (p: ProductId) { return `bk_state_${p}` }
+function pidKey   (p: ProductId) { return `bk_pid_${p}` }  // localStorage — переживает редирект
 
 export function saveStateBeforePayment(product: ProductId, state: unknown) {
   try { sessionStorage.setItem(stateKey(product), JSON.stringify(state)) } catch {}
@@ -42,11 +42,20 @@ async function verifyPayment(paymentId: string): Promise<boolean> {
     const res = await fetch(`/api/payment/verify?payment_id=${paymentId}`)
     if (!res.ok) return false
     const data = await res.json()
-    // Платёж успешен ТОЛЬКО если status === 'succeeded' И paid === true
     return data.paid === true && data.status === 'succeeded'
   } catch {
     return false
   }
+}
+
+function confirmPaid(product: ProductId, setPaid: (v: boolean) => void, setJustPaid: (v: boolean) => void) {
+  setPaid(true)
+  setJustPaid(true)
+  try { localStorage.setItem(paidKey(product), '1') } catch {}
+  // Удаляем pending pid
+  try { localStorage.removeItem(pidKey(product)) } catch {}
+  clearSavedState(product)
+  setTimeout(() => setJustPaid(false), 5000)
 }
 
 export function usePayment(product: ProductId) {
@@ -58,7 +67,7 @@ export function usePayment(product: ProductId) {
   const [justPaid,  setJustPaid]  = useState(false)
 
   useEffect(() => {
-    // Уже оплачено ранее
+    // ── 1. Уже оплачено ранее ────────────────────────────────────────────────
     try {
       if (localStorage.getItem(paidKey(product)) === '1') { setPaid(true); return }
     } catch {}
@@ -66,41 +75,48 @@ export function usePayment(product: ProductId) {
     const params  = new URLSearchParams(window.location.search)
     const urlProd = params.get('product')
 
-    // ── Демо режим: ?paid=1 (только из нашей демо-страницы) ──────────────────
+    // ── 2. Демо режим (?paid=1 от нашей демо-страницы) ───────────────────────
     if (params.get('paid') === '1' && urlProd === product) {
       cleanUrl(['paid', 'product'])
-      setPaid(true); setJustPaid(true)
-      try { localStorage.setItem(paidKey(product), '1') } catch {}
-      clearSavedState(product)
-      setTimeout(() => setJustPaid(false), 5000)
+      confirmPaid(product, setPaid, setJustPaid)
       return
     }
 
-    // ── Возврат с ЮКасса: проверяем payment_id ───────────────────────────────
-    // ЮКасса возвращает пользователя на наш return_url
-    // Мы заранее сохранили paymentId в sessionStorage перед редиректом
-    if (urlProd === product) {
-      const savedPid = sessionStorage.getItem(pendingPidKey(product))
-      if (savedPid) {
-        cleanUrl(['product'])
-        setVerifying(true)
-        verifyPayment(savedPid).then(success => {
-          if (success) {
-            // ✅ Платёж реально прошёл — разблокируем
-            setPaid(true); setJustPaid(true)
-            try { localStorage.setItem(paidKey(product), '1') } catch {}
-            clearSavedState(product)
-            setTimeout(() => setJustPaid(false), 5000)
-          } else {
-            // ❌ Не оплачен / отменён / недостаточно средств
-            // Данные пользователя сохранены — может попробовать снова
-            console.log('Payment not confirmed, access denied')
-          }
-          // В любом случае удаляем pending pid
-          try { sessionStorage.removeItem(pendingPidKey(product)) } catch {}
-          setVerifying(false)
-        })
-      }
+    // ── 3. Возврат с ЮКасса ──────────────────────────────────────────────────
+    // payment_id может быть в URL (если передали через return_url)
+    // ИЛИ в localStorage (сохранили перед редиректом)
+    const urlPaymentId  = params.get('payment_id')
+    const savedPid      = (() => { try { return localStorage.getItem(pidKey(product)) } catch { return null } })()
+    const paymentId     = urlPaymentId || savedPid
+
+    if (paymentId && urlProd === product) {
+      cleanUrl(['payment_id', 'product'])
+      setVerifying(true)
+
+      verifyPayment(paymentId).then(success => {
+        if (success) {
+          confirmPaid(product, setPaid, setJustPaid)
+        } else {
+          // Не оплачен — данные пользователя остаются, может попробовать снова
+          console.log(`Payment ${paymentId} not confirmed`)
+          try { localStorage.removeItem(pidKey(product)) } catch {}
+        }
+      }).catch(() => {
+        console.error('Verify failed')
+      }).finally(() => {
+        setVerifying(false)
+      })
+      return
+    }
+
+    // ── 4. Вернулся без product= в URL, но есть сохранённый pid ─────────────
+    // (На случай если ЮКасса вернул на страницу без параметров)
+    if (savedPid && !urlProd) {
+      setVerifying(true)
+      verifyPayment(savedPid).then(success => {
+        if (success) confirmPaid(product, setPaid, setJustPaid)
+        else try { localStorage.removeItem(pidKey(product)) } catch {}
+      }).finally(() => setVerifying(false))
     }
   }, [product])
 
@@ -108,17 +124,16 @@ export function usePayment(product: ProductId) {
     setLoading(true); setError('')
     try {
       const res = await fetch('/api/payment/create', {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ product, returnUrl: window.location.href }),
       })
       const data = await res.json()
       if (!data.url) throw new Error(data.error || 'Ошибка создания платежа')
 
-      // Сохраняем payment_id ДО редиректа на ЮКасса
-      // После возврата восстановим и проверим статус
+      // Сохраняем payment_id в localStorage (переживает редирект на внешний домен)
       if (data.paymentId) {
-        try { sessionStorage.setItem(pendingPidKey(product), data.paymentId) } catch {}
+        try { localStorage.setItem(pidKey(product), data.paymentId) } catch {}
       }
 
       window.location.href = data.url
