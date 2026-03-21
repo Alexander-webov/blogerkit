@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "БлогерКит — инструменты для YouTube блогеров, бесплатно",
+  title: "БлогерКит — инструменты для Ютуб блогеров, бесплатно",
   description:
-    "Анализ YouTube канала, медиакит PDF, кроп видео для Shorts, генератор заголовков. Без регистрации. Бесплатные и Pro инструменты для блогеров.",
+    "Анализ Ютуб канала, медиакит PDF, кроп видео для Shorts, генератор заголовков. Без регистрации. Бесплатные и Pro инструменты для блогеров.",
   alternates: { canonical: "https://blogerkit.ru" },
 };
 
@@ -47,7 +47,7 @@ const proTools = [
 const freeTools = [
   {
     icon: "🔥",
-    name: "Тренды YouTube",
+    name: "Ютуб лучшее",
     desc: "Что набирает просмотры прямо сейчас",
     href: "/trends",
   },
@@ -59,8 +59,8 @@ const freeTools = [
   },
   {
     icon: "🎨",
-    name: "Конструктор обложек",
-    desc: "25+ шаблонов для YouTube и соцсетей",
+    name: "Конструктор Превью",
+    desc: "25+ шаблонов для Ютуб и соцсетей",
     href: "/covers",
   },
   {
@@ -71,15 +71,15 @@ const freeTools = [
   },
   {
     icon: "💡",
-    name: "Советы блогера",
+    name: "Советы блогера (ВАЖНО ЗНАТЬ)",
     desc: "Алгоритм, монетизация, рост канала",
     href: "/tips",
   },
   {
     icon: "📬",
-    name: "Рассылка",
+    name: "Полезные статьи (БЛОГ)",
     desc: "Тренды и советы каждую неделю",
-    href: "/subscribe",
+    href: "/blog",
   },
 ];
 
@@ -94,7 +94,7 @@ const faqs = [
   },
   {
     q: "Откуда берутся данные?",
-    a: "Официальный YouTube Data API v3 — те же данные что в YouTube Studio. Актуальные и достоверные.",
+    a: "Официальный Ютуб Data API v3 — те же данные что в Ютуб Studio. Актуальные и достоверные.",
   },
   {
     q: "Видео загружается на сервер?",
@@ -122,11 +122,11 @@ export default function HomePage() {
             href="/covers"
             className="text-sm text-muted hover:text-white transition-colors hidden sm:block"
           >
-            Обложки
+            Превью
           </Link>
           <Link
             href="/blog"
-            className="text-sm text-muted hover:text-white transition-colors hidden md:block"
+            className="text-sm text-muted hover:text-white transition-colors hidden md:block border p-1 border-[#db6565]"
           >
             Блог
           </Link>
@@ -141,24 +141,25 @@ export default function HomePage() {
 
       {/* HERO */}
       <section className="pt-16 sm:pt-20 pb-12 sm:pb-14 px-4 sm:px-6 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-sm text-muted mb-6 sm:mb-8">
-          🚀 Работает без регистрации · Данные YouTube API
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-[#da5454] text-sm text-muted mb-6 sm:mb-8">
+          🚀 Работает без регистрации · Данные Ютуб API
         </div>
         <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight mb-4 sm:mb-5">
           Инструменты для
           <br />
-          <span className="text-accent">YouTube блогеров</span>
+          <span className="text-accent">ВСЕХ блогеров</span>
         </h1>
         <p className="text-muted text-base sm:text-lg leading-relaxed max-w-xl mx-auto mb-6 sm:mb-8">
-          Анализ канала, медиакит для рекламодателей, кроп видео для Shorts и
-          AI-заголовки. Бесплатно и без регистрации.
+          Анализ ЮТУБ канала, медиакит для рекламодателей, обрезать видео.
+          Создать превью.{" "}
+          <span className="text-[#da5454]">Онлайн и без регистрации.</span>
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/covers"
             className="px-6 py-3 bg-accent text-white font-bold text-sm rounded-xl hover:opacity-90 transition-opacity text-center"
           >
-            Создать Обложку →
+            Создать Превью →
           </Link>
           <Link
             href="/mediakit"
@@ -349,8 +350,8 @@ export default function HomePage() {
             },
             {
               icon: "📊",
-              title: "Официальные данные YouTube",
-              desc: "Используем YouTube Data API v3 — те же данные что в YouTube Studio.",
+              title: "Официальные данные Ютуб",
+              desc: "Используем Ютуб Data API v3 — те же данные что в Ютуб Studio.",
             },
           ].map((item) => (
             <div key={item.title}>
@@ -418,7 +419,7 @@ export default function HomePage() {
             name: "БлогерКит",
             url: "https://blogerkit.ru",
             description:
-              "Бесплатные инструменты для YouTube блогеров без регистрации",
+              "Бесплатные инструменты для Ютуб блогеров без регистрации",
             potentialAction: {
               "@type": "SearchAction",
               target: "https://blogerkit.ru/analyze?q={search_term_string}",
