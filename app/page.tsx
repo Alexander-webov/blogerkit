@@ -85,6 +85,10 @@ const freeTools = [
 
 const faqs = [
   {
+    q: "На сколько дается доступ к платной услуги? ",
+    a: "Доступ дается только на ту услугу, которую вы оплатили и только на один раз. Мы не гарантируем но в отдельных случаях услуга будет работать до момента закрытия вкладки браузера. Если вы закрыли вкладку и не воспользовались услугой, мы не делаем возврат средств.",
+  },
+  {
     q: "Нужно ли регистрироваться?",
     a: "Нет. Все инструменты работают без регистрации прямо в браузере. Pro активируется разовым платежом через ЮКасса.",
   },
@@ -109,14 +113,14 @@ export default function HomePage() {
       <nav className="sticky top-0 z-50 h-14 flex items-center justify-between px-4 sm:px-6 bg-bg/95 backdrop-blur border-b border-border">
         <div className="font-heading text-sm font-black flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-accent animate-pulse2" />
-          БлогерКит
+          <Link href="/">БлогерКит</Link>
         </div>
         <div className="flex items-center gap-2 sm:gap-4">
           <Link
             href="/trends"
             className="text-sm text-muted hover:text-white transition-colors hidden sm:block"
           >
-            Тренды
+            Лучшее
           </Link>
           <Link
             href="/covers"
@@ -126,9 +130,15 @@ export default function HomePage() {
           </Link>
           <Link
             href="/blog"
-            className="text-sm text-muted hover:text-white transition-colors hidden md:block border p-1 border-[#db6565]"
+            className="text-sm text-muted hover:text-white transition-colors hidden md:block "
           >
             Блог
+          </Link>
+          <Link
+            href="/faq"
+            className="text-sm text-muted hover:text-white transition-colors hidden md:block "
+          >
+            FAQ
           </Link>
           <Link
             href="/channel-analysis"
