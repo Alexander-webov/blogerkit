@@ -108,9 +108,38 @@ export default function AnalyzeTool() {
       console.log('[analyze] API response:', res.status, 'videos:', data.videos?.length, 'error:', data.error)
       if (!res.ok) throw new Error(data.error || `Ошибка API (${res.status})`)
       if (!data.videos?.length) throw new Error('YouTube не вернул видео по этому запросу. Попробуй другую нишу или период.')
-      console.log('[analyze] setting videos, meta:', !!data.meta, 'videos:', data.videos.length)
-      setVideos(data.videos)
-      setMeta(data.meta)
+      // API может не возвращать meta — вычисляем на клиенте
+      const vids = data.videos
+      const metaObj: Meta = data.meta || (() => {
+        const totalViews  = vids.reduce((s: number, v: any) => s + (v.views||0), 0)
+        const avgViews    = vids.length ? Math.round(totalViews / vids.length) : 0
+        const shortsCount = vids.filter((v: any) => v.isShort || (v.durationSec>0 && v.durationSec<=60)).length
+        const avgLikeRate = vids.length
+          ? +(vids.reduce((s: number, v: any) => s + (v.likeRate||0), 0) / vids.length).toFixed(2)
+          : 0
+        // title word frequency
+        const stop = new Set(['и','в','на','с','по','за','для','из','от','до','как','что','это','или','но','а','не','все','мой','моя','я','он','она','они','его','её','их'])
+        const freq: Record<string, number> = {}
+        vids.forEach((v: any) => {
+          (v.title||'').toLowerCase().replace(/[^а-яёa-z0-9\s]/gi,' ').split(/\s+/)
+            .filter((w: string) => w.length > 2 && !stop.has(w))
+            .forEach((w: string) => { freq[w] = (freq[w]||0)+1 })
+        })
+        const topWords = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,20).map(([word,count])=>({word,count}))
+        return {
+          totalVideos:  vids.length,
+          totalViews,
+          avgViews,
+          avgLikeRate,
+          shortsCount,
+          longCount:    vids.length - shortsCount,
+          competition:  avgViews > 1_500_000 ? 'Высокая' : avgViews > 300_000 ? 'Средняя' : 'Низкая',
+          topWords,
+        }
+      })()
+      console.log('[analyze] setting videos:', vids.length, 'meta computed:', !!metaObj)
+      setVideos(vids)
+      setMeta(metaObj)
       setShowResults(true)
       try { localStorage.removeItem('bk_analyze_query') } catch {}
     } catch (e: any) {
