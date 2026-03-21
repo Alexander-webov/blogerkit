@@ -7,7 +7,7 @@ export const PRODUCTS: Record<ProductId, { name: string; price: number; label: s
   'channel-analysis': { name: 'Анализ YouTube канала',     price: 149, label: '149 ₽' },
   'mediakit':         { name: 'Медиакит PDF для блогера',   price: 149, label: '149 ₽' },
   'crop-pro':         { name: 'Видеоредактор Pro',          price: 149, label: '149 ₽' },
-  'analyze':          { name: 'Анализ конкурентов YouTube', price: 49,  label: '49 ₽'  },
+  'analyze':          { name: 'Анализ конкурентов YouTube', price: 149,  label: '49 ₽'  },
 }
 
 function paidKey      (p: ProductId) { return `bk_paid_${p}` }

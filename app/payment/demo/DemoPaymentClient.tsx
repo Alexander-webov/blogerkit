@@ -6,7 +6,7 @@ const PRICES: Record<string, { label: string; price: number }> = {
   'channel-analysis': { label: 'Анализ YouTube канала', price: 149 },
   'mediakit':         { label: 'Медиакит PDF',           price: 149 },
   'crop-pro':         { label: 'Видеоредактор Pro',      price: 149 },
-  'analyze':          { label: 'Анализ конкурентов',     price: 49  },
+  'analyze':          { label: 'Анализ конкурентов',     price: 149 },
 }
 
 export default function DemoPaymentClient() {
