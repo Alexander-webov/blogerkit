@@ -78,14 +78,60 @@ export default function AnalyzeTool() {
   const [paywallM, setPaywallM] = useState<Meta | null>(null)
   const [expanded, setExpanded] = useState<string | null>(null)
 
-  const { paid, justPaid, info } = usePayment('analyze')
+  const { paid, justPaid, info, verifying } = usePayment('analyze')
 
+  // Restore saved state after payment redirect
   useEffect(() => {
     const saved = restoreStateAfterPayment<{ query: string; videos: Video[]; meta: Meta }>('analyze')
     if (saved?.videos?.length) {
       setQuery(saved.query); setVideos(saved.videos); setMeta(saved.meta); setStatus('results')
+    } else {
+      // sessionStorage might be cleared — restore just the query from localStorage
+      try {
+        const savedQ = localStorage.getItem('bk_analyze_query')
+        if (savedQ) setQuery(savedQ)
+      } catch {}
     }
   }, [])
+
+  // Auto-show results when payment verified
+  useEffect(() => {
+    if (!paid) return
+    // Case 1: already have fetched data in memory
+    if (paywallV.length > 0 && status !== 'results') {
+      setVideos(paywallV); setMeta(paywallM); setStatus('results')
+      try { localStorage.removeItem('bk_analyze_query') } catch {}
+      return
+    }
+    // Case 2: data was in sessionStorage (may survive redirect)
+    const saved = restoreStateAfterPayment<{ query: string; videos: Video[]; meta: Meta }>('analyze')
+    if (saved?.videos?.length) {
+      setQuery(saved.query); setVideos(saved.videos); setMeta(saved.meta); setStatus('results')
+      try { localStorage.removeItem('bk_analyze_query') } catch {}
+      return
+    }
+    // Case 3: sessionStorage cleared, but have query saved — auto-trigger search
+    // (search() will see paid=true and show results directly)
+    const savedQ = (() => { try { return localStorage.getItem('bk_analyze_query') } catch { return null } })()
+    if (savedQ && status === 'idle') {
+      setQuery(savedQ)
+      // Small delay so query state updates before search runs
+      setTimeout(() => {
+        setStatus('loading')
+        fetch(`/api/youtube?q=${encodeURIComponent(savedQ)}&period=month`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.videos?.length) {
+              setVideos(data.videos); setMeta(data.meta); setStatus('results')
+              try { localStorage.removeItem('bk_analyze_query') } catch {}
+            } else {
+              setStatus('idle')
+            }
+          })
+          .catch(() => setStatus('idle'))
+      }, 300)
+    }
+  }, [paid])
 
   async function search() {
     const q = query.trim(); if (!q) return
@@ -95,8 +141,16 @@ export default function AnalyzeTool() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Ошибка API')
       setPaywallQ(q); setPaywallV(data.videos); setPaywallM(data.meta)
-      if (paid) { setVideos(data.videos); setMeta(data.meta); setStatus('results') }
-      else { saveStateBeforePayment('analyze', { query: q, videos: data.videos, meta: data.meta }); setStatus('paywall') }
+      if (paid) {
+        // Уже оплачено — сразу показываем результаты
+        setVideos(data.videos); setMeta(data.meta); setStatus('results')
+        try { localStorage.removeItem('bk_analyze_query') } catch {}
+      } else {
+        // Не оплачено — сохраняем данные и показываем paywall
+        saveStateBeforePayment('analyze', { query: q, videos: data.videos, meta: data.meta })
+        try { localStorage.setItem('bk_analyze_query', q) } catch {}
+        setStatus('paywall')
+      }
     } catch (e: any) { setError(e.message); setStatus('idle') }
   }
 
@@ -117,7 +171,12 @@ export default function AnalyzeTool() {
           <Link href="/" className="font-heading text-sm font-black flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-accent animate-pulse2"/>БлогерКит
           </Link>
-          <div className="text-muted text-xs">🔍 Анализ конкурентов · 149 ₽</div>
+          <div className="text-muted text-xs">
+            {verifying
+              ? <span className="text-yellow-400 flex items-center gap-1.5"><span className="w-3 h-3 border-2 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin inline-block"/>Проверяем оплату...</span>
+              : '🔍 Анализ конкурентов · 149 ₽'
+            }
+          </div>
         </nav>
 
         {/* HERO */}
