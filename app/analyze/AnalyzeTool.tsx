@@ -37,11 +37,6 @@ function Paywall({ query, onSuccess, onClose }: {
 }) {
   const { startPayment, loading, error, paid } = usePayment('analyze')
 
-  useEffect(() => {
-    // Save query+results to session before payment redirect
-    if (query) saveStateBeforePayment('analyze', { query, videos })
-  }, [query, videos])
-
   if (paid) {
     onSuccess()
     return null
@@ -143,6 +138,7 @@ export default function AnalyzeTool() {
         setVideos(data.videos)
         setStatus('results')
       } else {
+        saveStateBeforePayment('analyze', { query: q, videos: data.videos })
         setStatus('paywall')
       }
     } catch(e: any) {
