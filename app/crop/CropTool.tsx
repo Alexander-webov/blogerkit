@@ -170,12 +170,23 @@ export default function CropTool() {
     vid.onloadedmetadata=()=>{
       const scale=Math.min(800/vid.videoWidth,500/vid.videoHeight,1)
       const dw=Math.round(vid.videoWidth*scale),dh=Math.round(vid.videoHeight*scale)
-      setDuration(vid.duration);pendingInit.current={dw,dh};setLoaded(true)
+      pendingInit.current={dw,dh}
+      // duration may still be Infinity here for some formats — wait for it
+      if(isFinite(vid.duration) && vid.duration > 0){
+        setDuration(vid.duration); setLoaded(true)
+      }
+    }
+    // ondurationchange fires when duration becomes known (fixes Infinity:NaN)
+    vid.ondurationchange=()=>{
+      if(isFinite(vid.duration) && vid.duration > 0){
+        setDuration(vid.duration)
+        if(pendingInit.current) setLoaded(true)
+      }
     }
     vid.onplay  = () => setIsPlaying(true)
     vid.onpause = () => setIsPlaying(false)
     vid.onended = () => setIsPlaying(false)
-    // НЕ запускаем автовоспроизведение — пользователь сам нажмёт Play
+    vid.load() // force metadata fetch without autoplay
   }
 
   // ── SETUP AUDIO CONTEXT (once per file) ─────────────────────────────────────
@@ -474,7 +485,7 @@ export default function CropTool() {
                     className="w-8 h-8 flex items-center justify-center bg-purple-500/20 rounded-lg text-purple-400 text-sm hover:bg-purple-500/30">
                     {isPlaying ? '⏸' : '▶'}
                   </button>
-                  <div className="text-muted text-xs">{fmtT(currentTime)} / {fmtT(duration)}</div>
+                  <div className="text-muted text-xs">{fmtT(currentTime)} / {isFinite(duration) && duration > 0 ? fmtT(duration) : '...'}</div>
                   {mode==='split'&&(
                     <button onClick={()=>setSplitPoints(prev=>[...prev,currentTime].sort((a,b)=>a-b))}
                       className="ml-auto px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-lg border border-red-500/30 hover:bg-red-500/30">
@@ -484,11 +495,12 @@ export default function CropTool() {
                 </div>
                 <div className="relative h-8 bg-surface rounded-lg overflow-hidden cursor-pointer"
                   onClick={e=>{
+                    if(!isFinite(duration) || duration <= 0) return
                     const rect=e.currentTarget.getBoundingClientRect()
                     const pct=(e.clientX-rect.left)/rect.width
                     if(videoRef.current) videoRef.current.currentTime=pct*duration
                   }}>
-                  <div className="h-full bg-purple-500/30 rounded-lg" style={{width:`${(currentTime/duration)*100}%`}}/>
+                  <div className="h-full bg-purple-500/30 rounded-lg" style={{width:`${isFinite(duration) && duration > 0 ? (currentTime/duration)*100 : 0}%`}}/>
                   {splitPoints.map((p,i)=>(
                     <div key={i} className="absolute top-0 h-full w-0.5 bg-red-400" style={{left:`${(p/duration)*100}%`}}>
                       <div className="absolute -top-1 -translate-x-1/2 text-red-400 text-xs">✂</div>
@@ -533,9 +545,11 @@ export default function CropTool() {
                       onChange={e=>setSplitCount(Number(e.target.value))}
                       className="w-16 px-2 py-1 bg-surface border border-border rounded text-sm text-center outline-none"/>
                     <button onClick={()=>{
+                      if(!isFinite(duration) || duration <= 0) return
                       const pts=Array.from({length:splitCount-1},(_,i)=>(i+1)*duration/splitCount)
                       setSplitPoints(pts)
-                    }} className="px-3 py-1.5 bg-purple-500/20 text-purple-400 text-xs rounded-lg border border-purple-500/30 hover:bg-purple-500/30">
+                    }} className="px-3 py-1.5 bg-purple-500/20 text-purple-400 text-xs rounded-lg border border-purple-500/30 hover:bg-purple-500/30 disabled:opacity-40"
+                      disabled={!isFinite(duration) || duration <= 0}>
                       Разбить равномерно
                     </button>
                     <button onClick={()=>setSplitPoints([])}
