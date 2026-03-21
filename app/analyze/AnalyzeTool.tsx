@@ -694,7 +694,11 @@ export default function AnalyzeTool() {
                           }
                           className="flex-shrink-0 self-center w-8 h-8 flex items-center justify-center text-muted hover:text-white transition-colors text-sm"
                         >
-                          {expanded === v.id ? "Инфо" : "Скрыть"}
+                          {expanded === v.id ? (
+                            <span className="pr-2">Скрыть</span>
+                          ) : (
+                            <span className="pr-2">Инфо</span>
+                          )}
                         </button>
                       </div>
 
