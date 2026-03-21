@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const proTools = [
   {
     icon: "📡",
-    name: "Анализ своего канала",
+    name: "Анализ своего YouTube канала",
     desc: "Статистика, топ видео, AI-советы по развитию. Без регистрации — вставь ссылку и получи результат.",
     href: "/channel-analysis",
     price: "Pro 149 ₽",
@@ -27,7 +27,7 @@ const proTools = [
   },
   {
     icon: "🔍",
-    name: "Анализ конкурентов",
+    name: "Анализ YouTube конкурентов",
     desc: "Топ видео и паттерны любого канала",
     href: "/analyze",
     price: "Pro 149 ₽",
