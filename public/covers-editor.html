@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Конструктор обложек — БлогерКит</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Oswald:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Oswald:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Bebas+Neue&family=Anton&family=Russo+One&family=Black+Han+Sans&family=Righteous&family=Exo+2:ital,wght@0,900;1,900&family=Bangers&family=Passion+One:wght@900&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -68,6 +68,13 @@
     .ov-gold{background:linear-gradient(145deg,rgba(100,60,0,.75) 0%,rgba(0,0,0,.6) 100%)}
     .ov-purple{background:linear-gradient(145deg,rgba(60,0,100,.75) 0%,rgba(0,0,0,.55) 100%)}
     .ov-green{background:linear-gradient(145deg,rgba(0,60,30,.75) 0%,rgba(0,0,0,.55) 100%)}
+    .ov-neon{background:linear-gradient(145deg,rgba(0,0,0,.82) 0%,rgba(10,0,40,.75) 100%)}
+    .ov-white{background:linear-gradient(to top,rgba(255,255,255,.95) 0%,rgba(255,255,255,.6) 50%,rgba(255,255,255,.1) 100%)}
+    .ov-split{background:linear-gradient(to right,rgba(0,0,0,.92) 0%,rgba(0,0,0,.92) 50%,rgba(0,0,0,.0) 50%)}
+    .ov-top{background:linear-gradient(to bottom,rgba(0,0,0,.88) 0%,rgba(0,0,0,.3) 45%,transparent 100%);justify-content:flex-start}
+    .ov-orange{background:linear-gradient(145deg,rgba(180,60,0,.78) 0%,rgba(0,0,0,.55) 100%)}
+    .ov-teal{background:linear-gradient(145deg,rgba(0,80,80,.78) 0%,rgba(0,0,0,.55) 100%)}
+    .ov-pink{background:linear-gradient(145deg,rgba(150,0,80,.72) 0%,rgba(0,0,0,.55) 100%)}
 
     .ov-tag{display:inline-block;padding:.18rem .55rem;border-radius:4px;font-size:.58rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem;width:fit-content}
     .tag-r{background:var(--accent);color:#fff}
@@ -78,6 +85,15 @@
     .tag-p{background:#7c3aed;color:#fff}
 
     .ov-h{font-family:'Unbounded',sans-serif;font-size:.95rem;font-weight:900;color:#fff;line-height:1.2;letter-spacing:-.02em;text-shadow:0 2px 12px rgba(0,0,0,.8)}
+    /* 3D TEXT STYLES */
+    .txt-3d-fire{text-shadow:0 0 20px #ff6600,0 0 40px #ff3300,2px 2px 0 #cc2200,4px 4px 0 #991900,6px 6px 0 #661000,8px 8px 8px rgba(0,0,0,.9);-webkit-text-stroke:1px #ff8800}
+    .txt-3d-ice{text-shadow:0 0 20px #00d4ff,0 0 40px #0088ff,2px 2px 0 #0066cc,4px 4px 0 #004499,6px 6px 0 #002266,8px 8px 8px rgba(0,0,0,.9);-webkit-text-stroke:1px #44ddff}
+    .txt-3d-gold{text-shadow:0 0 15px #ffcc00,2px 2px 0 #cc9900,4px 4px 0 #996600,6px 6px 0 #663300,8px 8px 8px rgba(0,0,0,.9);-webkit-text-stroke:1px #ffee88}
+    .txt-3d-white{text-shadow:2px 2px 0 #888,4px 4px 0 #666,6px 6px 0 #444,8px 8px 8px rgba(0,0,0,.8);-webkit-text-stroke:1px rgba(255,255,255,.3)}
+    .txt-3d-green{text-shadow:0 0 20px #00ff88,2px 2px 0 #00aa55,4px 4px 0 #007733,6px 6px 0 #004422,8px 8px 8px rgba(0,0,0,.9);-webkit-text-stroke:1px #44ffaa}
+    .txt-3d-purple{text-shadow:0 0 20px #aa00ff,2px 2px 0 #7700cc,4px 4px 0 #440099,6px 6px 0 #220066,8px 8px 8px rgba(0,0,0,.9);-webkit-text-stroke:1px #cc44ff}
+    .txt-3d-red{text-shadow:2px 2px 0 #990000,4px 4px 0 #660000,6px 6px 0 #330000,8px 8px 8px rgba(0,0,0,.9);-webkit-text-stroke:2px #ff0000}
+    .txt-3d-chrome{text-shadow:0 1px 0 #fff,2px 2px 0 #999,4px 4px 0 #666,6px 6px 8px rgba(0,0,0,.8);-webkit-text-stroke:1px rgba(200,200,200,.5)}
     .ov-h.oswald{font-family:'Oswald',sans-serif;font-size:1.2rem;text-transform:uppercase}
     .ov-s{font-size:.62rem;color:rgba(255,255,255,.6);margin-top:.25rem;font-weight:500}
 
@@ -201,6 +217,8 @@
       <button class="s-btn" onclick="filterCat('food',this)"><span class="s-icon">🍕</span>Еда</button>
       <button class="s-btn" onclick="filterCat('beauty',this)"><span class="s-icon">💄</span>Красота</button>
       <button class="s-btn" onclick="filterCat('gaming',this)"><span class="s-icon">🎮</span>Игры</button>
+      <button class="s-btn" onclick="filterCat('3d',this)" style="color:#fbbf24;border-color:rgba(251,191,36,.3)"><span class="s-icon">✨</span>3D стиль</button>
+      <button class="s-btn" onclick="filterCat('multicolor',this)" style="color:#ff6b6b;border-color:rgba(255,107,107,.3)"><span class="s-icon">🎨</span>Многоцвет</button>
       <button class="s-btn" onclick="filterCat('motivation',this)"><span class="s-icon">🧠</span>Мотивация</button>
       <div class="s-label" style="margin-top:auto">Или</div>
       <button class="s-btn" onclick="setMode('editor',document.querySelectorAll('.mode-tab')[1])" style="border-color:rgba(255,61,90,.3);color:#ff8099">
@@ -310,13 +328,24 @@
           <textarea id="txtVal" class="prop-inp" rows="3" style="resize:none;margin-bottom:.4rem" oninput="setTxtProp('text',this.value)"></textarea>
           <div class="prop-lbl" style="margin-top:.4rem">Шрифт</div>
           <select class="font-sel" id="fontFam" onchange="setTxtProp('fontFamily',this.value)">
-            <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
-            <option value="Unbounded">Unbounded</option>
-            <option value="Oswald">Oswald</option>
-            <option value="Impact">Impact</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Arial">Arial</option>
-            <option value="Courier New">Courier New</option>
+            <optgroup label="🔥 Топ для превью">
+              <option value="Bebas Neue">Bebas Neue — YouTube хит</option>
+              <option value="Anton">Anton — агрессивный</option>
+              <option value="Impact">Impact — классика</option>
+              <option value="Bangers">Bangers — комикс</option>
+              <option value="Black Han Sans">Black Han Sans — корейский блок</option>
+              <option value="Russo One">Russo One — русский стиль</option>
+              <option value="Oswald">Oswald — вытянутый</option>
+              <option value="Righteous">Righteous — ретро</option>
+              <option value="Passion One">Passion One — сжатый</option>
+              <option value="Exo 2">Exo 2 — технологичный</option>
+            </optgroup>
+            <optgroup label="Стандартные">
+              <option value="Unbounded">Unbounded</option>
+              <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Arial">Arial</option>
+            </optgroup>
           </select>
         </div>
         <div class="prop-sec">
@@ -450,6 +479,321 @@ const TPLS = [
   // MOTIVATION
   {id:'mot1',cat:'motivation',name:'Мотивация / Успех',img:'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=75',ov:'ov-gold',h:'5 ПРАВИЛ КОТОРЫЕ ИЗМЕНИЛИ МОЮ ЖИЗНЬ',s:'Начни применять их прямо сейчас',tag:'🧠 МОТИВАЦИЯ',tc:'#fbbf24',tf:'Unbounded',cls:''},
   {id:'mot2',cat:'motivation',name:'Утренняя рутина',img:'https://images.unsplash.com/photo-1541480601022-2308c0f02487?w=800&q=75',ov:'ov-green',h:'Я ВСТАВАЛ В 5 УТРА 30 ДНЕЙ',s:'Честный результат без прикрас',tag:'⏰ ЧЕЛЛЕНДЖ',tc:'#6ee7b7',tf:'Unbounded',cls:''},
+  // НEON DARK
+  {id:'neon1',cat:'tech',name:'Неон / ИИ',img:'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=75',ov:'ov-neon',h:'КАК РАБОТАЕТ ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ',s:'Объясняю на пальцах за 10 минут',tag:'🤖 ИИ',tc:'#00ff88',tf:'Oswald',cls:'oswald'},
+  {id:'neon2',cat:'gaming',name:'Неон / Киберпанк',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=75',ov:'ov-neon',h:'CYBERPUNK 2025',s:'Лучший гайд который ты найдёшь',tag:'💜 ГАЙД',tc:'#a855f7',tf:'Oswald',cls:'oswald'},
+  {id:'neon3',cat:'motivation',name:'Неон / Мотивация',img:'https://images.unsplash.com/photo-1514363933909-70e1b6e8e47b?w=800&q=75',ov:'ov-neon',h:'НЕ ОСТАНАВЛИВАЙСЯ',s:'Когда хочется всё бросить — читай это',tag:'⚡ МОТИВАЦИЯ',tc:'#facc15',tf:'Unbounded',cls:''},
+  // СВЕТЛЫЙ
+  {id:'light1',cat:'lifestyle',name:'Светлый / Минимализм',img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=75',ov:'ov-white',h:'МОЙ МИНИМАЛИСТИЧНЫЙ ДЕНЬ',s:'Меньше вещей — больше счастья',tag:'🤍 СТИЛЬ',tc:'#1a1a1a',tf:'Unbounded',cls:''},
+  {id:'light2',cat:'food',name:'Светлый / Завтрак',img:'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=75',ov:'ov-white',h:'ИДЕАЛЬНЫЙ ЗАВТРАК',s:'Полезно и вкусно — мой рецепт',tag:'☀️ УТРО',tc:'#1a1a1a',tf:'Oswald',cls:'oswald'},
+  {id:'light3',cat:'beauty',name:'Светлый / Бьюти',img:'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800&q=75',ov:'ov-white',h:'УХОД ЗА КОЖЕЙ 2025',s:'Что реально работает из дрогери',tag:'✨ BEAUTY',tc:'#1a1a1a',tf:'Unbounded',cls:''},
+  // СПЛИТ
+  {id:'split1',cat:'finance',name:'Сплит / Финансы',img:'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=75',ov:'ov-split',h:'ДО И ПОСЛЕ',s:'Как инвестиции изменили мою жизнь',tag:'📊 СРАВНЕНИЕ',tc:'#fbbf24',tf:'Unbounded',cls:''},
+  {id:'split2',cat:'sport',name:'Сплит / Трансформация',img:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=75',ov:'ov-split',h:'-20 КГ ЗА 3 МЕСЯЦА',s:'Правда которую не говорят в интернете',tag:'💪 ДО/ПОСЛЕ',tc:'#fff',tf:'Oswald',cls:'oswald'},
+  // ЗАГОЛОВОК СВЕРХУ
+  {id:'top1',cat:'travel',name:'Сверху / Горы',img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=75',ov:'ov-top',h:'Я ПОКОРИЛ ЭТУ ГОРУ',s:'То что никто не ожидал увидеть на вершине',tag:'🏔 ЭКСПЕДИЦИЯ',tc:'#fff',tf:'Unbounded',cls:''},
+  {id:'top2',cat:'lifestyle',name:'Сверху / Ночь',img:'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=75',ov:'ov-top',h:'САМАЯ ДИКАЯ НОЧЬ',s:'О которой я пожалел на следующий день',tag:'🎉 ИСТОРИЯ',tc:'#fff',tf:'Oswald',cls:'oswald'},
+  // ОРАНЖЕВЫЙ
+  {id:'org1',cat:'motivation',name:'Оранжевый / Энергия',img:'https://images.unsplash.com/photo-1552581234-26160f608093?w=800&q=75',ov:'ov-orange',h:'СДЕЛАЙ ЭТО СЕГОДНЯ',s:'5 привычек которые меняют жизнь',tag:'🔥 ДЕЙСТВУЙ',tc:'#fed7aa',tf:'Unbounded',cls:''},
+  {id:'org2',cat:'sport',name:'Оранжевый / Баскет',img:'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=75',ov:'ov-orange',h:'КАК Я НАУЧИЛСЯ ИГРАТЬ',s:'С нуля до первой игры за команду',tag:'🏀 СПОРТ',tc:'#fff',tf:'Oswald',cls:'oswald'},
+  {id:'org3',cat:'cars',name:'Оранжевый / Закат',img:'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&q=75',ov:'ov-orange',h:'ROAD TRIP 5000 КМ',s:'Один. Без навигатора. Без плана.',tag:'🚗 ПУТЕШЕСТВИЕ',tc:'#fed7aa',tf:'Unbounded',cls:''},
+  // БИРЮЗА
+  {id:'teal1',cat:'travel',name:'Бирюза / Океан',img:'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=75',ov:'ov-teal',h:'МАЛЬДИВЫ ЗА 80 000 РУБ',s:'Как я это сделал и ты можешь',tag:'🌊 ПУТЕШЕСТВИЕ',tc:'#99f6e4',tf:'Unbounded',cls:''},
+  {id:'teal2',cat:'lifestyle',name:'Бирюза / Море',img:'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&q=75',ov:'ov-teal',h:'ЖИЗНЬ У ОКЕАНА',s:'Как я переехал на берег моря',tag:'🏖 ВЛОГ',tc:'#fff',tf:'Unbounded',cls:''},
+  // РОЗОВЫЙ
+  {id:'pink1',cat:'beauty',name:'Розовый / Гламур',img:'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&q=75',ov:'ov-pink',h:'ОБРАЗ ЗА 15 МИНУТ',s:'Базовый гардероб который работает всегда',tag:'💗 СТИЛЬ',tc:'#fce7f3',tf:'Unbounded',cls:''},
+  {id:'pink2',cat:'lifestyle',name:'Розовый / Романтика',img:'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&q=75',ov:'ov-pink',h:'КАК НАЙТИ ИДЕАЛЬНОГО ПАРТНЁРА',s:'Психолог объясняет что важно',tag:'❤️ ОТНОШЕНИЯ',tc:'#fff',tf:'Oswald',cls:'oswald'},
+  // БОКОВОЙ НОВЫЕ
+  {id:'side1',cat:'finance',name:'Боковой / Стартап',img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=75',ov:'ov-side',h:'МОЙ СТАРТАП ПРОВАЛИЛСЯ',s:'Потерял 2 миллиона — вот уроки',tag:'💸 БИЗНЕС',tc:'#fff',tf:'Unbounded',cls:''},
+  {id:'side2',cat:'tech',name:'Боковой / Код',img:'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=75',ov:'ov-side',h:'КАК Я СТАЛ РАЗРАБОТЧИКОМ',s:'Путь от нуля до первой работы',tag:'👨‍💻 КОД',tc:'#00d4ff',tf:'Oswald',cls:'oswald'},
+  {id:'side3',cat:'motivation',name:'Боковой / Победа',img:'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?w=800&q=75',ov:'ov-side',h:'ОНИ ГОВОРИЛИ НЕВОЗМОЖНО',s:'Я сделал это за 6 месяцев',tag:'🏆 ПОБЕДА',tc:'#fbbf24',tf:'Unbounded',cls:''},
+  // ОБРАЗОВАНИЕ
+  {id:'edu1',cat:'motivation',name:'Книги',img:'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=75',ov:'ov-gold',h:'10 КНИГ КОТОРЫЕ ИЗМЕНИЛИ МОЙ МОЗГ',s:'Читай их пока ещё не поздно',tag:'📚 КНИГИ',tc:'#fbbf24',tf:'Unbounded',cls:''},
+  {id:'edu2',cat:'tech',name:'Онлайн обучение',img:'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&q=75',ov:'ov-blue',h:'КУРС ЗА 0 РУБЛЕЙ',s:'Где учиться бесплатно в 2025 году',tag:'🎓 ОБРАЗОВАНИЕ',tc:'#93c5fd',tf:'Unbounded',cls:''},
+  // НОВЫЕ ПУТЕШЕСТВИЯ
+  {id:'trv3',cat:'travel',name:'Париж',img:'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=75',ov:'ov-dark',h:'ПАРИЖ ЗА 3 ДНЯ',s:'Полный маршрут без туристических ловушек',tag:'🗼 PARIS',tc:'#fbbf24',tf:'Unbounded',cls:''},
+  {id:'trv4',cat:'travel',name:'Токио / Япония',img:'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=75',ov:'ov-purple',h:'ТОКИО ЗА 7 ДНЕЙ',s:'Всё что я хотел бы знать заранее',tag:'🗾 ЯПОНИЯ',tc:'#e9d5ff',tf:'Unbounded',cls:''},
+  // ФИНАНСЫ НОВЫЕ
+  {id:'fin4',cat:'finance',name:'Биткоин',img:'https://images.unsplash.com/photo-1621504450181-5d356f61d307?w=800&q=75',ov:'ov-gold',h:'Я КУПИЛ БИТКОИН В 2020',s:'Что из этого вышло — честно',tag:'₿ КРИПТА',tc:'#fbbf24',tf:'Oswald',cls:'oswald'},
+  {id:'fin5',cat:'finance',name:'Пассивный доход',img:'https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=800&q=75',ov:'ov-green',h:'100 000 РУБ ПАССИВНОГО ДОХОДА',s:'Источники которые работают пока ты спишь',tag:'💸 ДОХОД',tc:'#6ee7b7',tf:'Unbounded',cls:''},
+  // ЗДОРОВЬЕ
+  {id:'hlth1',cat:'sport',name:'Сон / Эксперимент',img:'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&q=75',ov:'ov-dark',h:'Я СПАЛ 8 ЧАСОВ 30 ДНЕЙ',s:'Что изменилось в моей жизни',tag:'😴 ЭКСПЕРИМЕНТ',tc:'#a5f3fc',tf:'Unbounded',cls:''},
+  {id:'hlth2',cat:'food',name:'Без сахара',img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=75',ov:'ov-green',h:'Я НЕ ЕЛ САХАР 30 ДНЕЙ',s:'Неожиданные результаты которые меня удивили',tag:'🥗 ЗДОРОВЬЕ',tc:'#6ee7b7',tf:'Unbounded',cls:''},
+  // ПОДКАСТ / СТУДИЯ
+  {id:'pod1',cat:'lifestyle',name:'Подкаст / Студия',img:'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800&q=75',ov:'ov-dark',h:'МОЙ ПЕРВЫЙ ПОДКАСТ',s:'Что я узнал записав 100 эпизодов',tag:'🎙 ПОДКАСТ',tc:'#fff',tf:'Unbounded',cls:''},
+  {id:'pod2',cat:'lifestyle',name:'Концерт / Музыка',img:'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&q=75',ov:'ov-purple',h:'ЗА КУЛИСАМИ КОНЦЕРТА',s:'Как это выглядит с другой стороны',tag:'🎵 МУЗЫКА',tc:'#e9d5ff',tf:'Unbounded',cls:''},
+  // СЕМЬЯ И ПИТОМЦЫ
+  {id:'fam1',cat:'lifestyle',name:'Семья / Дети',img:'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&q=75',ov:'ov-gold',h:'КАК Я СТАЛ ОТЦОМ',s:'Первый год — честно и без прикрас',tag:'👶 СЕМЬЯ',tc:'#fbbf24',tf:'Unbounded',cls:''},
+  {id:'pet1',cat:'lifestyle',name:'Питомцы / Собака',img:'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&q=75',ov:'ov-dark',h:'МОЯ СОБАКА ИЗМЕНИЛА МОЮ ЖИЗНЬ',s:'Чему она меня научила за 3 года',tag:'🐕 ПИТОМЦЫ',tc:'#fbbf24',tf:'Unbounded',cls:''},
+
+  // ═══════════════════════════════════════════════════════
+  // 3D FIRE — Огненный стиль (жёлтый/оранжевый экструзия)
+  // ═══════════════════════════════════════════════════════
+  {id:'3df01',cat:'gaming',name:'3D Огонь / Игры',img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=75',ov:'ov-neon',h:'ЭТО ЛУЧШАЯ ИГРА 2025',s:'Честный обзор который ты ждал',tag:'🔥 ХАЙП',tc:'#fbbf24',tf:'Oswald',cls:'txt-3d-fire'},
+  {id:'3df02',cat:'motivation',name:'3D Огонь / Мотивация',img:'https://images.unsplash.com/photo-1552581234-26160f608093?w=800&q=75',ov:'ov-neon',h:'ТЫ МОЖЕШЬ БОЛЬШЕ',s:'Включи это видео и убедись сам',tag:'⚡ СИЛА',tc:'#ff6600',tf:'Oswald',cls:'txt-3d-fire'},
+  {id:'3df03',cat:'sport',name:'3D Огонь / Спорт',img:'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&q=75',ov:'ov-red',h:'ТРЕНИРОВКА ДО ОТКАЗА',s:'Программа которая реально работает',tag:'💪 HARD',tc:'#ff8800',tf:'Oswald',cls:'txt-3d-fire'},
+  {id:'3df04',cat:'cars',name:'3D Огонь / Авто',img:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=75',ov:'ov-red',h:'ДРИФТ НА ПРЕДЕЛЕ',s:'То что ты ещё не видел на YouTube',tag:'🔥 ЭКСТРИМ',tc:'#fbbf24',tf:'Oswald',cls:'txt-3d-fire'},
+  {id:'3df05',cat:'drama',name:'3D Огонь / Шок',img:'https://images.unsplash.com/photo-1541199249251-f713e6145474?w=800&q=75',ov:'ov-red',h:'ОН ВЗОРВАЛ МОЙ МОЗ',s:'То что нельзя развидеть',tag:'🤯 ШОК',tc:'#ff4400',tf:'Oswald',cls:'txt-3d-fire'},
+  {id:'3df06',cat:'finance',name:'3D Огонь / Деньги',img:'https://images.unsplash.com/photo-1565514020179-026b92b2d70b?w=800&q=75',ov:'ov-orange',h:'ДЕНЬГИ ГОРЯТ',s:'Ошибки которые убивают твой бюджет',tag:'💸 ФИНАНСЫ',tc:'#ff6600',tf:'Oswald',cls:'txt-3d-fire'},
+  {id:'3df07',cat:'gaming',name:'3D Огонь / Экшн',img:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=75',ov:'ov-neon',h:'ХАРДКОР РЕЖИМ',s:'Прохожу самое сложное в истории',tag:'🎮 ХАРДКОР',tc:'#ff8800',tf:'Oswald',cls:'txt-3d-fire'},
+
+  // ═══════════════════════════════════════════════════════
+  // 3D ICE — Ледяной / синий стиль
+  // ═══════════════════════════════════════════════════════
+  {id:'3di01',cat:'gaming',name:'3D Лёд / Игры',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=75',ov:'ov-blue',h:'ЛЕДЯНОЙ ГАЙД',s:'Лучшие тактики которые работают',tag:'❄️ ГАЙД',tc:'#00d4ff',tf:'Oswald',cls:'txt-3d-ice'},
+  {id:'3di02',cat:'sport',name:'3D Лёд / Хоккей',img:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=75',ov:'ov-blue',h:'ФИНТ КОТОРОГО НЕ ЖДУТ',s:'Техника чемпионов за 10 минут',tag:'🏒 ХОККЕЙ',tc:'#44ddff',tf:'Oswald',cls:'txt-3d-ice'},
+  {id:'3di03',cat:'tech',name:'3D Лёд / Технологии',img:'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=75',ov:'ov-blue',h:'ТОП ГАДЖЕТОВ 2025',s:'Что купить этой зимой',tag:'❄️ TECH',tc:'#00aaff',tf:'Oswald',cls:'txt-3d-ice'},
+  {id:'3di04',cat:'travel',name:'3D Лёд / Зима',img:'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&q=75',ov:'ov-blue',h:'АРКТИКА ЗА 7 ДНЕЙ',s:'Путешествие которое изменит тебя',tag:'🧊 ЗИМА',tc:'#44ddff',tf:'Oswald',cls:'txt-3d-ice'},
+  {id:'3di05',cat:'motivation',name:'3D Лёд / Холодная голова',img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=75',ov:'ov-teal',h:'ХОЛОДНАЯ ГОЛОВА',s:'Как не терять контроль в любой ситуации',tag:'🧊 ПСИХОЛОГИЯ',tc:'#00d4ff',tf:'Oswald',cls:'txt-3d-ice'},
+  {id:'3di06',cat:'gaming',name:'3D Лёд / Зимний мир',img:'https://images.unsplash.com/photo-1511497584788-876760111969?w=800&q=75',ov:'ov-blue',h:'ЗИМА ПРИШЛА',s:'Обзор которого ты ждал',tag:'❄️ ЗИМА',tc:'#88eeff',tf:'Oswald',cls:'txt-3d-ice'},
+  {id:'3di07',cat:'finance',name:'3D Лёд / Хладнокровие',img:'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=75',ov:'ov-blue',h:'ХЛАДНОКРОВНЫЙ ИНВЕСТОР',s:'Как я не паниковал когда рынок падал',tag:'💎 ИНВЕСТИЦИИ',tc:'#00d4ff',tf:'Oswald',cls:'txt-3d-ice'},
+
+  // ═══════════════════════════════════════════════════════
+  // 3D GOLD — Золотой / премиум стиль
+  // ═══════════════════════════════════════════════════════
+  {id:'3dg01',cat:'finance',name:'3D Золото / Миллион',img:'https://images.unsplash.com/photo-1565514020179-026b92b2d70b?w=800&q=75',ov:'ov-gold',h:'МОЙ ПЕРВЫЙ МИЛЛИОН',s:'Точный путь без воды',tag:'💰 ДЕНЬГИ',tc:'#ffd700',tf:'Unbounded',cls:'txt-3d-gold'},
+  {id:'3dg02',cat:'lifestyle',name:'3D Золото / Роскошь',img:'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=75',ov:'ov-gold',h:'ЖИЗНЬ НА ВЫСШЕМ УРОВНЕ',s:'Как я попал в этот мир',tag:'👑 ЛЮКС',tc:'#ffd700',tf:'Unbounded',cls:'txt-3d-gold'},
+  {id:'3dg03',cat:'motivation',name:'3D Золото / Чемпион',img:'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=75',ov:'ov-gold',h:'СТАНЬ ЧЕМПИОНОМ',s:'Менталитет победителя за 21 день',tag:'🏆 ПОБЕДА',tc:'#ffd700',tf:'Unbounded',cls:'txt-3d-gold'},
+  {id:'3dg04',cat:'travel',name:'3D Золото / Дубай',img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=75',ov:'ov-gold',h:'ДУБАЙ ЗА 5 ДНЕЙ',s:'Всё что нужно знать до поездки',tag:'🌟 ДУБАЙ',tc:'#ffd700',tf:'Unbounded',cls:'txt-3d-gold'},
+  {id:'3dg05',cat:'finance',name:'3D Золото / Инвестиции',img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=75',ov:'ov-gold',h:'КАК ИНВЕСТИРОВАТЬ В 2025',s:'Конкретный план для начинающих',tag:'📈 ИНВЕСТ',tc:'#ffcc00',tf:'Unbounded',cls:'txt-3d-gold'},
+  {id:'3dg06',cat:'cars',name:'3D Золото / Премиум авто',img:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=75',ov:'ov-gold',h:'ТЕСТ DRIVE FERRARI',s:'День который я не забуду никогда',tag:'🚗 ПРЕМИУМ',tc:'#ffd700',tf:'Unbounded',cls:'txt-3d-gold'},
+  {id:'3dg07',cat:'gaming',name:'3D Золото / Легендарный',img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=75',ov:'ov-gold',h:'ЛЕГЕНДАРНЫЙ РЕЙ',s:'Рекорд который не повторить',tag:'👑 ЛЕГЕНДА',tc:'#ffd700',tf:'Unbounded',cls:'txt-3d-gold'},
+
+  // ═══════════════════════════════════════════════════════
+  // 3D WHITE — Белый объёмный стиль
+  // ═══════════════════════════════════════════════════════
+  {id:'3dw01',cat:'tech',name:'3D Белый / Apple стиль',img:'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=75',ov:'ov-dark',h:'СЕКРЕТЫ iPHONE',s:'Функции о которых не рассказывают',tag:'🍎 APPLE',tc:'#ffffff',tf:'Unbounded',cls:'txt-3d-white'},
+  {id:'3dw02',cat:'lifestyle',name:'3D Белый / Минимал',img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=75',ov:'ov-dark',h:'ЧИСТЫЙ СТИЛЬ',s:'Как выглядеть дорого не тратя много',tag:'🤍 СТИЛЬ',tc:'#ffffff',tf:'Unbounded',cls:'txt-3d-white'},
+  {id:'3dw03',cat:'motivation',name:'3D Белый / Чистый лист',img:'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&q=75',ov:'ov-dark',h:'НАЧНИ СНАЧАЛА',s:'Как перезагрузить свою жизнь',tag:'✨ НОВЫЙ СТАРТ',tc:'#ffffff',tf:'Unbounded',cls:'txt-3d-white'},
+  {id:'3dw04',cat:'food',name:'3D Белый / Ресторан',img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=75',ov:'ov-dark',h:'МИШЛЕН ЗА 1000 РУБ',s:'Рецепт который удивит гостей',tag:'🍽 КУХНЯ',tc:'#ffffff',tf:'Unbounded',cls:'txt-3d-white'},
+  {id:'3dw05',cat:'beauty',name:'3D Белый / Уход',img:'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800&q=75',ov:'ov-dark',h:'ИДЕАЛЬНАЯ КОЖА',s:'Рутина которая работает за 2 недели',tag:'✨ BEAUTY',tc:'#ffffff',tf:'Unbounded',cls:'txt-3d-white'},
+
+  // ═══════════════════════════════════════════════════════
+  // 3D GREEN — Зелёный / природа
+  // ═══════════════════════════════════════════════════════
+  {id:'3dgr01',cat:'sport',name:'3D Зелёный / Природа',img:'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=75',ov:'ov-green',h:'В ЛЕС С НУЛЯ',s:'Выживание для городских жителей',tag:'🌿 ПРИРОДА',tc:'#00ff88',tf:'Oswald',cls:'txt-3d-green'},
+  {id:'3dgr02',cat:'food',name:'3D Зелёный / Здоровье',img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=75',ov:'ov-green',h:'ЗОЖ ЗА 30 ДНЕЙ',s:'Реальный результат без фотошопа',tag:'🥗 ЗОЖ',tc:'#44ffaa',tf:'Oswald',cls:'txt-3d-green'},
+  {id:'3dgr03',cat:'finance',name:'3D Зелёный / Рост',img:'https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=800&q=75',ov:'ov-green',h:'ПОРТФЕЛЬ РАСТЁТ',s:'Мой план инвестиций на 2025',tag:'📈 РОСТ',tc:'#00ff88',tf:'Unbounded',cls:'txt-3d-green'},
+  {id:'3dgr04',cat:'travel',name:'3D Зелёный / Джунгли',img:'https://images.unsplash.com/photo-1437719417032-8595fd9e9dc6?w=800&q=75',ov:'ov-green',h:'АМАЗОНКА ЗА 10 ДНЕЙ',s:'Экспедиция которая изменила всё',tag:'🌴 ДЖУНГЛИ',tc:'#44ffaa',tf:'Oswald',cls:'txt-3d-green'},
+
+  // ═══════════════════════════════════════════════════════
+  // 3D PURPLE — Фиолетовый / магия
+  // ═══════════════════════════════════════════════════════
+  {id:'3dp01',cat:'gaming',name:'3D Фиолет / Магия',img:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=75',ov:'ov-purple',h:'МАГИЯ ЭТОЙ ИГРЫ',s:'Почему все помешались в 2025',tag:'🔮 МАГИЯ',tc:'#dd88ff',tf:'Oswald',cls:'txt-3d-purple'},
+  {id:'3dp02',cat:'motivation',name:'3D Фиолет / Психология',img:'https://images.unsplash.com/photo-1514363933909-70e1b6e8e47b?w=800&q=75',ov:'ov-purple',h:'ТЁМНАЯ ПСИХОЛОГИЯ',s:'Что скрывают от людей',tag:'🧠 ПСИХО',tc:'#cc66ff',tf:'Oswald',cls:'txt-3d-purple'},
+  {id:'3dp03',cat:'lifestyle',name:'3D Фиолет / Ночь',img:'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=75',ov:'ov-purple',h:'НОЧНАЯ ЖИЗНЬ',s:'Всё что происходит пока ты спишь',tag:'🌙 НОЧЬ',tc:'#dd88ff',tf:'Unbounded',cls:'txt-3d-purple'},
+  {id:'3dp04',cat:'drama',name:'3D Фиолет / Тайна',img:'https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=800&q=75',ov:'ov-purple',h:'ТАЙНА КОТОРУЮ СКРЫВАЛИ',s:'Я наконец нашёл ответы',tag:'🔍 ТАЙНА',tc:'#cc66ff',tf:'Oswald',cls:'txt-3d-purple'},
+  {id:'3dp05',cat:'beauty',name:'3D Фиолет / Гламур',img:'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&q=75',ov:'ov-purple',h:'ВЕЧЕРНИЙ ОБРАЗ',s:'Из обычной в незабываемую',tag:'💜 ГЛАМУР',tc:'#dd88ff',tf:'Unbounded',cls:'txt-3d-purple'},
+
+  // ═══════════════════════════════════════════════════════
+  // 3D RED — Красный / экстрим
+  // ═══════════════════════════════════════════════════════
+  {id:'3dr01',cat:'drama',name:'3D Красный / Опасность',img:'https://images.unsplash.com/photo-1541199249251-f713e6145474?w=800&q=75',ov:'ov-red',h:'ОПАСНОСТЬ ПОВСЮДУ',s:'История которую не хотел рассказывать',tag:'⚠️ ОСТОРОЖНО',tc:'#ff3333',tf:'Oswald',cls:'txt-3d-red'},
+  {id:'3dr02',cat:'sport',name:'3D Красный / Бокс',img:'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&q=75',ov:'ov-red',h:'БОЙ ДО КОНЦА',s:'Всё на кону — ничего не осталось',tag:'🥊 FIGHT',tc:'#ff4444',tf:'Oswald',cls:'txt-3d-red'},
+  {id:'3dr03',cat:'cars',name:'3D Красный / Гонки',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75',ov:'ov-red',h:'НА КРАСНЫЙ СВЕТ',s:'История которая должна была убить меня',tag:'🚨 ЭКСТРИМ',tc:'#ff3333',tf:'Oswald',cls:'txt-3d-red'},
+  {id:'3dr04',cat:'gaming',name:'3D Красный / Атака',img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=75',ov:'ov-red',h:'ТОТАЛЬНАЯ АТАКА',s:'Стратегия которая уничтожает всех',tag:'⚔️ АТАКА',tc:'#ff4444',tf:'Oswald',cls:'txt-3d-red'},
+  {id:'3dr05',cat:'drama',name:'3D Красный / Скандал',img:'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=75',ov:'ov-red',h:'СКАНДАЛ КОТОРЫЙ ВЗОРВАЛ',s:'Всё что скрывали за закрытыми дверями',tag:'💥 СКАНДАЛ',tc:'#ff3333',tf:'Oswald',cls:'txt-3d-red'},
+
+  // ═══════════════════════════════════════════════════════
+  // 3D CHROME — Металлик / хром
+  // ═══════════════════════════════════════════════════════
+  {id:'3dc01',cat:'cars',name:'3D Хром / Металл',img:'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=75',ov:'ov-dark',h:'ХРОМ И СТАЛЬ',s:'Кастом который стоит миллион',tag:'⚙️ КАСТОМ',tc:'#e0e0e0',tf:'Oswald',cls:'txt-3d-chrome'},
+  {id:'3dc02',cat:'tech',name:'3D Хром / Гаджеты',img:'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=75',ov:'ov-dark',h:'TITANIUM PRO MAX',s:'Обзор которого ты ждал год',tag:'💻 ОБЗОР',tc:'#d0d0d0',tf:'Oswald',cls:'txt-3d-chrome'},
+  {id:'3dc03',cat:'gaming',name:'3D Хром / Киберспорт',img:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=75',ov:'ov-dark',h:'КИБЕРСПОРТИВНЫЙ ПРО',s:'Путь от нуля до турнира',tag:'🎮 КИБЕРСПОРТ',tc:'#d0e0ff',tf:'Unbounded',cls:'txt-3d-chrome'},
+  {id:'3dc04',cat:'motivation',name:'3D Хром / Железная воля',img:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=75',ov:'ov-dark',h:'ЖЕЛЕЗНАЯ ВОЛЯ',s:'Как закалить характер за 30 дней',tag:'⚙️ ВОЛЯ',tc:'#d0d0d0',tf:'Oswald',cls:'txt-3d-chrome'},
+  {id:'3dc05',cat:'cars',name:'3D Хром / Тюнинг',img:'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&q=75',ov:'ov-dark',h:'ТЮНИНГ ЗА 100К',s:'Что можно сделать с машиной',tag:'🔧 ТЮНИНГ',tc:'#c0c0c0',tf:'Oswald',cls:'txt-3d-chrome'},
+
+  // ═══════════════════════════════════════════════════════
+  // 3D MIX — Комбо стилей
+  // ═══════════════════════════════════════════════════════
+  {id:'3dm01',cat:'gaming',name:'3D Золото / Легенда',img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=75',ov:'ov-neon',h:'СТАНЬ ЛЕГЕНДОЙ',s:'Гайд от чемпиона мира',tag:'👑 ТОП-1',tc:'#ffd700',tf:'Unbounded',cls:'txt-3d-gold'},
+  {id:'3dm02',cat:'finance',name:'3D Огонь / Биткоин',img:'https://images.unsplash.com/photo-1621504450181-5d356f61d307?w=800&q=75',ov:'ov-neon',h:'БИТКОИН ГОРИТ',s:'Куда пойдёт курс в 2025',tag:'₿ КРИПТА',tc:'#ff8800',tf:'Oswald',cls:'txt-3d-fire'},
+  {id:'3dm03',cat:'motivation',name:'3D Лёд + Огонь',img:'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=75',ov:'ov-blue',h:'СИЛА ДУХА',s:'Холодный ум — горячее сердце',tag:'⚡ СИЛА',tc:'#00d4ff',tf:'Unbounded',cls:'txt-3d-ice'},
+  {id:'3dm04',cat:'drama',name:'3D Красный / Месть',img:'https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=800&q=75',ov:'ov-red',h:'Я ВЕРНУЛСЯ',s:'Они думали что я сломан — они ошиблись',tag:'🔴 КАМБЭК',tc:'#ff3333',tf:'Oswald',cls:'txt-3d-red'},
+  {id:'3dm05',cat:'sport',name:'3D Золото / Медаль',img:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=75',ov:'ov-gold',h:'ЗОЛОТАЯ МЕДАЛЬ',s:'Три года к этому моменту',tag:'🥇 ЧЕМПИОН',tc:'#ffd700',tf:'Unbounded',cls:'txt-3d-gold'},
+  {id:'3dm06',cat:'travel',name:'3D Огонь / Приключение',img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=75',ov:'ov-orange',h:'НА ВЕРШИНУ МИРА',s:'Экспедиция которая чуть не убила меня',tag:'🔥 ЭКСТРИМ',tc:'#ff8800',tf:'Oswald',cls:'txt-3d-fire'},
+  {id:'3dm07',cat:'tech',name:'3D Хром / Будущее',img:'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=75',ov:'ov-dark',h:'ТЕХНОЛОГИИ 2030',s:'Что ждёт нас через 5 лет',tag:'🚀 БУДУЩЕЕ',tc:'#d0e0ff',tf:'Unbounded',cls:'txt-3d-chrome'},
+  {id:'3dm08',cat:'gaming',name:'3D Лёд / Зима',img:'https://images.unsplash.com/photo-1511497584788-876760111969?w=800&q=75',ov:'ov-blue',h:'ЗИМНИЙ СЕЗОН',s:'Топ игр которые греют зимой',tag:'❄️ WINTER',tc:'#88eeff',tf:'Oswald',cls:'txt-3d-ice'},
+  {id:'3dm09',cat:'drama',name:'3D Фиолет / Секреты',img:'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=800&q=75',ov:'ov-purple',h:'СЕКРЕТ ОТКРЫТ',s:'То что скрывали годами — теперь здесь',tag:'🔮 ТАЙНА',tc:'#cc66ff',tf:'Oswald',cls:'txt-3d-purple'},
+  {id:'3dm10',cat:'cars',name:'3D Огонь / Мощь',img:'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=75',ov:'ov-red',h:'1000 ЛОШАДЕЙ',s:'Самая мощная машина которую я водил',tag:'🔥 МОЩЬ',tc:'#ff6600',tf:'Oswald',cls:'txt-3d-fire'},
+  {id:'3dm11',cat:'lifestyle',name:'3D Золото / Успех',img:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=75',ov:'ov-gold',h:'УСПЕХ ЗА 365 ДНЕЙ',s:'Что изменилось за один год',tag:'👑 УСПЕХ',tc:'#ffd700',tf:'Unbounded',cls:'txt-3d-gold'},
+  {id:'3dm12',cat:'finance',name:'3D Зелёный / Пассив',img:'https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=800&q=75',ov:'ov-green',h:'ДЕНЬГИ ПОКА СПИШЬ',s:'4 источника пассивного дохода',tag:'💸 ПАССИВ',tc:'#00ff88',tf:'Unbounded',cls:'txt-3d-green'},
+
+  // ═══════════════════════════════════════════════════════════════
+  // МНОГОЦВЕТНЫЕ ШАБЛОНЫ — каждая строка свой цвет + толстый обводок
+  // Стиль топовых русских блогеров: Bebas Neue / Anton / Impact
+  // ═══════════════════════════════════════════════════════════════
+
+  // ДЕНЬГИ / ФИНАНСЫ
+  {id:'mc01',cat:'finance',name:'Многоцвет / Заработал',img:'https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'💰 ДЕНЬГИ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'Я ЗАРАБОТАЛ',   color:'#ffffff', size:100, strokeColor:'#000', strokeW:20},
+      {text:'$44,000',       color:'#00ff44', size:130, strokeColor:'#003300', strokeW:22},
+      {text:'ЗА 30 ДНЕЙ',    color:'#ffdd00', size:95,  strokeColor:'#000', strokeW:18},
+    ]},
+  {id:'mc02',cat:'finance',name:'Многоцвет / Миллион',img:'https://images.unsplash.com/photo-1565514020179-026b92b2d70b?w=800&q=75',ov:'ov-dark',h:'',s:'Как я это сделал',tag:'💸 УСПЕХ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'КАК Я СДЕЛАЛ',  color:'#ffffff', size:88,  strokeColor:'#000', strokeW:18},
+      {text:'МИЛЛИОН',       color:'#ffd700', size:130, strokeColor:'#330000', strokeW:22},
+      {text:'С НУЛЯ',        color:'#ff4444', size:100, strokeColor:'#000', strokeW:20},
+    ]},
+  {id:'mc03',cat:'finance',name:'Многоцвет / Заработок',img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=75',ov:'ov-neon',h:'',s:'Реальная история',tag:'🤑 КЕЙС',tc:'#fff',tf:'Anton',cls:'',
+    lines:[
+      {text:'100,000 РУБ',   color:'#00ff88', size:115, strokeColor:'#003322', strokeW:20},
+      {text:'ЗА НЕДЕЛЮ',     color:'#ffffff', size:95,  strokeColor:'#000', strokeW:18},
+      {text:'РЕАЛЬНО?',      color:'#ffdd00', size:85,  strokeColor:'#332200', strokeW:16},
+    ]},
+
+  // ПУТЕШЕСТВИЯ
+  {id:'mc04',cat:'travel',name:'Многоцвет / Побег',img:'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'✈️ ПУТЕШЕСТВИЕ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'ПОБЕГ',         color:'#ff4444', size:140, strokeColor:'#000', strokeW:24},
+      {text:'В ТАЙЛАНД',     color:'#ffffff', size:105, strokeColor:'#000', strokeW:20},
+      {text:'НА 1 МЕСЯЦ',    color:'#ffd700', size:88,  strokeColor:'#000', strokeW:18},
+    ]},
+  {id:'mc05',cat:'travel',name:'Многоцвет / Дубай',img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=75',ov:'ov-gold',h:'',s:'',tag:'🌟 ДУБАЙ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'ДУБАЙ',         color:'#ffd700', size:145, strokeColor:'#330000', strokeW:24},
+      {text:'ЗА 5 ДНЕЙ',     color:'#ffffff', size:100, strokeColor:'#000', strokeW:20},
+      {text:'ВСЁ ВКЛЮЧЕНО',  color:'#00ddff', size:80,  strokeColor:'#000', strokeW:16},
+    ]},
+
+  // АВТО
+  {id:'mc06',cat:'cars',name:'Многоцвет / Купил авто',img:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'🚗 АВТО',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'КУПИЛ',         color:'#ffffff', size:120, strokeColor:'#000', strokeW:22},
+      {text:'LAMBORGHINI',   color:'#ffdd00', size:95,  strokeColor:'#443300', strokeW:18},
+      {text:'ЗА 1М РУБ',     color:'#ff4444', size:88,  strokeColor:'#000', strokeW:18},
+    ]},
+  {id:'mc07',cat:'cars',name:'Многоцвет / Гонки',img:'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=75',ov:'ov-red',h:'',s:'',tag:'🏁 ГОНКИ',tc:'#fff',tf:'Anton',cls:'',
+    lines:[
+      {text:'300',           color:'#ff4444', size:160, strokeColor:'#000', strokeW:28},
+      {text:'КМ В ЧАС',      color:'#ffffff', size:105, strokeColor:'#000', strokeW:20},
+      {text:'НА ТРЕКЕ',      color:'#ffdd00', size:88,  strokeColor:'#000', strokeW:18},
+    ]},
+
+  // СПОРТ
+  {id:'mc08',cat:'sport',name:'Многоцвет / Похудел',img:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'💪 ТРАНСФОРМАЦИЯ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'МИНУС',         color:'#ff4444', size:110, strokeColor:'#000', strokeW:20},
+      {text:'30 КГ',         color:'#00ff88', size:145, strokeColor:'#003300', strokeW:24},
+      {text:'ЗА 90 ДНЕЙ',    color:'#ffffff', size:88,  strokeColor:'#000', strokeW:18},
+    ]},
+  {id:'mc09',cat:'sport',name:'Многоцвет / Рекорд',img:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=75',ov:'ov-red',h:'',s:'',tag:'🏆 РЕКОРД',tc:'#fff',tf:'Anton',cls:'',
+    lines:[
+      {text:'МОЙ РЕКОРД',    color:'#ffffff', size:105, strokeColor:'#000', strokeW:20},
+      {text:'42 КМ',         color:'#ffdd00', size:140, strokeColor:'#332200', strokeW:24},
+      {text:'ЗА 3:45',       color:'#ff8800', size:100, strokeColor:'#000', strokeW:20},
+    ]},
+
+  // GAMING
+  {id:'mc10',cat:'gaming',name:'Многоцвет / Игра',img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=75',ov:'ov-neon',h:'',s:'',tag:'🎮 ОБЗОР',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'ЛУЧШАЯ ИГРА',   color:'#ffffff', size:100, strokeColor:'#000', strokeW:20},
+      {text:'2025',          color:'#ff4444', size:145, strokeColor:'#330000', strokeW:26},
+      {text:'ГОДА',          color:'#ffdd00', size:115, strokeColor:'#000', strokeW:22},
+    ]},
+  {id:'mc11',cat:'gaming',name:'Многоцвет / Топ-1',img:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=75',ov:'ov-blue',h:'',s:'',tag:'🥇 ТОП-1',tc:'#fff',tf:'Anton',cls:'',
+    lines:[
+      {text:'СТАЛ',          color:'#00ddff', size:105, strokeColor:'#000', strokeW:20},
+      {text:'ТОП-1',         color:'#ffd700', size:145, strokeColor:'#332200', strokeW:26},
+      {text:'В МИРЕ',        color:'#ffffff', size:100, strokeColor:'#000', strokeW:20},
+    ]},
+  {id:'mc12',cat:'gaming',name:'Многоцвет / Читы',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=75',ov:'ov-neon',h:'',s:'',tag:'💥 ХАЙП',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'ЧИТЫ',          color:'#ff4444', size:145, strokeColor:'#000', strokeW:26},
+      {text:'ИЛИ СКИЛЛ?',    color:'#ffffff', size:95,  strokeColor:'#000', strokeW:18},
+      {text:'РАЗБИРАЕМСЯ',   color:'#00ff88', size:78,  strokeColor:'#003322', strokeW:16},
+    ]},
+
+  // ДРАМА / ИСТОРИЯ
+  {id:'mc13',cat:'drama',name:'Многоцвет / Потерял всё',img:'https://images.unsplash.com/photo-1541199249251-f713e6145474?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'💔 ИСТОРИЯ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'Я ПОТЕРЯЛ',     color:'#ff4444', size:108, strokeColor:'#000', strokeW:20},
+      {text:'ВСЁ',           color:'#ffffff', size:160, strokeColor:'#000', strokeW:28},
+      {text:'И ВЫЖИЛ',       color:'#00ff88', size:100, strokeColor:'#003322', strokeW:20},
+    ]},
+  {id:'mc14',cat:'drama',name:'Многоцвет / Шок',img:'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=800&q=75',ov:'ov-red',h:'',s:'',tag:'😱 ШОК',tc:'#fff',tf:'Anton',cls:'',
+    lines:[
+      {text:'ЭТО',           color:'#ffdd00', size:130, strokeColor:'#332200', strokeW:24},
+      {text:'ИЗМЕНИЛО',      color:'#ffffff', size:100, strokeColor:'#000', strokeW:20},
+      {text:'МОЮ ЖИЗНЬ',     color:'#ff4444', size:95,  strokeColor:'#000', strokeW:18},
+    ]},
+
+  // МОТИВАЦИЯ
+  {id:'mc15',cat:'motivation',name:'Многоцвет / Успех',img:'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=75',ov:'ov-gold',h:'',s:'',tag:'🏆 УСПЕХ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'ОНИ СМЕЯЛИСЬ',  color:'#ff4444', size:88,  strokeColor:'#000', strokeW:18},
+      {text:'ТЕПЕРЬ',        color:'#ffffff', size:115, strokeColor:'#000', strokeW:22},
+      {text:'Я БОГАТЫЙ',     color:'#ffd700', size:105, strokeColor:'#332200', strokeW:20},
+    ]},
+  {id:'mc16',cat:'motivation',name:'Многоцвет / Вставай',img:'https://images.unsplash.com/photo-1552581234-26160f608093?w=800&q=75',ov:'ov-neon',h:'',s:'',tag:'⚡ СИЛА',tc:'#fff',tf:'Anton',cls:'',
+    lines:[
+      {text:'ХВАТИТ',        color:'#ff4444', size:130, strokeColor:'#000', strokeW:24},
+      {text:'БОЯТЬСЯ',       color:'#ffffff', size:115, strokeColor:'#000', strokeW:22},
+      {text:'ДЕЙСТВУЙ',      color:'#00ff88', size:105, strokeColor:'#003322', strokeW:20},
+    ]},
+
+  // ТЕХНОЛОГИИ
+  {id:'mc17',cat:'tech',name:'Многоцвет / ИИ',img:'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=75',ov:'ov-blue',h:'',s:'',tag:'🤖 ИИ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'ИИ ЗАБЕРЁТ',    color:'#ff4444', size:100, strokeColor:'#000', strokeW:20},
+      {text:'ТВОЮ',          color:'#ffffff', size:130, strokeColor:'#000', strokeW:24},
+      {text:'РАБОТУ',        color:'#00ddff', size:120, strokeColor:'#000', strokeW:22},
+    ]},
+  {id:'mc18',cat:'tech',name:'Многоцвет / iPhone',img:'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'🍎 ОБЗОР',tc:'#fff',tf:'Anton',cls:'',
+    lines:[
+      {text:'iPHONE 17',     color:'#ffffff', size:115, strokeColor:'#000', strokeW:22},
+      {text:'СТОИТ ЛИ',      color:'#ffdd00', size:95,  strokeColor:'#332200', strokeW:18},
+      {text:'ПОКУПАТЬ?',     color:'#ff4444', size:100, strokeColor:'#000', strokeW:20},
+    ]},
+
+  // ЛАЙФСТАЙЛ
+  {id:'mc19',cat:'lifestyle',name:'Многоцвет / Уволился',img:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'🚀 СВОБОДА',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'УВОЛИЛСЯ',      color:'#ff4444', size:115, strokeColor:'#000', strokeW:22},
+      {text:'И СТАЛ',        color:'#ffffff', size:100, strokeColor:'#000', strokeW:20},
+      {text:'БОГАТЫМ',       color:'#ffd700', size:125, strokeColor:'#332200', strokeW:22},
+    ]},
+  {id:'mc20',cat:'lifestyle',name:'Многоцвет / Правда',img:'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'❤️ ОТНОШЕНИЯ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'ОНА СКАЗАЛА',   color:'#ff9999', size:88,  strokeColor:'#000', strokeW:18},
+      {text:'"ДА"',          color:'#ff4444', size:160, strokeColor:'#330000', strokeW:28},
+      {text:'КАК Я ЕЁ УБЕДИЛ', color:'#ffffff', size:68, strokeColor:'#000', strokeW:14},
+    ]},
+
+  // ДОПОЛНИТЕЛЬНЫЕ РАЗНООБРАЗНЫЕ
+  {id:'mc21',cat:'finance',name:'Многоцвет / Долг',img:'https://images.unsplash.com/photo-1621504450181-5d356f61d307?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'💳 КРЕДИТ',tc:'#fff',tf:'Anton',cls:'',
+    lines:[
+      {text:'ЗАКРЫЛ ДОЛГ',   color:'#ff4444', size:100, strokeColor:'#000', strokeW:20},
+      {text:'500,000 РУБ',   color:'#00ff88', size:115, strokeColor:'#003300', strokeW:22},
+      {text:'ЗА 6 МЕСЯЦЕВ',  color:'#ffffff', size:82,  strokeColor:'#000', strokeW:16},
+    ]},
+  {id:'mc22',cat:'motivation',name:'Многоцвет / Пари',img:'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&q=75',ov:'ov-neon',h:'',s:'',tag:'🎯 ПАРИ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'ПОСПОРИЛ',      color:'#ffffff', size:108, strokeColor:'#000', strokeW:20},
+      {text:'НА 100,000',    color:'#ffd700', size:115, strokeColor:'#332200', strokeW:22},
+      {text:'И ПРОИГРАЛ',    color:'#ff4444', size:95,  strokeColor:'#000', strokeW:18},
+    ]},
+  {id:'mc23',cat:'travel',name:'Многоцвет / Виза',img:'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800&q=75',ov:'ov-blue',h:'',s:'',tag:'🛂 ВИЗА',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'ДАЛИ ВИЗУ',     color:'#00ff88', size:108, strokeColor:'#003300', strokeW:20},
+      {text:'В США',         color:'#ffffff', size:145, strokeColor:'#000', strokeW:26},
+      {text:'КАК Я ЭТО СДЕЛАЛ', color:'#ffdd00', size:68, strokeColor:'#000', strokeW:14},
+    ]},
+  {id:'mc24',cat:'drama',name:'Многоцвет / Обман',img:'https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=800&q=75',ov:'ov-dark',h:'',s:'',tag:'⚠️ ОСТОРОЖНО',tc:'#fff',tf:'Anton',cls:'',
+    lines:[
+      {text:'МЕНЯ',          color:'#ffffff', size:115, strokeColor:'#000', strokeW:22},
+      {text:'ОБМАНУЛИ',      color:'#ff4444', size:125, strokeColor:'#330000', strokeW:24},
+      {text:'НА МИЛЛИОН',    color:'#ffdd00', size:88,  strokeColor:'#000', strokeW:18},
+    ]},
+  {id:'mc25',cat:'sport',name:'Многоцвет / Челлендж',img:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=75',ov:'ov-red',h:'',s:'',tag:'💪 ЧЕЛЛЕНДЖ',tc:'#fff',tf:'Bebas Neue',cls:'',
+    lines:[
+      {text:'30 ДНЕЙ',       color:'#ffdd00', size:130, strokeColor:'#332200', strokeW:24},
+      {text:'БЕЗ САХАРА',    color:'#ffffff', size:105, strokeColor:'#000', strokeW:20},
+      {text:'РЕЗУЛЬТАТ?',    color:'#00ff88', size:95,  strokeColor:'#003322', strokeW:18},
+    ]},
+
 ];
 
 // ══════════════════════════════════════════════════════════════════
@@ -462,7 +806,35 @@ function renderTpls(list){
         <img src="${t.img}" loading="lazy" alt="${t.name}">
         <div class="tpl-ov ${t.ov}">
           <div class="ov-tag tag-r">${t.tag}</div>
-          <div class="ov-h ${t.cls}" style="font-family:'${t.tf}';color:${t.tc}">${t.h}</div>
+          ${t.cls && t.cls.startsWith('txt-3d')
+            ? `<div class="ov-h" style="
+                font-family:'${t.tf}';
+                color:${t.tc};
+                font-weight:900;
+                font-size:1.05rem;
+                letter-spacing:-.01em;
+                ${t.cls==='txt-3d-fire'   ? 'text-shadow:0 0 8px #ff6600,1px 1px 0 #cc2200,2px 2px 0 #991900,3px 3px 4px rgba(0,0,0,.9);-webkit-text-stroke:.5px #ff8800' : ''}
+                ${t.cls==='txt-3d-ice'    ? 'text-shadow:0 0 8px #00aaff,1px 1px 0 #0055cc,2px 2px 0 #003399,3px 3px 4px rgba(0,0,0,.9);-webkit-text-stroke:.5px #44ddff' : ''}
+                ${t.cls==='txt-3d-gold'   ? 'text-shadow:0 0 6px #ffcc00,1px 1px 0 #996600,2px 2px 0 #664400,3px 3px 4px rgba(0,0,0,.9);-webkit-text-stroke:.5px #ffee88' : ''}
+                ${t.cls==='txt-3d-white'  ? 'text-shadow:1px 1px 0 #555,2px 2px 0 #333,3px 3px 4px rgba(0,0,0,.9)' : ''}
+                ${t.cls==='txt-3d-green'  ? 'text-shadow:0 0 8px #00ff88,1px 1px 0 #007733,2px 2px 0 #004422,3px 3px 4px rgba(0,0,0,.9);-webkit-text-stroke:.5px #44ffaa' : ''}
+                ${t.cls==='txt-3d-purple' ? 'text-shadow:0 0 8px #aa00ff,1px 1px 0 #6600cc,2px 2px 0 #440099,3px 3px 4px rgba(0,0,0,.9);-webkit-text-stroke:.5px #cc44ff' : ''}
+                ${t.cls==='txt-3d-red'    ? 'text-shadow:1px 1px 0 #880000,2px 2px 0 #550000,3px 3px 4px rgba(0,0,0,.9);-webkit-text-stroke:.5px #ff2222' : ''}
+                ${t.cls==='txt-3d-chrome' ? 'text-shadow:1px 1px 0 #888,2px 2px 0 #555,3px 3px 4px rgba(0,0,0,.9)' : ''}
+              ">${t.h}</div>`
+            : t.lines
+              ? t.lines.map(ln=>`<div style="
+                  font-family:'${t.tf || 'Bebas Neue'}',sans-serif;
+                  font-size:${ln.size ? ln.size*0.012+'rem' : '1.05rem'};
+                  font-weight:900;
+                  color:${ln.color||'#fff'};
+                  line-height:1.1;
+                  -webkit-text-stroke:${ln.stroke!==false?'1.5px '+(ln.strokeColor||'#000'):'none'};
+                  text-shadow:2px 2px 4px rgba(0,0,0,.9);
+                  text-transform:uppercase;
+                ">${ln.text}</div>`).join('')
+              : `<div class="ov-h ${t.cls}" style="font-family:'${t.tf}';color:${t.tc}">${t.h}</div>`
+          }
           <div class="ov-s">${t.s}</div>
         </div>
       </div>
@@ -477,7 +849,13 @@ renderTpls(TPLS);
 function filterCat(cat,btn){
   document.querySelectorAll('.s-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  renderTpls(cat==='all'?TPLS:TPLS.filter(t=>t.cat===cat));
+  if(cat==='3d'){
+    renderTpls(TPLS.filter(t=>t.cls&&t.cls.startsWith('txt-3d')));
+  } else if(cat==='multicolor'){
+    renderTpls(TPLS.filter(t=>t.lines&&t.lines.length>0));
+  } else {
+    renderTpls(cat==='all'?TPLS:TPLS.filter(t=>t.cat===cat));
+  }
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -553,12 +931,193 @@ function addDefaultContent(){
   saveH();
 }
 
+
+// ══════════════════════════════════════════════════════════════════
+// 3D PERSPECTIVE TEXT RENDERER
+// Рисует текст с эффектом линзы: буквы в центре крупнее, по краям меньше
+// Возвращает fabric.Image готовый для добавления на canvas
+// ══════════════════════════════════════════════════════════════════
+function make3DText(text, opts, callback) {
+  const {
+    color = '#fff',
+    fontFamily = 'Oswald',
+    baseSize = 120,       // размер центральной буквы
+    edgeScale = 0.55,     // масштаб крайних букв (0..1)
+    canvasW = 1180,       // ширина offscreen canvas
+    canvasH = 200,        // высота
+    shadowColor = 'rgba(0,0,0,.85)',
+    shadowLayers = 8,     // глубина экструзии
+    shadowDir = {x:1, y:1},
+    strokeColor = null,
+    strokeW = 3,
+    glowColor = null,
+  } = opts;
+
+  const off = document.createElement('canvas');
+  off.width  = canvasW;
+  off.height = canvasH;
+  const ctx  = off.getContext('2d');
+
+  // Measure each character
+  const chars = text.split('');
+  const n = chars.length;
+
+  // Scale per character: bell curve (center = 1, edges = edgeScale)
+  function charScale(i) {
+    const pos = i / Math.max(n - 1, 1); // 0..1
+    const t   = 1 - Math.abs(pos - 0.5) * 2; // 1 at center, 0 at edges
+    return edgeScale + (1 - edgeScale) * t;
+  }
+
+  // First pass: measure total width
+  let totalW = 0;
+  const sizes = [];
+  const widths = [];
+  chars.forEach((ch, i) => {
+    const sz = Math.round(baseSize * charScale(i));
+    sizes.push(sz);
+    ctx.font = `900 ${sz}px '${fontFamily}', sans-serif`;
+    const w = ctx.measureText(ch).width;
+    widths.push(w);
+    totalW += w * 0.92; // slight kerning
+  });
+
+  // Center on canvas
+  let x = (canvasW - totalW) / 2;
+  const baseline = canvasH - 30;
+
+  // Vertical offset: center chars are higher (pop forward)
+  function charY(i) {
+    const pos = i / Math.max(n - 1, 1);
+    const t   = 1 - Math.abs(pos - 0.5) * 2;
+    return baseline - Math.round(t * 35); // center letters lifted up
+  }
+
+  // Draw each character
+  chars.forEach((ch, i) => {
+    const sz  = sizes[i];
+    const w   = widths[i];
+    const cx  = x + w / 2;
+    const cy  = charY(i);
+    ctx.font  = `900 ${sz}px '${fontFamily}', sans-serif`;
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'alphabetic';
+
+    // Glow pass
+    if (glowColor) {
+      ctx.save();
+      ctx.shadowColor = glowColor;
+      ctx.shadowBlur  = 30;
+      ctx.fillStyle   = glowColor;
+      ctx.globalAlpha = 0.4;
+      ctx.fillText(ch, cx, cy);
+      ctx.restore();
+    }
+
+    // Extrusion layers (back to front)
+    for (let layer = shadowLayers; layer >= 1; layer--) {
+      const alpha = 0.6 + (shadowLayers - layer) * 0.04;
+      ctx.fillStyle   = shadowColor;
+      ctx.globalAlpha = alpha;
+      ctx.fillText(ch, cx + shadowDir.x * layer, cy + shadowDir.y * layer);
+    }
+    ctx.globalAlpha = 1;
+
+    // Stroke
+    if (strokeColor) {
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth   = strokeW;
+      ctx.strokeText(ch, cx, cy);
+    }
+
+    // Main fill
+    ctx.fillStyle = color;
+    ctx.fillText(ch, cx, cy);
+
+    x += w * 0.92;
+  });
+
+  // Convert to fabric.Image
+  const dataURL = off.toDataURL('image/png');
+  fabric.Image.fromURL(dataURL, img => {
+    callback(img);
+  });
+}
+
+// Style presets for make3DText
+const TEXT3D_PRESETS = {
+  'txt-3d-fire': {
+    color: '#fbbf24',
+    shadowColor: 'rgba(160,30,0,.95)',
+    shadowLayers: 9,
+    glowColor: '#ff6600',
+    strokeColor: '#ff8800',
+    strokeW: 2,
+  },
+  'txt-3d-ice': {
+    color: '#88eeff',
+    shadowColor: 'rgba(0,40,140,.95)',
+    shadowLayers: 9,
+    glowColor: '#00aaff',
+    strokeColor: '#44ddff',
+    strokeW: 2,
+  },
+  'txt-3d-gold': {
+    color: '#ffd700',
+    shadowColor: 'rgba(100,50,0,.95)',
+    shadowLayers: 10,
+    glowColor: '#ffaa00',
+    strokeColor: '#ffee88',
+    strokeW: 2,
+  },
+  'txt-3d-white': {
+    color: '#ffffff',
+    shadowColor: 'rgba(0,0,0,.9)',
+    shadowLayers: 10,
+    glowColor: null,
+    strokeColor: 'rgba(180,180,180,.5)',
+    strokeW: 2,
+  },
+  'txt-3d-green': {
+    color: '#44ffaa',
+    shadowColor: 'rgba(0,80,30,.95)',
+    shadowLayers: 8,
+    glowColor: '#00ff88',
+    strokeColor: '#00cc66',
+    strokeW: 2,
+  },
+  'txt-3d-purple': {
+    color: '#dd88ff',
+    shadowColor: 'rgba(60,0,120,.95)',
+    shadowLayers: 9,
+    glowColor: '#aa00ff',
+    strokeColor: '#cc44ff',
+    strokeW: 2,
+  },
+  'txt-3d-red': {
+    color: '#ff4444',
+    shadowColor: 'rgba(100,0,0,.95)',
+    shadowLayers: 9,
+    glowColor: null,
+    strokeColor: '#ff0000',
+    strokeW: 3,
+  },
+  'txt-3d-chrome': {
+    color: '#e0e0e0',
+    shadowColor: 'rgba(20,20,20,.9)',
+    shadowLayers: 8,
+    glowColor: null,
+    strokeColor: 'rgba(255,255,255,.3)',
+    strokeW: 1,
+  },
+};
+
 function loadTplInEditor(t){
   if(!canvas) return;
   canvas.clear();
   canvas.setBackgroundColor('#0a0a0f',()=>{});
 
-  fabric.Image.fromURL(t.img+'&w=1280', img=>{
+  fabric.Image.fromURL(t.img, img=>{
     const sc=Math.max(CW/img.width, CH/img.height);
     img.set({
       scaleX:sc, scaleY:sc, left:CW/2, top:CH/2,
@@ -578,19 +1137,110 @@ function loadTplInEditor(t){
       'ov-red':'rgba(160,0,20,.65)','ov-blue':'rgba(0,10,70,.72)',
       'ov-gold':'rgba(80,40,0,.65)','ov-purple':'rgba(50,0,80,.68)',
       'ov-green':'rgba(0,50,20,.65)','ov-dark':'rgba(0,0,0,.55)',
-      'ov-center':'rgba(0,0,0,.55)','ov-side':'rgba(0,0,0,.55)'
+      'ov-center':'rgba(0,0,0,.55)','ov-side':'rgba(0,0,0,.55)',
+      'ov-neon':'rgba(5,0,30,.80)','ov-white':'rgba(255,255,255,.85)',
+      'ov-split':'rgba(0,0,0,.85)','ov-top':'rgba(0,0,0,.80)',
+      'ov-orange':'rgba(150,50,0,.72)','ov-teal':'rgba(0,65,65,.75)',
+      'ov-pink':'rgba(120,0,65,.70)'
     }[t.ov]||'rgba(0,0,0,.55)';
 
     const ov=new fabric.Rect({left:0,top:0,width:CW,height:CH,fill:ovColor,selectable:false,evented:false});
     canvas.add(ov);
 
-    const tag=new fabric.IText(t.tag,{left:60,top:CH-200,fontSize:22,fontFamily:'Plus Jakarta Sans',fontWeight:'800',fill:'#ff3d5a',selectable:true});
-    const title=new fabric.IText(t.h,{left:60,top:CH-165,fontSize:t.cls==='oswald'?82:62,fontFamily:t.tf,fontWeight:'bold',fill:t.tc,width:CW-120,textAlign:'left',selectable:true});
-    const sub=new fabric.IText(t.s,{left:60,top:CH-55,fontSize:28,fontFamily:'Plus Jakarta Sans',fill:'rgba(255,255,255,.6)',selectable:true});
-    canvas.add(tag,title,sub);
-    canvas.renderAll();
-    saveH();
-    updateLayers();
+    const tag=new fabric.IText(t.tag,{left:60,top:CH-210,fontSize:22,fontFamily:'Plus Jakarta Sans',fontWeight:'800',fill:'#ff3d5a',selectable:true});
+    const sub=new fabric.IText(t.s,{left:60,top:CH-52,fontSize:28,fontFamily:'Plus Jakarta Sans',fill:'rgba(255,255,255,.6)',selectable:true});
+
+    if(t.cls && t.cls.startsWith('txt-3d') && TEXT3D_PRESETS[t.cls]){
+      // ── 3D PERSPECTIVE TEXT via offscreen canvas ─────────────────────
+      const preset = TEXT3D_PRESETS[t.cls];
+      const isFire = t.cls === 'txt-3d-fire';
+      const words = t.h.split(' ');
+      // Split into 1-2 lines max for readability
+      const line1 = words.slice(0, Math.ceil(words.length/2)).join(' ');
+      const line2 = words.length > 3 ? words.slice(Math.ceil(words.length/2)).join(' ') : null;
+
+      const addLine = (text, yPos, baseSize, cb) => {
+        make3DText(text, {
+          ...preset,
+          fontFamily: t.tf || 'Oswald',
+          baseSize,
+          edgeScale: 0.52,
+          canvasW: CW - 80,
+          canvasH: Math.round(baseSize * 1.6),
+          shadowDir: {x:2, y:2},
+        }, img => {
+          img.set({
+            left: 40, top: yPos,
+            selectable: true,
+            hasBorders: true, hasControls: true,
+          });
+          canvas.add(img);
+          canvas.renderAll();
+          if(cb) cb();
+        });
+      };
+
+      if(line2){
+        addLine(line1, CH - 230, 100, () => {
+          addLine(line2, CH - 120, 88, () => {
+            canvas.add(tag, sub);
+            canvas.renderAll();
+            saveH(); updateLayers();
+          });
+        });
+      } else {
+        addLine(line1, CH - 190, 110, () => {
+          canvas.add(tag, sub);
+          canvas.renderAll();
+          saveH(); updateLayers();
+        });
+      }
+    } else if(t.lines && t.lines.length) {
+      // ── MULTI-COLOR LINES ─────────────────────────────────────────────
+      // Each line: { text, color, size, font, stroke, strokeColor, italic }
+      let yPos = t.linesY || (CH - 190 - (t.lines.length - 1) * 100);
+      t.lines.forEach((line, i) => {
+        const strokeColor = line.stroke !== false ? (line.strokeColor || '#000000') : null;
+        const strokeW     = line.strokeW || 18;
+        const fontSize    = line.size || (i === 0 ? 90 : 88);
+        const fontFamily  = line.font || t.tf || 'Bebas Neue';
+        const fontStyle   = line.italic ? 'italic' : 'normal';
+        const obj = new fabric.IText(line.text, {
+          left: line.left !== undefined ? line.left : 60,
+          top: yPos,
+          fontSize,
+          fontFamily,
+          fontWeight: 'bold',
+          fontStyle,
+          fill: line.color || '#ffffff',
+          stroke: strokeColor,
+          strokeWidth: strokeColor ? strokeW : 0,
+          paintFirst: 'stroke',
+          selectable: true,
+          shadow: new fabric.Shadow({color:'rgba(0,0,0,.6)', blur:6, offsetX:3, offsetY:3}),
+        });
+        canvas.add(obj);
+        yPos += line.gap || (fontSize * 1.15);
+      });
+      canvas.add(tag, sub);
+      canvas.renderAll();
+      saveH();
+      updateLayers();
+    } else {
+      // ── REGULAR TEXT ─────────────────────────────────────────────────
+      const shadow = t.cls ? new fabric.Shadow({color:'rgba(0,0,0,.7)', blur:8, offsetX:4, offsetY:4}) : null;
+      const title=new fabric.IText(t.h,{
+        left:60, top:CH-170,
+        fontSize: t.cls==='oswald'?86:62,
+        fontFamily:t.tf, fontWeight:'bold', fill:t.tc,
+        width:CW-120, textAlign:'left', selectable:true,
+        shadow,
+      });
+      canvas.add(tag,title,sub);
+      canvas.renderAll();
+      saveH();
+      updateLayers();
+    }
   },{crossOrigin:'anonymous'});
 }
 
