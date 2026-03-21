@@ -6,7 +6,7 @@ import PaywallModal from '@/components/PaywallModal'
 import { usePayment } from '@/lib/usePayment'
 import PaymentSuccessToast from '@/components/PaymentSuccessToast'
 
-type Mode = 'crop' | 'split' | 'subtitles' | 'filters'
+type Mode = 'crop' | 'split' | 'filters'
 
 const RATIOS = [
   { label:'9:16 Shorts',    w:1080, h:1920 },
@@ -36,8 +36,6 @@ function fmtT(sec: number) {
 const CROP_FEATURES = [
   'Нарезка видео на N равных частей',
   'Ручные точки разреза на таймлайне',
-  'AI-субтитры — введи текст, тайминги расставит Claude',
-  'Субтитры записываются в видео',
   '8 видеофильтров',
 ]
 
@@ -62,10 +60,6 @@ export default function CropTool() {
   const [splitPoints, setSplitPoints] = useState<number[]>([])
   const [duration,    setDuration]    = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
-  const [subtitles,   setSubtitles]   = useState<{start:number;end:number;text:string}[]>([])
-  const [subLoading,  setSubLoading]  = useState(false)
-  const [subText,     setSubText]     = useState('')
-  const [subError,    setSubError]    = useState('')
   const [isPlaying,   setIsPlaying]   = useState(false)
 
   const { paid, showPay, setShowPay, justPaid, info } = usePayment('crop-pro')
@@ -111,21 +105,10 @@ export default function CropTool() {
       cropW/canvas.width*vid.videoWidth, cropH/canvas.height*vid.videoHeight,
       0,0,prev.width,prev.height)
 
-    if(subtitles.length){
-      const ct=vid.currentTime
-      const sub=subtitles.find(s=>ct>=s.start&&ct<=s.end)
-      if(sub){
-        pctx.fillStyle='rgba(0,0,0,0.75)'
-        pctx.fillRect(4,prev.height-38,prev.width-8,30)
-        pctx.fillStyle='#ffffff';pctx.font=`bold ${Math.max(10,prev.width/13)}px Arial`
-        pctx.textAlign='center';pctx.fillText(sub.text,prev.width/2,prev.height-17)
-        pctx.textAlign='left'
-      }
-    }
 
     setCurrentTime(vid.currentTime)
     rafRef.current=requestAnimationFrame(renderLoop)
-  },[cropX,cropY,cropW,cropH,filter,subtitles,ratio])
+  },[cropX,cropY,cropW,cropH,filter,ratio])
 
   useEffect(()=>{
     if(!loaded||!pendingInit.current) return
@@ -156,8 +139,10 @@ export default function CropTool() {
 
   // ── FILE LOAD ────────────────────────────────────────────────────────────────
   function handleFile(file:File){
-    if(!file.type.startsWith('video/')) return
-    setFileName(file.name);setLoaded(false);setSubtitles([]);setIsPlaying(false)
+    const ext = file.name.split('.').pop()?.toLowerCase() || ''
+    const isVideo = file.type.startsWith('video/') || ['mp4','webm','mov','avi','mkv','m4v'].includes(ext)
+    if(!isVideo) return
+    setFileName(file.name);setLoaded(false);setIsPlaying(false)
     if(fileUrlRef.current) URL.revokeObjectURL(fileUrlRef.current)
     // Close old audio context so new file gets fresh audio node
     if(audioCtxRef.current){ audioCtxRef.current.close(); audioCtxRef.current=null }
@@ -243,7 +228,7 @@ export default function CropTool() {
     setCropX(x);setCropY(y)
   }
 
-  // ── CORE EXPORT: plays video in real-time, records canvas+audio ──────────────
+  // ── CORE EXPORT ─────────────────────────────────────────────────────────────
   async function recordSegment(
     startTime: number,
     endTime: number,
@@ -256,93 +241,92 @@ export default function CropTool() {
     const scaleY = vid.videoHeight / vidH
     const segDuration = endTime - startTime
 
-    // ── Step 1: seek to start position ──────────────────────────────────────
+    const drawFrame = (forRecorder?: CanvasRenderingContext2D) => {
+      const c = forRecorder || ctx
+      c.filter = filter.css || 'none'
+      c.drawImage(vid, cropX*scaleX, cropY*scaleY, cropW*scaleX, cropH*scaleY, 0, 0, outCanvas.width, outCanvas.height)
+    }
+
+    // ── Seek ─────────────────────────────────────────────────────────────────
     await new Promise<void>(res => {
-      if(Math.abs(vid.currentTime - startTime) < 0.05) { res(); return }
-      vid.onseeked = () => { vid.onseeked = null; res() }
+      if(Math.abs(vid.currentTime - startTime) < 0.05){ res(); return }
+      const onSeeked = () => { vid.removeEventListener('seeked', onSeeked); res() }
+      vid.addEventListener('seeked', onSeeked)
       vid.currentTime = startTime
     })
 
-    // ── Step 2: draw first frame so captureStream has content ────────────────
-    ctx.filter = filter.css || 'none'
-    ctx.drawImage(vid, cropX*scaleX, cropY*scaleY, cropW*scaleX, cropH*scaleY, 0, 0, outCanvas.width, outCanvas.height)
-
-    // ── Step 3: setup audio (must happen after user gesture path) ────────────
-    const audioTracks = setupAudio(vid)
-    // Resume AudioContext if suspended (browser policy)
-    if(audioCtxRef.current && audioCtxRef.current.state === 'suspended'){
-      await audioCtxRef.current.resume()
+    // ── Draw several frames BEFORE starting recorder ─────────────────────────
+    // This primes the canvas so captureStream has real pixel data
+    for(let i = 0; i < 3; i++){
+      drawFrame()
+      await new Promise(r => requestAnimationFrame(r))
     }
 
-    // ── Step 4: build MediaRecorder from canvas stream ───────────────────────
+    // ── Audio setup ──────────────────────────────────────────────────────────
+    const audioTracks = setupAudio(vid)
+    if(audioCtxRef.current?.state === 'suspended') await audioCtxRef.current.resume()
+
+    // ── Build stream AFTER frames are drawn ──────────────────────────────────
     const canvasStream = (outCanvas as any).captureStream(30) as MediaStream
-    const tracks = [...canvasStream.getVideoTracks(), ...audioTracks]
-    const finalStream = new MediaStream(tracks)
+    const allTracks = [...canvasStream.getVideoTracks(), ...audioTracks]
+    const stream = new MediaStream(allTracks)
 
-    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
-      ? 'video/webm;codecs=vp9,opus'
-      : MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')
-      ? 'video/webm;codecs=vp8,opus'
-      : 'video/webm'
+    // Pick best supported mimeType
+    const mimeType = [
+      'video/webm;codecs=vp9,opus',
+      'video/webm;codecs=vp8,opus',
+      'video/webm;codecs=vp9',
+      'video/webm;codecs=vp8',
+      'video/webm',
+    ].find(t => MediaRecorder.isTypeSupported(t)) || ''
 
-    const recorder = new MediaRecorder(finalStream, { mimeType, videoBitsPerSecond: 8_000_000 })
+    const recorder = new MediaRecorder(stream, {
+      mimeType: mimeType || undefined,
+      videoBitsPerSecond: 6_000_000,
+    })
     const chunks: Blob[] = []
-    recorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data) }
+    recorder.ondataavailable = e => { if(e.data?.size > 0) chunks.push(e.data) }
 
-    // ── Step 5: start recorder, then play ────────────────────────────────────
-    recorder.start(100) // request data every 100ms
-    await new Promise(r => setTimeout(r, 80)) // tiny pause so recorder initialises
+    // ── Start recorder, wait for it to initialise, then play ─────────────────
+    recorder.start(200)
+    await new Promise(r => setTimeout(r, 150))
 
-    // Draw render loop
+    // RAF render loop
     let rafId = 0
-    const drawFrame = () => {
-      ctx.filter = filter.css || 'none'
-      ctx.drawImage(vid, cropX*scaleX, cropY*scaleY, cropW*scaleX, cropH*scaleY, 0, 0, outCanvas.width, outCanvas.height)
-      const sub = subtitles.find(s => vid.currentTime >= s.start && vid.currentTime <= s.end)
-      if(sub){
-        ctx.fillStyle = 'rgba(0,0,0,0.75)'
-        ctx.fillRect(0, outCanvas.height-100, outCanvas.width, 80)
-        ctx.fillStyle = '#ffffff'
-        ctx.font = `bold ${Math.round(outCanvas.width/22)}px Arial`
-        ctx.textAlign = 'center'
-        ctx.fillText(sub.text, outCanvas.width/2, outCanvas.height-42)
-        ctx.textAlign = 'left'
-      }
+    const loop = () => {
+      drawFrame()
       const elapsed = vid.currentTime - startTime
       setProgress(Math.round(Math.min(elapsed / segDuration * 100, 99)))
-      rafId = requestAnimationFrame(drawFrame)
+      rafId = requestAnimationFrame(loop)
     }
-    rafId = requestAnimationFrame(drawFrame)
+    rafId = requestAnimationFrame(loop)
 
     await vid.play()
 
-    // ── Step 6: wait for segment to end, then stop ───────────────────────────
+    // ── Wait for end ─────────────────────────────────────────────────────────
     await new Promise<void>(resolve => {
-      const checkEnd = setInterval(() => {
-        if(vid.currentTime >= endTime - 0.05 || vid.ended){
-          clearInterval(checkEnd)
+      const check = setInterval(() => {
+        if(vid.currentTime >= endTime - 0.08 || vid.ended || vid.paused){
+          clearInterval(check)
           cancelAnimationFrame(rafId)
           vid.pause()
-          // Request any remaining data, then stop after buffer
           recorder.requestData()
-          setTimeout(() => {
-            recorder.stop()
-          }, 300)
+          setTimeout(() => recorder.stop(), 400)
         }
       }, 50)
 
       recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'video/webm' })
-        if(blob.size === 0){
-          console.error('Recording produced 0 bytes — MediaRecorder may not be supported')
-          alert('Ошибка записи: файл пустой. Попробуй Chrome или Edge.')
+        const blob = new Blob(chunks, { type: mimeType || 'video/webm' })
+        console.log(`Recorded: ${blob.size} bytes, chunks: ${chunks.length}`)
+        if(blob.size < 1000){
+          alert('Файл пустой или слишком маленький. Убедись что используешь Chrome или Edge, и нажми Play перед экспортом.')
         } else {
           const a = document.createElement('a')
           a.href = URL.createObjectURL(blob)
           a.download = filename
           document.body.appendChild(a)
           a.click()
-          document.body.removeChild(a)
+          setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href) }, 1000)
         }
         setProgress(100)
         resolve()
@@ -387,30 +371,6 @@ export default function CropTool() {
     setProcessing(false); setStatusMsg('')
   }
 
-  // ── AI SUBTITLES ─────────────────────────────────────────────────────────────
-  async function generateSubtitles(){
-    if(!paid){setShowPay(true);return}
-    if(!subText.trim()){setSubError('Введи текст видео');return}
-    setSubLoading(true);setSubError('')
-    const prompt=`Разбей текст на субтитры для видео длительностью ${Math.round(duration)} секунд.
-Текст: "${subText}"
-Верни ТОЛЬКО JSON без markdown: [{"start":0,"end":3,"text":"Текст"},...]
-Правила: 3-7 слов на субтитр, длительность 2-4 сек, покрой всё видео равномерно.`
-    try{
-      const res=await fetch('/api/claude',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]}),
-      })
-      const data=await res.json()
-      if(data.error) throw new Error(data.error.message)
-      const text=(data.content??[]).filter((b:any)=>b.type==='text').map((b:any)=>b.text).join('')
-      const match=text.match(/\[[\s\S]*?\]/)
-      if(!match) throw new Error('Неверный формат ответа')
-      setSubtitles(JSON.parse(match[0]))
-    }catch(e:any){setSubError(e.message||'Ошибка')}
-    finally{setSubLoading(false)}
-  }
-
   return (
     <div className="min-h-screen bg-bg">
 
@@ -442,7 +402,6 @@ export default function CropTool() {
           {([
             ['crop','✂️ Кроп',false],
             ['split','🔪 Нарезка',true],
-            ['subtitles','💬 Субтитры',true],
             ['filters','🎨 Фильтры',false],
           ] as [Mode,string,boolean][]).map(([m,label,isPro])=>(
             <button key={m}
@@ -506,10 +465,7 @@ export default function CropTool() {
                       <div className="absolute -top-1 -translate-x-1/2 text-red-400 text-xs">✂</div>
                     </div>
                   ))}
-                  {subtitles.map((s,i)=>(
-                    <div key={i} className="absolute bottom-0 h-2 bg-yellow-400/60 rounded"
-                      style={{left:`${(s.start/duration)*100}%`,width:`${((s.end-s.start)/duration)*100}%`}}/>
-                  ))}
+
                 </div>
               </div>
 
@@ -564,35 +520,6 @@ export default function CropTool() {
                 </div>
               )}
 
-              {mode==='subtitles'&&(
-                <div className="bg-card border border-border rounded-xl p-4">
-                  <div className="text-muted text-xs uppercase tracking-widest mb-3">AI-субтитры · Pro</div>
-                  <textarea value={subText} onChange={e=>setSubText(e.target.value)} rows={4}
-                    placeholder="Введи текст или сценарий видео — Claude расставит тайминги..."
-                    className="w-full px-3 py-2 bg-surface border border-border rounded-xl text-xs outline-none focus:border-purple-400/60 resize-none placeholder:text-muted mb-3"/>
-                  {subError&&<div className="text-red-400 text-xs mb-2">{subError}</div>}
-                  <div className="flex gap-2">
-                    <button onClick={generateSubtitles} disabled={subLoading}
-                      className="px-4 py-2 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-xl border border-purple-500/30 hover:bg-purple-500/30 disabled:opacity-40">
-                      {subLoading?'🤖 Генерирую...':'🤖 Сгенерировать'}
-                    </button>
-                    {subtitles.length>0&&(
-                      <button onClick={()=>setSubtitles([])}
-                        className="px-3 py-2 bg-red-500/10 text-red-400 text-xs rounded-xl border border-red-500/20">Очистить</button>
-                    )}
-                  </div>
-                  {subtitles.length>0&&(
-                    <div className="mt-3 space-y-1 max-h-36 overflow-y-auto">
-                      {subtitles.map((s,i)=>(
-                        <div key={i} className="flex gap-2 text-xs bg-surface rounded px-2 py-1.5">
-                          <span className="text-purple-400 font-mono whitespace-nowrap">{fmtT(s.start)}–{fmtT(s.end)}</span>
-                          <span className="text-muted">{s.text}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
 
               {mode==='filters'&&(
                 <div className="bg-card border border-border rounded-xl p-4">
