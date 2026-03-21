@@ -96,12 +96,13 @@ export default function AnalyzeTool() {
     }
   }, [paid])
 
-  async function doSearch(q: string) {
+  async function doSearch(q: string, p?: string) {
     if (!q.trim()) { console.log('[analyze] doSearch called with empty query'); return }
-    console.log('[analyze] doSearch start, paid=', paid, 'q=', q)
+    const activePeriod = p || period
+    console.log('[analyze] doSearch start, paid=', paid, 'q=', q, 'period=', activePeriod)
     setLoading(true); setError(''); setShowResults(false)
     try {
-      const url = `/api/youtube?q=${encodeURIComponent(q)}&period=${period}`
+      const url = `/api/youtube?q=${encodeURIComponent(q)}&period=${activePeriod}`
       console.log('[analyze] fetching:', url)
       const res  = await fetch(url)
       const data = await res.json()
@@ -208,7 +209,11 @@ export default function AnalyzeTool() {
             {/* PERIOD */}
             <div className="flex justify-center gap-2 mb-4">
               {PERIODS.map(p => (
-                <button key={p.id} onClick={() => setPeriod(p.id)}
+                <button key={p.id} onClick={() => {
+                    setPeriod(p.id)
+                    // Если уже есть результаты — перезапускаем поиск с новым периодом
+                    if (showResults && query.trim() && paid) doSearch(query.trim(), p.id)
+                  }}
                   className={`px-4 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer font-semibold
                     ${period === p.id ? 'bg-accent/15 border-accent/40 text-accent' : 'border-border text-muted hover:text-white bg-transparent'}`}>
                   {p.label}

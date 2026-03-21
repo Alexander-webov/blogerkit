@@ -29,24 +29,44 @@ export async function GET(req: NextRequest) {
     )
     const statsData = await statsRes.json()
 
-    // 3. Format
-    const videos = statsData.items.map((item: any) => ({
-      id:       item.id,
-      title:    item.snippet.title,
-      channel:  item.snippet.channelTitle,
-      views:    parseInt(item.statistics.viewCount)   || 0,
-      likes:    parseInt(item.statistics.likeCount)   || 0,
-      comments: parseInt(item.statistics.commentCount)|| 0,
-      duration: formatDuration(item.contentDetails.duration),
-      age:      timeAgo(item.snippet.publishedAt),
-      thumb:    item.snippet.thumbnails?.high?.url || item.snippet.thumbnails?.medium?.url || '',
-      url:      `https://youtube.com/watch?v=${item.id}`,
-    }))
+    // 3. Format with rich data
+    const videos = statsData.items.map((item: any) => {
+      const dur      = parseDuration(item.contentDetails.duration)
+      const isShort  = dur > 0 && dur <= 61
+      const views    = parseInt(item.statistics.viewCount)    || 0
+      const likes    = parseInt(item.statistics.likeCount)    || 0
+      const comments = parseInt(item.statistics.commentCount) || 0
+      const tags     = (item.snippet.tags || []).slice(0, 12)
+      const pub      = item.snippet.publishedAt
+      return {
+        id:          item.id,
+        title:       item.snippet.title,
+        channel:     item.snippet.channelTitle,
+        views, likes, comments,
+        likeRate:    views > 0 ? +((likes / views) * 100).toFixed(2) : 0,
+        duration:    formatDuration(item.contentDetails.duration),
+        durationSec: dur,
+        isShort,
+        format:      isShort ? 'Shorts' : dur > 1200 ? 'Длинное (20+ мин)' : dur > 600 ? 'Среднее (10-20 мин)' : 'Короткое (до 10 мин)',
+        publishedAt: pub,
+        publishDate: new Date(pub).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'}),
+        age:         timeAgo(pub),
+        tags,
+        thumb:       item.snippet.thumbnails?.high?.url || item.snippet.thumbnails?.medium?.url || '',
+        url:         `https://youtube.com/watch?v=${item.id}`,
+      }
+    })
 
     return NextResponse.json({ videos })
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 })
   }
+}
+
+function parseDuration(dur: string): number {
+  const m = dur.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
+  if (!m) return 0
+  return (parseInt(m[1]||'0')*3600) + (parseInt(m[2]||'0')*60) + parseInt(m[3]||'0')
 }
 
 function formatDuration(dur: string): string {
