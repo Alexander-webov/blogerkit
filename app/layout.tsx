@@ -40,7 +40,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'БлогерКит — инструменты для блогеров',
     description: 'Конструктор обложек, анализ конкурентов, калькулятор рекламы и советы по продвижению.',
-    images: ['/og/main.png'],
   },
   robots: {
     index: true,
@@ -57,6 +56,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ru">
       <head>
         <link rel="icon" href="/favicon.ico" />
+        {/* Яндекс.Вебмастер — замени content на свой токен верификации */}
+        <meta name="yandex-verification" content="REPLACE_WITH_YOUR_YANDEX_TOKEN" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"

@@ -1,27 +1,42 @@
 import type { MetadataRoute } from 'next'
 
-const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://blogerkit.ru'
+const base = 'https://blogerkit.ru'
 const now  = new Date()
 
-const TOOLS = ['analyze','trends','covers','calculator','tips','crop','titles','mediakit','channel-analysis','subscribe']
+const TOOLS = [
+  'analyze', 'trends', 'covers', 'calculator',
+  'tips', 'crop', 'titles', 'mediakit', 'channel-analysis',
+]
+
 const BLOG_SLUGS = [
-  'kak-sdelat-oblozhku-youtube','analiz-konkurentov-youtube','skolko-stoit-reklama-u-blogera',
-  'kak-prodvigat-youtube-kanal','algoritm-youtube-2025','kak-zarabotat-na-youtube',
-  'youtube-shorts-prosmotr','kak-sdelat-viral-video','luchshee-vremya-youtube',
-  'kak-pisat-opisanie-youtube','youtube-tegi','kak-uvelichit-podpischikov',
-  'monetizaciya-youtube','kak-sdelat-shorts','tiktok-vs-youtube','kanalnyj-trejler',
-  'kontent-plan-youtube','rabota-s-reklamodatelyami','kak-sdelat-thumbnail-abtest',
-  'youtube-analytics','prodvizhenie-telegram','kak-nachat-youtube','youtube-seo-prodvizhenie',
+  // Русские статьи — YouTube
+  'algoritm-youtube-2025', 'analiz-konkurentov-youtube', 'kak-nachat-youtube',
+  'kak-oformit-youtube-kanal', 'kak-pisat-opisanie-youtube', 'kak-prodvigat-youtube-kanal',
+  'kak-sdelat-oblozhku-youtube', 'kak-sdelat-shorts', 'kak-sdelat-thumbnail-abtest',
+  'kak-sdelat-viral-video', 'kak-snyat-video-youtube-telefon', 'kak-uvelichit-podpischikov',
+  'kak-zarabotat-na-youtube', 'kanalnyj-trejler', 'kontent-plan-youtube',
+  'luchshee-vremya-youtube', 'mikrofon-dlya-youtube', 'monetizaciya-youtube',
+  'osveshenie-dlya-semki-video', 'prodvizhenie-telegram', 'programmy-montazha-youtube-besplatno',
+  'rabota-s-reklamodatelyami', 'skolko-stoit-reklama-u-blogera', 'tiktok-vs-youtube',
+  'youtube-analytics', 'youtube-seo-prodvizhenie', 'youtube-shorts-prosmotr', 'youtube-tegi',
+  // Русские статьи — VK/Rutube
+  'kak-prodvigatsya-vk-video', 'vk-klipy-algoritm', 'kak-zarabotat-vk-video',
+  'rutube-kak-nabrat-prosmotry', 'rutube-monetizatsiya-2025', 'mediakit-dlya-vk-blogerov',
+  'reklama-u-blogerov-vkontakte', 'kak-vesti-telegram-kanal', 'vk-vs-youtube-gde-nachat',
+  'prodvizhenie-na-russkih-platformah',
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    { url: base,                    lastModified: now, changeFrequency: 'weekly',  priority: 1.0 },
-    { url: `${base}/blog`,          lastModified: now, changeFrequency: 'weekly',  priority: 0.9 },
+    { url: base,           lastModified: now, changeFrequency: 'weekly',  priority: 1.0 },
+    { url: `${base}/blog`, lastModified: now, changeFrequency: 'weekly',  priority: 0.9 },
+    { url: `${base}/offer`,    lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${base}/contacts`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     ...TOOLS.map(t => ({
-      url: `${base}/${t}`, lastModified: now,
+      url: `${base}/${t}`,
+      lastModified: now,
       changeFrequency: t === 'trends' ? 'daily' : 'monthly' as any,
-      priority: ['analyze','trends','titles'].includes(t) ? 0.9 : 0.7,
+      priority: ['analyze', 'trends', 'titles', 'covers', 'crop'].includes(t) ? 0.9 : 0.7,
     })),
     ...BLOG_SLUGS.map(slug => ({
       url: `${base}/blog/${slug}`,
