@@ -72,6 +72,7 @@ export default function AnalyzeTool() {
   const [expanded, setExpanded] = useState<string | null>(null)
   const [showPay,  setShowPay]  = useState(false)
   const [loading,  setLoading]  = useState(false)
+  const [showResults, setShowResults] = useState(false)
 
   const { paid, justPaid, info, verifying } = usePayment('analyze')
 
@@ -98,7 +99,7 @@ export default function AnalyzeTool() {
   async function doSearch(q: string) {
     if (!q.trim()) { console.log('[analyze] doSearch called with empty query'); return }
     console.log('[analyze] doSearch start, paid=', paid, 'q=', q)
-    setLoading(true); setError('')
+    setLoading(true); setError(''); setShowResults(false)
     try {
       const url = `/api/youtube?q=${encodeURIComponent(q)}&period=${period}`
       console.log('[analyze] fetching:', url)
@@ -107,7 +108,10 @@ export default function AnalyzeTool() {
       console.log('[analyze] API response:', res.status, 'videos:', data.videos?.length, 'error:', data.error)
       if (!res.ok) throw new Error(data.error || `Ошибка API (${res.status})`)
       if (!data.videos?.length) throw new Error('YouTube не вернул видео по этому запросу. Попробуй другую нишу или период.')
-      setVideos(data.videos); setMeta(data.meta)
+      console.log('[analyze] setting videos, meta:', !!data.meta, 'videos:', data.videos.length)
+      setVideos(data.videos)
+      setMeta(data.meta)
+      setShowResults(true)
       try { localStorage.removeItem('bk_analyze_query') } catch {}
     } catch (e: any) {
       console.error('[analyze] doSearch error:', e.message)
@@ -131,8 +135,8 @@ export default function AnalyzeTool() {
     doSearch(q)
   }
 
-  const hasResults = videos.length > 0 && meta
-  const status = loading ? 'loading' : hasResults ? 'results' : 'idle'
+  // showResults управляется явно чтобы избежать race condition с meta
+
 
   const sorted = [...videos].sort((a, b) =>
     sort === 'views'    ? b.views - a.views :
@@ -221,7 +225,7 @@ export default function AnalyzeTool() {
           )}
 
           {/* LOADING */}
-          {status === 'loading' && !verifying && (
+          {loading && !verifying && (
             <div className="text-center py-20">
               <div className="w-10 h-10 border-[3px] border-border border-t-accent rounded-full animate-spin mx-auto mb-4"/>
               <p className="text-muted text-sm">Загружаем данные с YouTube...</p>
@@ -229,7 +233,7 @@ export default function AnalyzeTool() {
           )}
 
           {/* ERROR */}
-          {error && (
+          {!!error && (
             <div className="max-w-md mx-auto py-10 text-center">
               <div className="text-4xl mb-3">⚠️</div>
               <div className="text-muted text-xs">{error}</div>
@@ -237,7 +241,7 @@ export default function AnalyzeTool() {
           )}
 
           {/* IDLE */}
-          {status === 'idle' && !error && !verifying && (
+          {!loading && !showResults && !error && !verifying && (
             <div className="text-center py-20">
               <div className="text-6xl mb-4">🔍</div>
               <div className="font-heading text-xl font-bold mb-2">Введи нишу чтобы начать</div>
@@ -246,7 +250,7 @@ export default function AnalyzeTool() {
           )}
 
           {/* RESULTS */}
-          {status === 'results' && meta && (
+          {showResults && meta && (
             <div className="animate-fadeUp space-y-6">
 
               {/* STATS */}
@@ -382,7 +386,7 @@ export default function AnalyzeTool() {
               </div>
 
               <div className="text-center pt-4">
-                <button onClick={() => { setVideos([]); setMeta(null); setError('') }}
+                <button onClick={() => { setVideos([]); setMeta(null); setError(''); setShowResults(false) }}
                   className="px-6 py-2.5 border border-border text-muted text-sm rounded-xl hover:text-white hover:border-white/20 transition-colors">
                   ← Новый поиск
                 </button>
