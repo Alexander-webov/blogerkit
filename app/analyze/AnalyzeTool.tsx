@@ -96,14 +96,21 @@ export default function AnalyzeTool() {
   }, [paid])
 
   async function doSearch(q: string) {
+    if (!q.trim()) { console.log('[analyze] doSearch called with empty query'); return }
+    console.log('[analyze] doSearch start, paid=', paid, 'q=', q)
     setLoading(true); setError('')
     try {
-      const res  = await fetch(`/api/youtube?q=${encodeURIComponent(q)}&period=${period}`)
+      const url = `/api/youtube?q=${encodeURIComponent(q)}&period=${period}`
+      console.log('[analyze] fetching:', url)
+      const res  = await fetch(url)
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Ошибка API')
+      console.log('[analyze] API response:', res.status, 'videos:', data.videos?.length, 'error:', data.error)
+      if (!res.ok) throw new Error(data.error || `Ошибка API (${res.status})`)
+      if (!data.videos?.length) throw new Error('YouTube не вернул видео по этому запросу. Попробуй другую нишу или период.')
       setVideos(data.videos); setMeta(data.meta)
       try { localStorage.removeItem('bk_analyze_query') } catch {}
     } catch (e: any) {
+      console.error('[analyze] doSearch error:', e.message)
       setError(e.message)
     } finally {
       setLoading(false)
@@ -111,9 +118,10 @@ export default function AnalyzeTool() {
   }
 
   async function handleSearch() {
-    const q = query.trim(); if (!q) return
+    const q = query.trim()
+    console.log('[analyze] handleSearch, q=', q, 'paid=', paid, 'verifying=', verifying)
+    if (!q) return
     if (!paid) {
-      // Сохраняем запрос в localStorage — переживёт редирект на ЮКасса
       try { localStorage.setItem('bk_analyze_query', q) } catch {}
       savedQueryRef.current = q
       saveStateBeforePayment('analyze', { query: q })
