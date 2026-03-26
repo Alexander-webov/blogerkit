@@ -405,10 +405,10 @@ export default function HomePage() {
             ["/channel-analysis", "Анализ канала"],
             ["/mediakit", "Медиакит"],
             ["/crop", "Видеоредактор"],
-            ["/titles", "AI-заголовки"],
+            /*          ["/titles", "AI-заголовки"], */
             ["/covers", "Обложки"],
             ["/blog", "Блог"],
-            ["/contacts", "Контакты"],
+            /*    ["/contacts", "Контакты"], */
           ].map(([href, label]) => (
             <Link
               key={href}
